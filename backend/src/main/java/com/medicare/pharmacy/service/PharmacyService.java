@@ -39,8 +39,22 @@ public class PharmacyService {
 
         Page<Pharmacy> page = pharmacyRepository.searchPharmacies(query, city, postalCode, filter.getIs24Hours(), pageable);
 
+        Double userLat = filter.getLatitude();
+        Double userLng = filter.getLongitude();
+
         List<PharmacyDto> dtos = page.getContent().stream()
-                .map(this::mapToPharmacyDto)
+                .map(pharmacy -> {
+                    PharmacyDto dto = mapToPharmacyDto(pharmacy);
+                    if (userLat != null && userLng != null && pharmacy.getLatitude() != null && pharmacy.getLongitude() != null) {
+                        double distance = calculateHaversineDistance(
+                                userLat, userLng,
+                                pharmacy.getLatitude().doubleValue(),
+                                pharmacy.getLongitude().doubleValue()
+                        );
+                        dto.setDistanceInKm(Math.round(distance * 100.0) / 100.0);
+                    }
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
         return new PagedResponse<>(
