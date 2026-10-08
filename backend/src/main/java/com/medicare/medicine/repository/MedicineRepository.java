@@ -25,6 +25,8 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>, JpaSp
 
     Page<Medicine> findByGenericNameIgnoreCaseContaining(String genericName, Pageable pageable);
 
+    Page<Medicine> findByNameIgnoreCaseContaining(String name, Pageable pageable);
+
     List<Medicine> findTop8ByAvailableTrueOrderByCreatedAtDesc();
 
     @Query("SELECT m FROM Medicine m " +
@@ -32,7 +34,8 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>, JpaSp
            "       LOWER(m.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "       LOWER(m.genericName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "       LOWER(m.brandName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-           "       LOWER(m.composition) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+           "       LOWER(m.composition) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "       LOWER(m.indications) LIKE LOWER(CONCAT('%', :query, '%'))) " +
            "AND (:category IS NULL OR :category = '' OR LOWER(m.category) = LOWER(:category)) " +
            "AND (:dosageForm IS NULL OR :dosageForm = '' OR LOWER(m.dosageForm) = LOWER(:dosageForm)) " +
            "AND (:prescription IS NULL OR m.requiresPrescription = :prescription) " +
@@ -53,7 +56,8 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>, JpaSp
            "       LOWER(m.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "       LOWER(m.genericName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "       LOWER(m.brandName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-           "       LOWER(m.composition) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+           "       LOWER(m.composition) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "       LOWER(m.indications) LIKE LOWER(CONCAT('%', :query, '%'))) " +
            "AND (:category IS NULL OR :category = '' OR LOWER(m.category) = LOWER(:category)) " +
            "AND (:prescription IS NULL OR m.requiresPrescription = :prescription) " +
            "AND (:minPrice IS NULL OR m.mrp >= :minPrice) " +
