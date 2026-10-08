@@ -35,20 +35,40 @@ public class MedicineService {
     @Transactional(readOnly = true)
     public PagedResponse<MedicineDto> searchMedicines(MedicineSearchFilter filter) {
         Sort.Direction direction = "DESC".equalsIgnoreCase(filter.getSortDirection()) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        String sortField = "price".equalsIgnoreCase(filter.getSortBy()) || "mrp".equalsIgnoreCase(filter.getSortBy()) ? "mrp" : "name";
+        
+        String sortField = "name";
+        String requestedSort = filter.getSortBy() != null ? filter.getSortBy().toLowerCase() : "name";
+        if ("price".equals(requestedSort) || "mrp".equals(requestedSort)) {
+            sortField = "mrp";
+        } else if ("category".equals(requestedSort)) {
+            sortField = "category";
+        } else if ("createdat".equals(requestedSort) || "date".equals(requestedSort) || "newest".equals(requestedSort)) {
+            sortField = "createdAt";
+        }
+
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(direction, sortField));
 
         String sanitizedQuery = sanitizeSearchQuery(filter.getQuery());
         String category = (filter.getCategory() != null && !filter.getCategory().trim().isEmpty()) ? filter.getCategory().trim() : null;
         String dosageForm = (filter.getDosageForm() != null && !filter.getDosageForm().trim().isEmpty()) ? filter.getDosageForm().trim() : null;
 
+        BigDecimal minPrice = filter.getMinPrice();
+        BigDecimal maxPrice = filter.getMaxPrice();
+
+        // Ensure price bounds sanity
+        if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
+            BigDecimal temp = minPrice;
+            minPrice = maxPrice;
+            maxPrice = temp;
+        }
+
         Page<Medicine> page = medicineRepository.searchMedicinesWithFilters(
                 sanitizedQuery,
                 category,
                 dosageForm,
                 filter.getRequiresPrescription(),
-                filter.getMinPrice(),
-                filter.getMaxPrice(),
+                minPrice,
+                maxPrice,
                 pageable
         );
 
