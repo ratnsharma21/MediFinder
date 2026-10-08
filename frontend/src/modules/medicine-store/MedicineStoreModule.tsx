@@ -275,8 +275,8 @@ export const MedicineStoreModule: React.FC = () => {
                   fontSize: '0.6875rem',
                   padding: '0.2rem 0.5rem',
                   borderRadius: '12px',
-                  background: query.toLowerCase() === tag.toLowerCase() ? 'var(--primary)' : 'var(--border-light, #f1f5f9)',
-                  color: query.toLowerCase() === tag.toLowerCase() ? '#ffffff' : 'var(--text-main)',
+                  background: (debouncedQuery || query).toLowerCase() === tag.toLowerCase() ? 'var(--primary)' : 'var(--border-light, #f1f5f9)',
+                  color: (debouncedQuery || query).toLowerCase() === tag.toLowerCase() ? '#ffffff' : 'var(--text-main)',
                   border: '1px solid var(--border)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
@@ -390,7 +390,7 @@ export const MedicineStoreModule: React.FC = () => {
             </Card>
           )}
 
-          {/* Empty State */}
+          {/* Empty State with Suggestions */}
           {!loading && !error && medicines.length === 0 && (
             <Card>
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
@@ -398,12 +398,27 @@ export const MedicineStoreModule: React.FC = () => {
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
                   No matching medicines found
                 </h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '420px', margin: '0 auto 1.5rem auto' }}>
-                  We couldn't find any medications matching "<strong>{debouncedQuery || query}</strong>" with the selected filters.
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '460px', margin: '0 auto 1.5rem auto', lineHeight: 1.5 }}>
+                  We couldn't find any medications matching "<strong>{debouncedQuery || query}</strong>" with the current filter combination.
+                  Try searching for generic salt names (like <em>Paracetamol</em>, <em>Amoxicillin</em>) or clearing some filters.
                 </p>
-                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                  <button className="btn btn-secondary" onClick={handleClearSearch}>
-                    Clear All Filters
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Try searching:</span>
+                    {['Paracetamol', 'Pantoprazole', 'Telmisartan'].map(sugg => (
+                      <button
+                        key={sugg}
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => { setQuery(sugg); setDebouncedQuery(sugg); }}
+                      >
+                        {sugg}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button className="btn btn-primary" onClick={handleClearSearch} style={{ marginTop: '0.5rem' }}>
+                    Clear All Filters & Show All
                   </button>
                 </div>
               </div>
