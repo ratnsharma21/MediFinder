@@ -41,7 +41,7 @@ class MedicineSearchTests {
         medicineRepository.deleteAll();
         manufacturerRepository.deleteAll();
 
-        Manufacturer manufacturer = new Manufacturer("Cipla Test Lab", "India");
+        Manufacturer manufacturer = new Manufacturer("Cipla Test Lab", "India", "https://cipla.com", "info@cipla.com");
         manufacturer = manufacturerRepository.save(manufacturer);
 
         testMedicine1 = new Medicine();

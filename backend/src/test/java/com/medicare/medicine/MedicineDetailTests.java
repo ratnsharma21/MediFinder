@@ -55,7 +55,7 @@ class MedicineDetailTests {
         medicineRepository.deleteAll();
         manufacturerRepository.deleteAll();
 
-        Manufacturer manufacturer = new Manufacturer("Dr. Reddy's Lab", "India");
+        Manufacturer manufacturer = new Manufacturer("Dr. Reddy's Lab", "India", "https://drreddys.com", "info@drreddys.com");
         manufacturer = manufacturerRepository.save(manufacturer);
 
         testMedicine = new Medicine();
@@ -76,22 +76,28 @@ class MedicineDetailTests {
         testMedicine.setAvailable(true);
         testMedicine = medicineRepository.save(testMedicine);
 
-        testRetailer1 = new Retailer("Tata 1mg Test", "https://1mg.com");
-        testRetailer1.setRating(BigDecimal.valueOf(4.80));
+        testRetailer1 = new Retailer("Tata 1mg Test", "https://1mg.com", "https://assets.1mg.com/logo.svg", BigDecimal.valueOf(4.80));
         testRetailer1 = retailerRepository.save(testRetailer1);
 
-        testRetailer2 = new Retailer("PharmEasy Test", "https://pharmeasy.in");
-        testRetailer2.setRating(BigDecimal.valueOf(4.60));
+        testRetailer2 = new Retailer("PharmEasy Test", "https://pharmeasy.in", "https://assets.pharmeasy.in/logo.svg", BigDecimal.valueOf(4.60));
         testRetailer2 = retailerRepository.save(testRetailer2);
 
-        RetailerOffer offer1 = new RetailerOffer(testMedicine, testRetailer1, BigDecimal.valueOf(148.75), "https://1mg.com/omez");
+        RetailerOffer offer1 = new RetailerOffer();
+        offer1.setMedicine(testMedicine);
+        offer1.setRetailer(testRetailer1);
+        offer1.setSellingPrice(BigDecimal.valueOf(148.75));
         offer1.setDiscountPercent(BigDecimal.valueOf(15.00));
+        offer1.setProductUrl("https://1mg.com/omez");
         offer1.setInStock(true);
         offer1.setDeliveryEstimateDays(1);
         retailerOfferRepository.save(offer1);
 
-        RetailerOffer offer2 = new RetailerOffer(testMedicine, testRetailer2, BigDecimal.valueOf(145.25), "https://pharmeasy.in/omez");
+        RetailerOffer offer2 = new RetailerOffer();
+        offer2.setMedicine(testMedicine);
+        offer2.setRetailer(testRetailer2);
+        offer2.setSellingPrice(BigDecimal.valueOf(145.25));
         offer2.setDiscountPercent(BigDecimal.valueOf(17.00));
+        offer2.setProductUrl("https://pharmeasy.in/omez");
         offer2.setInStock(true);
         offer2.setDeliveryEstimateDays(2);
         retailerOfferRepository.save(offer2);

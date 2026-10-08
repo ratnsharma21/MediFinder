@@ -39,8 +39,8 @@ class MedicineFilterIntegrationTests {
         medicineRepository.deleteAll();
         manufacturerRepository.deleteAll();
 
-        Manufacturer m1 = manufacturerRepository.save(new Manufacturer("Cipla Test", "India"));
-        Manufacturer m2 = manufacturerRepository.save(new Manufacturer("Sun Pharma Test", "India"));
+        Manufacturer m1 = manufacturerRepository.save(new Manufacturer("Cipla Test", "India", "https://cipla.com", "info@cipla.com"));
+        Manufacturer m2 = manufacturerRepository.save(new Manufacturer("Sun Pharma Test", "India", "https://sunpharma.com", "info@sunpharma.com"));
 
         createMedicine("Dolo 650", "Paracetamol", "Dolo", "Analgesics", "Tablet", "650mg", false, BigDecimal.valueOf(30.00), m1);
         createMedicine("Augmentin 625", "Amoxicillin", "Augmentin", "Antibiotics", "Tablet", "625mg", true, BigDecimal.valueOf(200.00), m1);
