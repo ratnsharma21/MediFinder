@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,7 +111,6 @@ public class MedicineService {
         if (query == null) return null;
         String trimmed = query.trim();
         if (trimmed.isEmpty()) return null;
-        // Strip out excessive wildcards or malformed punctuation
         return trimmed.replaceAll("[%_]{2,}", " ");
     }
 
@@ -175,8 +175,31 @@ public class MedicineService {
             dto.setManufacturer(mapToManufacturerDto(medicine.getManufacturer()));
         }
 
-        if (medicine.getOffers() != null) {
-            dto.setOffers(medicine.getOffers().stream().map(this::mapToRetailerOfferDto).collect(Collectors.toList()));
+        if (medicine.getOffers() != null && !medicine.getOffers().isEmpty()) {
+            List<RetailerOfferDto> offerDtos = medicine.getOffers().stream()
+                    .map(this::mapToRetailerOfferDto)
+                    .sorted(Comparator.comparing(RetailerOfferDto::getSellingPrice))
+                    .collect(Collectors.toList());
+
+            dto.setOffers(offerDtos);
+            dto.setTotalOffersCount(offerDtos.size());
+
+            RetailerOfferDto bestOffer = offerDtos.get(0);
+            dto.setLowestPrice(bestOffer.getSellingPrice());
+            dto.setBestRetailerName(bestOffer.getRetailerName());
+
+            BigDecimal maxDiscount = offerDtos.stream()
+                    .map(RetailerOfferDto::getDiscountPercent)
+                    .filter(d -> d != null)
+                    .max(BigDecimal::compareTo)
+                    .orElse(BigDecimal.ZERO);
+            dto.setMaxDiscountPercent(maxDiscount);
+        } else {
+            dto.setOffers(List.of());
+            dto.setTotalOffersCount(0);
+            dto.setLowestPrice(medicine.getMrp());
+            dto.setMaxDiscountPercent(BigDecimal.ZERO);
+            dto.setBestRetailerName(null);
         }
 
         return dto;
