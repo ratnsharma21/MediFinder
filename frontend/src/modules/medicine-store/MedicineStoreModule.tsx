@@ -27,6 +27,7 @@ export const MedicineStoreModule: React.FC = () => {
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineDetail | null>(null);
   const [selectedOffers, setSelectedOffers] = useState<RetailerOffer[]>([]);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Filter and Query States
   const [query, setQuery] = useState('');
@@ -149,6 +150,11 @@ export const MedicineStoreModule: React.FC = () => {
     } finally {
       setLoadingDetail(false);
     }
+  };
+
+  const handleOpenFullModal = (med: MedicineDetail) => {
+    setSelectedMedicine(med);
+    setIsDetailModalOpen(true);
   };
 
   return (
@@ -556,20 +562,30 @@ export const MedicineStoreModule: React.FC = () => {
               title={selectedMedicine.name}
               subtitle={selectedMedicine.genericName}
               headerAction={
-                <button
-                  onClick={() => setSelectedMedicine(null)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '1.25rem',
-                    color: 'var(--text-muted)',
-                    padding: '0.25rem'
-                  }}
-                  title="Close sidebar"
-                >
-                  ✕
-                </button>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <button
+                    onClick={() => handleOpenFullModal(selectedMedicine)}
+                    className="btn btn-secondary btn-sm"
+                    style={{ fontSize: '0.6875rem', padding: '0.2rem 0.5rem' }}
+                    title="Expand full clinical card"
+                  >
+                    🔍 Full Modal
+                  </button>
+                  <button
+                    onClick={() => setSelectedMedicine(null)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '1.25rem',
+                      color: 'var(--text-muted)',
+                      padding: '0.25rem'
+                    }}
+                    title="Close sidebar"
+                  >
+                    ✕
+                  </button>
+                </div>
               }
             >
               {loadingDetail ? (
@@ -699,6 +715,147 @@ export const MedicineStoreModule: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Full Screen / Detailed Medicine Modal */}
+      {isDetailModalOpen && selectedMedicine && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(15, 23, 42, 0.65)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '1.5rem'
+        }}>
+          <div style={{
+            background: 'var(--card-bg, #ffffff)',
+            borderRadius: 'var(--radius-xl, 16px)',
+            maxWidth: '680px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            padding: '2rem',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
+            position: 'relative'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+              <div>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <span className="badge badge-primary">{selectedMedicine.category}</span>
+                  <span className="badge badge-secondary">{selectedMedicine.dosageForm}</span>
+                  {selectedMedicine.requiresPrescription && (
+                    <span className="badge badge-warning">Prescription Required (Rx)</span>
+                  )}
+                </div>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 0.25rem 0' }}>
+                  {selectedMedicine.name}
+                </h2>
+                <p style={{ fontSize: '0.9375rem', color: 'var(--text-muted)', margin: 0 }}>
+                  {selectedMedicine.genericName} • {selectedMedicine.strength}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsDetailModalOpen(false)}
+                style={{
+                  background: 'var(--border-light)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.125rem'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div style={{ background: 'var(--border-light)', padding: '1rem', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Composition & Manufacturer</div>
+                <div style={{ fontSize: '0.9375rem', fontWeight: 600, marginTop: '0.25rem' }}>
+                  {selectedMedicine.composition || selectedMedicine.genericName}
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                  Manufactured by: <strong>{selectedMedicine.manufacturer?.name || 'Verified Lab'}</strong> ({selectedMedicine.manufacturer?.country || 'India'})
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Clinical Indications</div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-main)', marginTop: '0.25rem', lineHeight: 1.5 }}>
+                  {selectedMedicine.indications || 'Take as indicated by licensed health professionals.'}
+                </p>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Precautions & Warnings</div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem', lineHeight: 1.5 }}>
+                  {selectedMedicine.precautions || 'Do not exceed the stated daily dosage.'}
+                </p>
+              </div>
+
+              {/* Retailer Comparison Section */}
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
+                <h3 style={{ fontSize: '1.0625rem', fontWeight: 700, marginBottom: '0.75rem' }}>
+                  Verified Retailer Quotes Comparison
+                </h3>
+                {selectedOffers.map(offer => (
+                  <div
+                    key={offer.id}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '8px',
+                      border: '1px solid var(--border)',
+                      marginBottom: '0.5rem',
+                      background: 'var(--card-bg)'
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700 }}>{offer.retailerName}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        Delivery in ~{offer.deliveryEstimateDays} business days
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontWeight: 800, color: 'var(--success)', fontSize: '1.125rem' }}>
+                        ₹{offer.sellingPrice.toFixed(2)}
+                      </div>
+                      <a
+                        href={offer.productUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-primary btn-sm"
+                        style={{ marginTop: '0.25rem', fontSize: '0.6875rem' }}
+                      >
+                        Buy on Store ↗
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                <button className="btn btn-secondary" onClick={() => setIsDetailModalOpen(false)}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
