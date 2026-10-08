@@ -1,6 +1,6 @@
 // ==============================================================================
-// MediFinder / MediCare - Pharmacy Locator Module
-// Primary Owner: Member 3 (Sumit) - feature/pharmacy-locator
+// MediFinder / MediCare - Pharmacy Locator & Map Integration Module
+// Primary Owner: Member 3 (Sumit) - feature/nearby-pharmacies
 // Backend Integration: /api/pharmacies, /api/pharmacies/nearby, /api/pharmacies/{id}
 // ==============================================================================
 
@@ -51,8 +51,10 @@ export const PharmacyLocatorModule: React.FC = () => {
   }, [searchQuery, city, postalCode, is24HoursOnly]);
 
   useEffect(() => {
-    fetchPharmacies();
-  }, [fetchPharmacies]);
+    if (!userLocation) {
+      fetchPharmacies();
+    }
+  }, [fetchPharmacies, userLocation]);
 
   const handleUseMyLocation = () => {
     if (!navigator.geolocation) {
@@ -71,11 +73,11 @@ export const PharmacyLocatorModule: React.FC = () => {
         try {
           const { latitude, longitude } = position.coords;
           setUserLocation({ latitude, longitude });
-          setLocationStatus(`Found location (${latitude.toFixed(3)}, ${longitude.toFixed(3)}). Searching nearby...`);
+          setLocationStatus(`Found location (${latitude.toFixed(3)}, ${longitude.toFixed(3)}). Searching within ${radiusInKm} km...`);
           const nearby = await pharmacyService.getNearbyPharmacies(latitude, longitude, radiusInKm);
           
           if (is24HoursOnly) {
-            setPharmacies(nearby.filter(p => p.is24Hours));
+            setPharmacies(nearby.filter((p) => p.is24Hours));
           } else {
             setPharmacies(nearby);
           }
@@ -111,12 +113,43 @@ export const PharmacyLocatorModule: React.FC = () => {
     );
   };
 
+  const handleRadiusChange = async (newRadius: number) => {
+    setRadiusInKm(newRadius);
+    if (userLocation) {
+      setLoading(true);
+      setLocationStatus(`Searching within ${newRadius} km...`);
+      try {
+        const nearby = await pharmacyService.getNearbyPharmacies(userLocation.latitude, userLocation.longitude, newRadius);
+        setPharmacies(is24HoursOnly ? nearby.filter((p) => p.is24Hours) : nearby);
+      } catch (err) {
+        console.error('Failed to update nearby radius', err);
+        setErrorMessage('Failed to refresh pharmacies for updated radius.');
+      } finally {
+        setLoading(false);
+        setLocationStatus(null);
+      }
+    }
+  };
+
   const handleCityPreset = (presetCity: string) => {
+    setUserLocation(null);
     setCity(presetCity);
     setSearchQuery('');
     setPostalCode('');
     setErrorMessage(null);
     setPermissionDenied(false);
+  };
+
+  const handleResetFilters = () => {
+    setUserLocation(null);
+    setCity('');
+    setSearchQuery('');
+    setPostalCode('');
+    setIs24HoursOnly(false);
+    setRadiusInKm(10.0);
+    setErrorMessage(null);
+    setPermissionDenied(false);
+    fetchPharmacies();
   };
 
   const handleOpenGoogleMaps = (pharmacy: Pharmacy) => {
@@ -187,11 +220,28 @@ export const PharmacyLocatorModule: React.FC = () => {
           <input
             type="text"
             className="form-input"
-            style={{ width: '120px' }}
+            style={{ width: '110px' }}
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
             placeholder="PIN Code"
           />
+
+          {/* Radius Selector */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: '#ffffff', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+            <label htmlFor="radius-select" style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Radius:</label>
+            <select
+              id="radius-select"
+              value={radiusInKm}
+              onChange={(e) => handleRadiusChange(Number(e.target.value))}
+              style={{ border: 'none', background: 'transparent', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', cursor: 'pointer', outline: 'none' }}
+            >
+              <option value={2}>2 km</option>
+              <option value={5}>5 km</option>
+              <option value={10}>10 km</option>
+              <option value={25}>25 km</option>
+              <option value={50}>50 km</option>
+            </select>
+          </div>
 
           <button
             type="button"
@@ -252,15 +302,10 @@ export const PharmacyLocatorModule: React.FC = () => {
               {preset}
             </button>
           ))}
-          {(city || searchQuery || postalCode || is24HoursOnly) && (
+          {(city || searchQuery || postalCode || is24HoursOnly || userLocation) && (
             <button
               type="button"
-              onClick={() => {
-                setCity('');
-                setSearchQuery('');
-                setPostalCode('');
-                setIs24HoursOnly(false);
-              }}
+              onClick={handleResetFilters}
               style={{
                 background: 'none',
                 border: 'none',
@@ -346,7 +391,7 @@ export const PharmacyLocatorModule: React.FC = () => {
       {/* View Switcher Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          Showing <strong>{pharmacies.length}</strong> licensed medical stores {userLocation ? 'near your location' : ''}
+          Showing <strong>{pharmacies.length}</strong> licensed medical stores {userLocation ? `within ${radiusInKm} km of your GPS location` : ''}
         </div>
 
         <div style={{ display: 'inline-flex', gap: '0.375rem', background: 'var(--border-light)', padding: '0.25rem', borderRadius: 'var(--radius-md)' }}>
@@ -355,21 +400,36 @@ export const PharmacyLocatorModule: React.FC = () => {
             className={`view-toggle-btn ${viewMode === 'split' ? 'active' : ''}`}
             onClick={() => setViewMode('split')}
           >
-            🔲 Split Map & List
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="12" y1="3" x2="12" y2="21"></line>
+            </svg>
+            Split Map & List
           </button>
           <button
             type="button"
             className={`view-toggle-btn ${viewMode === 'map' ? 'active' : ''}`}
             onClick={() => setViewMode('map')}
           >
-            🗺️ Map Only
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            </svg>
+            Map Only
           </button>
           <button
             type="button"
             className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
             onClick={() => setViewMode('list')}
           >
-            📋 List Only
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            List Only
           </button>
         </div>
       </div>
@@ -402,17 +462,12 @@ export const PharmacyLocatorModule: React.FC = () => {
                   <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏥</div>
                   <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>No pharmacies found</h3>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '420px', margin: '0 auto 1.5rem' }}>
-                    We couldn't find any medical stores matching your search filters. Try clearing your search parameters or expanding your radius.
+                    We couldn't find any medical stores matching your search filters within the selected radius. Try expanding your radius or selecting a different city.
                   </p>
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => {
-                      setSearchQuery('');
-                      setCity('');
-                      setPostalCode('');
-                      setIs24HoursOnly(false);
-                    }}
+                    onClick={handleResetFilters}
                   >
                     Reset All Filters
                   </button>
