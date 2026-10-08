@@ -1,10 +1,10 @@
 // ==============================================================================
 // MediFinder / MediCare - Medicine Store & Catalogue Module
-// Primary Owner: Member 2 (Vansh) - feature/medicine-catalogue, feature/medicine-search
+// Primary Owner: Vansh (Member 2) - M3 Catalogue & Search, M4 Price Provenance
 // Backend Integration: /api/medicines, /api/medicines/{id}, /api/medicines/{id}/offers
 // ==============================================================================
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card } from '../../components/common/Card';
 import { Medicine, MedicineDetail, RetailerOffer } from '../../types';
 import { medicineService } from '../../services/medicineService';
@@ -12,258 +12,620 @@ import { MEDICINE_CATEGORIES } from '../../utils/constants';
 
 export const MedicineStoreModule: React.FC = () => {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
+  const [featuredMedicines, setFeaturedMedicines] = useState<Medicine[]>([]);
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineDetail | null>(null);
   const [selectedOffers, setSelectedOffers] = useState<RetailerOffer[]>([]);
+  const [loadingDetail, setLoadingDetail] = useState(false);
+
+  // Filter and Query States
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All Categories');
-  const [loading, setLoading] = useState(false);
-  const [totalElements, setTotalElements] = useState(0);
+  const [dosageForm, setDosageForm] = useState('All Forms');
+  const [dosageFormsList, setDosageFormsList] = useState<string[]>([]);
+  const [categoriesList, setCategoriesList] = useState<string[]>(MEDICINE_CATEGORIES);
+  const [requiresPrescription, setRequiresPrescription] = useState<boolean | undefined>(undefined);
+  const [sortBy, setSortBy] = useState('name');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
 
-  const fetchMedicines = async () => {
+  // Pagination & Status States
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load initial dropdown data (Categories & Dosage Forms)
+  useEffect(() => {
+    const loadMetadata = async () => {
+      try {
+        const [cats, forms, featured] = await Promise.all([
+          medicineService.getCategories().catch(() => []),
+          medicineService.getDosageForms().catch(() => []),
+          medicineService.getFeaturedMedicines().catch(() => [])
+        ]);
+        if (cats && cats.length > 0) {
+          setCategoriesList(['All Categories', ...cats]);
+        }
+        if (forms && forms.length > 0) {
+          setDosageFormsList(['All Forms', ...forms]);
+        }
+        if (featured && featured.length > 0) {
+          setFeaturedMedicines(featured);
+        }
+      } catch (err) {
+        console.warn('Could not load catalogue metadata:', err);
+      }
+    };
+    loadMetadata();
+  }, []);
+
+  // Fetch medicines from backend
+  const fetchMedicines = useCallback(async (pageNumber = 0) => {
     setLoading(true);
+    setError(null);
     try {
       const data = await medicineService.getMedicines({
         query: query.trim() || undefined,
         category: category !== 'All Categories' ? category : undefined,
-        size: 12
+        dosageForm: dosageForm !== 'All Forms' ? dosageForm : undefined,
+        requiresPrescription: requiresPrescription,
+        sortBy: sortBy,
+        sortDirection: sortDirection,
+        page: pageNumber,
+        size: 9
       });
       setMedicines(data.content || []);
       setTotalElements(data.totalElements || 0);
-    } catch (err) {
-      console.error('Failed to fetch medicines', err);
+      setTotalPages(data.totalPages || 0);
+      setPage(data.pageNumber || 0);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to fetch medicine catalogue. Please check your connection.');
+      setMedicines([]);
     } finally {
       setLoading(false);
     }
+  }, [query, category, dosageForm, requiresPrescription, sortBy, sortDirection]);
+
+  // Refetch when filters change
+  useEffect(() => {
+    fetchMedicines(0);
+  }, [category, dosageForm, requiresPrescription, sortBy, sortDirection]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchMedicines(0);
   };
 
-  useEffect(() => {
-    fetchMedicines();
-  }, [category]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchMedicines();
+  const handleClearSearch = () => {
+    setQuery('');
+    setCategory('All Categories');
+    setDosageForm('All Forms');
+    setRequiresPrescription(undefined);
+    setSortBy('name');
+    setSortDirection('ASC');
   };
 
   const handleSelectMedicine = async (med: Medicine) => {
+    setLoadingDetail(true);
     try {
-      const detail = await medicineService.getMedicineById(med.id);
+      const [detail, offers] = await Promise.all([
+        medicineService.getMedicineById(med.id),
+        medicineService.getMedicineOffers(med.id).catch(() => [])
+      ]);
       setSelectedMedicine(detail);
-      const offers = await medicineService.getMedicineOffers(med.id);
       setSelectedOffers(offers);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load medicine details', err);
+    } finally {
+      setLoadingDetail(false);
     }
   };
 
   return (
-    <div>
-      {/* Header & Search Bar */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
-          Medicine Discovery & Store
-        </h1>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-          Search trusted medicines, compare online pharmacy prices, and verify manufacturer formulations.
+    <div style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '3rem' }}>
+      {/* Header & Title */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>💊</span>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+            Medicine Catalogue & Discovery
+          </h1>
+        </div>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0 }}>
+          Search trusted pharmaceutical medicines, verify salt formulations, and compare prices across top licensed online pharmacies.
         </p>
-
-        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <input
-            type="text"
-            className="form-input"
-            style={{ flex: '1 1 300px' }}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by medicine name, generic salt (e.g. Paracetamol), brand..."
-          />
-          <select
-            className="form-select"
-            style={{ width: 'auto', minWidth: '200px' }}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {MEDICINE_CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-          <button type="submit" className="btn btn-primary">
-            Search
-          </button>
-        </form>
       </div>
 
-      {/* Main Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: selectedMedicine ? '1fr 420px' : '1fr', gap: '2rem' }}>
+      {/* Featured / Quick Highlights Banner (when not actively searching) */}
+      {!query && category === 'All Categories' && featuredMedicines.length > 0 && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(15, 118, 110, 0.08) 0%, rgba(37, 99, 235, 0.06) 100%)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-lg, 12px)',
+          padding: '1.25rem',
+          marginBottom: '1.5rem'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              🌟 Commonly Searched Medications
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Verified formulations</span>
+          </div>
+          <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+            {featuredMedicines.slice(0, 6).map(feat => (
+              <button
+                key={feat.id}
+                onClick={() => handleSelectMedicine(feat)}
+                style={{
+                  flex: '0 0 auto',
+                  background: 'var(--card-bg, #ffffff)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md, 8px)',
+                  padding: '0.5rem 0.875rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+              >
+                <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>{feat.name}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{feat.genericName}</div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--success, #16a34a)', marginTop: '0.25rem' }}>
+                  ₹{(feat.lowestPrice || feat.mrp).toFixed(2)}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Search Bar & Primary Controls */}
+      <Card style={{ marginBottom: '1.5rem', padding: '1.25rem' }}>
+        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1 1 350px', position: 'relative' }}>
+              <input
+                type="text"
+                className="form-input"
+                style={{ width: '100%', paddingLeft: '2.5rem' }}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by brand name (e.g. Dolo, Augmentin), generic salt, composition..."
+              />
+              <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
+                🔍
+              </span>
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-muted)',
+                    fontSize: '1rem'
+                  }}
+                  title="Clear query"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ minWidth: '100px' }}>
+              Search
+            </button>
+            {(query || category !== 'All Categories' || dosageForm !== 'All Forms' || requiresPrescription !== undefined) && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleClearSearch}
+              >
+                Reset
+              </button>
+            )}
+          </div>
+
+          {/* Quick Filter Bar */}
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>Category:</label>
+              <select
+                className="form-select"
+                style={{ width: 'auto', minWidth: '180px', fontSize: '0.8125rem', padding: '0.375rem 0.75rem' }}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {categoriesList.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+
+            {dosageFormsList.length > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>Form:</label>
+                <select
+                  className="form-select"
+                  style={{ width: 'auto', minWidth: '130px', fontSize: '0.8125rem', padding: '0.375rem 0.75rem' }}
+                  value={dosageForm}
+                  onChange={(e) => setDosageForm(e.target.value)}
+                >
+                  {dosageFormsList.map(form => (
+                    <option key={form} value={form}>{form}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>Sort:</label>
+              <select
+                className="form-select"
+                style={{ width: 'auto', minWidth: '140px', fontSize: '0.8125rem', padding: '0.375rem 0.75rem' }}
+                value={`${sortBy}-${sortDirection}`}
+                onChange={(e) => {
+                  const [sb, sd] = e.target.value.split('-');
+                  setSortBy(sb);
+                  setSortDirection(sd as 'ASC' | 'DESC');
+                }}
+              >
+                <option value="name-ASC">Name (A → Z)</option>
+                <option value="name-DESC">Name (Z → A)</option>
+                <option value="price-ASC">Price: Low to High</option>
+                <option value="price-DESC">Price: High to Low</option>
+              </select>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
+              <label style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.375rem', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={requiresPrescription === false}
+                  onChange={(e) => setRequiresPrescription(e.target.checked ? false : undefined)}
+                />
+                OTC Only (No Rx)
+              </label>
+            </div>
+          </div>
+        </form>
+      </Card>
+
+      {/* Main Grid: Catalogue Cards & Sidebar Detail */}
+      <div style={{ display: 'grid', gridTemplateColumns: selectedMedicine ? '1fr 440px' : '1fr', gap: '1.5rem', alignItems: 'start' }}>
+        {/* Left / Main Column: Medicine Cards */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-              Showing {medicines.length} of {totalElements} medicines
+              {loading ? 'Searching catalogue...' : `Showing ${medicines.length} of ${totalElements} medicines`}
             </div>
+            {category !== 'All Categories' && (
+              <span className="badge badge-primary">{category}</span>
+            )}
           </div>
 
-          {loading ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Loading medicine catalogue...
+          {/* Loading State */}
+          {loading && (
+            <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏳</div>
+              <div style={{ fontWeight: 600 }}>Loading medicine catalogue...</div>
+              <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>Comparing verified pharmaceutical pricing</div>
             </div>
-          ) : medicines.length === 0 ? (
+          )}
+
+          {/* Error State */}
+          {!loading && error && (
             <Card>
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <p style={{ color: 'var(--text-muted)' }}>No medicines found matching your search criteria.</p>
+              <div style={{ textAlign: 'center', padding: '2.5rem' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⚠️</div>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--danger, #ef4444)', marginBottom: '0.5rem' }}>
+                  Unable to Load Medicines
+                </h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>{error}</p>
+                <button className="btn btn-primary" onClick={() => fetchMedicines(page)}>
+                  🔄 Retry Request
+                </button>
               </div>
             </Card>
-          ) : (
-            <div className="grid grid-cols-3">
-              {medicines.map(med => (
-                <div
-                  key={med.id}
-                  className="card"
-                  onClick={() => handleSelectMedicine(med)}
-                  style={{
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    borderColor: selectedMedicine?.id === med.id ? 'var(--primary)' : 'var(--border)',
-                    boxShadow: selectedMedicine?.id === med.id ? '0 0 0 2px var(--primary-light)' : undefined
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                      <span className="badge badge-primary">{med.category}</span>
-                      {med.requiresPrescription && (
-                        <span className="badge badge-warning" title="Prescription Required (Rx)">Rx</span>
-                      )}
-                    </div>
-                    <h3 style={{ fontSize: '1.0625rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
-                      {med.name}
-                    </h3>
-                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-                      {med.genericName} {med.strength ? `• ${med.strength}` : ''}
-                    </p>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginBottom: '0.75rem' }}>
-                      By {med.manufacturerName || 'Verified Manufacturer'} • {med.packSize || 'Standard Pack'}
-                    </div>
-                  </div>
+          )}
 
-                  <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Best Online Price</div>
-                      <div style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--success)' }}>
-                        ₹{med.lowestPrice ? med.lowestPrice.toFixed(2) : med.mrp.toFixed(2)}
+          {/* Empty State */}
+          {!loading && !error && medicines.length === 0 && (
+            <Card>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                  No matching medicines found
+                </h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '420px', margin: '0 auto 1.5rem auto' }}>
+                  We couldn't find any medications matching "<strong>{query}</strong>" with the selected filters.
+                </p>
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                  <button className="btn btn-secondary" onClick={handleClearSearch}>
+                    Clear All Filters
+                  </button>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Medicine Card Grid */}
+          {!loading && !error && medicines.length > 0 && (
+            <>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '1.25rem',
+                marginBottom: '1.5rem'
+              }}>
+                {medicines.map(med => {
+                  const isSelected = selectedMedicine?.id === med.id;
+                  const discountPercent = med.lowestPrice && med.mrp > med.lowestPrice
+                    ? Math.round(((med.mrp - med.lowestPrice) / med.mrp) * 100)
+                    : 0;
+
+                  return (
+                    <div
+                      key={med.id}
+                      className="card"
+                      onClick={() => handleSelectMedicine(med)}
+                      style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        padding: '1.25rem',
+                        borderRadius: 'var(--radius-lg, 10px)',
+                        border: isSelected ? '2px solid var(--primary)' : '1px solid var(--border)',
+                        background: isSelected ? 'rgba(15, 118, 110, 0.03)' : 'var(--card-bg, #ffffff)',
+                        boxShadow: isSelected ? '0 0 0 3px rgba(15, 118, 110, 0.15)' : '0 1px 3px rgba(0,0,0,0.05)',
+                        transition: 'all 0.2s ease',
+                        position: 'relative'
+                      }}
+                      onMouseEnter={e => {
+                        if (!isSelected) e.currentTarget.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseLeave={e => {
+                        if (!isSelected) e.currentTarget.style.transform = 'none';
+                      }}
+                    >
+                      <div>
+                        {/* Top Meta Badges */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
+                          <span className="badge badge-primary" style={{ fontSize: '0.6875rem' }}>{med.category}</span>
+                          <div style={{ display: 'flex', gap: '0.25rem' }}>
+                            {med.dosageForm && (
+                              <span className="badge badge-secondary" style={{ fontSize: '0.6875rem' }}>{med.dosageForm}</span>
+                            )}
+                            {med.requiresPrescription ? (
+                              <span className="badge badge-warning" title="Prescription Required (Rx)" style={{ fontSize: '0.6875rem', fontWeight: 800 }}>Rx</span>
+                            ) : (
+                              <span className="badge badge-success" title="Over The Counter (OTC)" style={{ fontSize: '0.6875rem' }}>OTC</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Medicine Name & Brand */}
+                        <h3 style={{ fontSize: '1.0625rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem', lineHeight: 1.3 }}>
+                          {med.name}
+                        </h3>
+                        <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 500 }}>
+                          {med.genericName} {med.strength ? `• ${med.strength}` : ''}
+                        </p>
+
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginBottom: '0.875rem' }}>
+                          By {med.manufacturerName || 'Verified Pharmaceutical'} • {med.packSize || 'Standard Pack'}
+                        </div>
+                      </div>
+
+                      {/* Price Section */}
+                      <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.75rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                          <div>
+                            <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
+                              MRP <span style={{ textDecoration: med.lowestPrice && med.lowestPrice < med.mrp ? 'line-through' : 'none' }}>₹{med.mrp.toFixed(2)}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.375rem' }}>
+                              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--success, #16a34a)' }}>
+                                ₹{(med.lowestPrice || med.mrp).toFixed(2)}
+                              </span>
+                              {discountPercent > 0 && (
+                                <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--primary)', background: 'rgba(15, 118, 110, 0.1)', padding: '0.125rem 0.375rem', borderRadius: '4px' }}>
+                                  {discountPercent}% OFF
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <span style={{ fontSize: '0.8125rem', color: 'var(--primary)', fontWeight: 700 }}>
+                            {isSelected ? 'Viewing Details ✓' : 'View Offers →'}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700 }}>
-                      Compare Offers →
-                    </span>
-                  </div>
+                  );
+                })}
+              </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled={page === 0}
+                    onClick={() => fetchMedicines(page - 1)}
+                  >
+                    ← Previous
+                  </button>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)', padding: '0 0.5rem' }}>
+                    Page {page + 1} of {totalPages}
+                  </span>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled={page >= totalPages - 1}
+                    onClick={() => fetchMedicines(page + 1)}
+                  >
+                    Next →
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
 
-        {/* Selected Medicine Detail Sidebar */}
+        {/* Right Column: Selected Medicine Details & Retailer Price Provenance */}
         {selectedMedicine && (
-          <div>
+          <div style={{ position: 'sticky', top: '1rem' }}>
             <Card
               title={selectedMedicine.name}
               subtitle={selectedMedicine.genericName}
               headerAction={
                 <button
                   onClick={() => setSelectedMedicine(null)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.25rem', color: 'var(--text-muted)' }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '1.25rem',
+                    color: 'var(--text-muted)',
+                    padding: '0.25rem'
+                  }}
+                  title="Close sidebar"
                 >
                   ✕
                 </button>
               }
             >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <span className="badge badge-primary">{selectedMedicine.category}</span>
-                  <span className="badge badge-secondary">{selectedMedicine.dosageForm}</span>
-                  {selectedMedicine.requiresPrescription && (
-                    <span className="badge badge-warning">Prescription Required (Rx)</span>
-                  )}
+              {loadingDetail ? (
+                <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  Loading details...
                 </div>
-
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Formulation & Strength
-                  </div>
-                  <div style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                    {selectedMedicine.composition || selectedMedicine.genericName} ({selectedMedicine.strength})
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Indications / Usage
-                  </div>
-                  <div style={{ fontSize: '0.875rem', marginTop: '0.25rem', color: 'var(--text-main)' }}>
-                    {selectedMedicine.indications || 'Used as prescribed by physician.'}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Precautions & Storage
-                  </div>
-                  <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem', color: 'var(--text-muted)' }}>
-                    {selectedMedicine.precautions} | {selectedMedicine.storageInstructions}
-                  </div>
-                </div>
-
-                {/* Verified Retailer Price Comparison */}
-                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-main)' }}>
-                    🛒 Verified Online Retailer Quotes
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.125rem' }}>
+                  {/* Tags */}
+                  <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+                    <span className="badge badge-primary">{selectedMedicine.category}</span>
+                    <span className="badge badge-secondary">{selectedMedicine.dosageForm}</span>
+                    {selectedMedicine.requiresPrescription ? (
+                      <span className="badge badge-warning">Prescription Required (Rx)</span>
+                    ) : (
+                      <span className="badge badge-success">Over The Counter (OTC)</span>
+                    )}
                   </div>
 
-                  {selectedOffers.length === 0 ? (
-                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                      No verified partner pricing offers indexed currently for this medicine.
+                  {/* Manufacturer & Formulation */}
+                  <div>
+                    <div style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Manufacturer & Composition
                     </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      {selectedOffers.map(offer => (
-                        <div
-                          key={offer.id}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '0.625rem 0.875rem',
-                            borderRadius: 'var(--radius-md)',
-                            background: 'var(--border-light)',
-                            border: '1px solid var(--border)'
-                          }}
-                        >
-                          <div>
-                            <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>{offer.retailerName}</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                              ⭐ {offer.retailerRating} • {offer.deliveryEstimateDays} day delivery
-                            </div>
-                          </div>
-                          <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontWeight: 800, color: 'var(--success)', fontSize: '1rem' }}>
-                              ₹{offer.sellingPrice.toFixed(2)}
-                            </div>
-                            <a
-                              href={offer.productUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn btn-primary btn-sm"
-                              style={{ marginTop: '0.25rem', padding: '0.25rem 0.5rem', fontSize: '0.6875rem' }}
+                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                      {selectedMedicine.manufacturer?.name || 'Verified Manufacturer'}
+                      {selectedMedicine.manufacturer?.isVerified && (
+                        <span style={{ color: 'var(--primary)', marginLeft: '0.25rem' }}>✓ Verified</span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.125rem' }}>
+                      {selectedMedicine.composition || `${selectedMedicine.genericName} (${selectedMedicine.strength})`}
+                    </div>
+                  </div>
+
+                  {/* Indications / Clinical Usage */}
+                  <div>
+                    <div style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Indications & Therapeutic Use
+                    </div>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-main)', marginTop: '0.25rem', lineHeight: 1.4 }}>
+                      {selectedMedicine.indications || 'Take as advised by your medical practitioner.'}
+                    </div>
+                  </div>
+
+                  {/* Precautions & Storage */}
+                  <div>
+                    <div style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Precautions & Storage
+                    </div>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.25rem', lineHeight: 1.4 }}>
+                      {selectedMedicine.precautions}
+                    </div>
+                    {selectedMedicine.storageInstructions && (
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                        📦 {selectedMedicine.storageInstructions}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Verified Retailer Quotes & Offers */}
+                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                        🛒 Verified Online Pharmacy Prices
+                      </div>
+                      <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>MRP ₹{selectedMedicine.mrp.toFixed(2)}</span>
+                    </div>
+
+                    {selectedOffers.length === 0 ? (
+                      <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', padding: '0.75rem', background: 'var(--border-light)', borderRadius: '6px', textAlign: 'center' }}>
+                        No direct partner offers currently indexed for this specific medicine.
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+                        {selectedOffers.map(offer => {
+                          const savings = selectedMedicine.mrp - offer.sellingPrice;
+                          return (
+                            <div
+                              key={offer.id}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '0.75rem',
+                                borderRadius: 'var(--radius-md, 8px)',
+                                background: 'var(--border-light, #f8fafc)',
+                                border: '1px solid var(--border)'
+                              }}
                             >
-                              Buy on Retailer ↗
-                            </a>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                              <div>
+                                <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-main)' }}>
+                                  {offer.retailerName}
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                  ⭐ {offer.retailerRating} • {offer.deliveryEstimateDays} day delivery
+                                </div>
+                                {savings > 0 && (
+                                  <div style={{ fontSize: '0.6875rem', color: 'var(--success, #16a34a)', fontWeight: 600, marginTop: '0.125rem' }}>
+                                    Save ₹{savings.toFixed(2)} ({offer.discountPercent}% off)
+                                  </div>
+                                )}
+                              </div>
+                              <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontWeight: 800, color: 'var(--success, #16a34a)', fontSize: '1.0625rem' }}>
+                                  ₹{offer.sellingPrice.toFixed(2)}
+                                </div>
+                                <a
+                                  href={offer.productUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn btn-primary btn-sm"
+                                  style={{ marginTop: '0.25rem', padding: '0.25rem 0.5rem', fontSize: '0.6875rem' }}
+                                >
+                                  Visit Retailer ↗
+                                </a>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </Card>
           </div>
         )}
