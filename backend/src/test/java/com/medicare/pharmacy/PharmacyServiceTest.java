@@ -124,6 +124,26 @@ class PharmacyServiceTest {
     }
 
     @Test
+    @DisplayName("Should compute distance when coordinates are supplied in search filter")
+    void testSearchPharmacies_WithCoordinates() {
+        PharmacySearchFilter filter = new PharmacySearchFilter();
+        filter.setQuery("Apollo");
+        filter.setLatitude(12.9716);
+        filter.setLongitude(77.6410);
+
+        Page<Pharmacy> page = new PageImpl<>(Collections.singletonList(p1));
+        when(pharmacyRepository.searchPharmacies(eq("Apollo"), eq(null), eq(null), eq(null), any(Pageable.class)))
+                .thenReturn(page);
+
+        PagedResponse<PharmacyDto> response = pharmacyService.searchPharmacies(filter);
+
+        assertNotNull(response);
+        assertEquals(1, response.getContent().size());
+        assertNotNull(response.getContent().get(0).getDistanceInKm());
+        assertTrue(response.getContent().get(0).getDistanceInKm() < 1.0);
+    }
+
+    @Test
     @DisplayName("Should calculate proximity distance and sort by closest store")
     void testGetNearbyPharmacies_SortingAndRadius() {
         when(pharmacyRepository.findAll()).thenReturn(Arrays.asList(p1, p2));
