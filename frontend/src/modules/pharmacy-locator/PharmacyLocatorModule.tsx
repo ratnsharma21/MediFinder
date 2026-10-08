@@ -39,6 +39,8 @@ export const PharmacyLocatorModule: React.FC = () => {
         city: city.trim() || undefined,
         postalCode: postalCode.trim() || undefined,
         is24Hours: is24HoursOnly ? true : undefined,
+        latitude: userLocation?.latitude,
+        longitude: userLocation?.longitude,
         size: 30
       });
       setPharmacies(res.content || []);
