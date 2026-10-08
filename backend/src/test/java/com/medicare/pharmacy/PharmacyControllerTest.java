@@ -86,4 +86,48 @@ class PharmacyControllerTest {
                 .andExpect(jsonPath("$.data", hasSize(1)))
                 .andExpect(jsonPath("$.data[0].distanceInKm", notNullValue()));
     }
+
+    @Test
+    void testGetNearbyPharmacies_InvalidLatitude() throws Exception {
+        mockMvc.perform(get("/api/pharmacies/nearby")
+                        .param("latitude", "95.0")
+                        .param("longitude", "77.6410")
+                        .param("radiusInKm", "5.0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("Bad Request")))
+                .andExpect(jsonPath("$.message", containsString("Latitude must be between -90.0 and 90.0 degrees")));
+    }
+
+    @Test
+    void testGetNearbyPharmacies_InvalidLongitude() throws Exception {
+        mockMvc.perform(get("/api/pharmacies/nearby")
+                        .param("latitude", "12.9716")
+                        .param("longitude", "200.0")
+                        .param("radiusInKm", "5.0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("Bad Request")))
+                .andExpect(jsonPath("$.message", containsString("Longitude must be between -180.0 and 180.0 degrees")));
+    }
+
+    @Test
+    void testGetNearbyPharmacies_InvalidRadius() throws Exception {
+        mockMvc.perform(get("/api/pharmacies/nearby")
+                        .param("latitude", "12.9716")
+                        .param("longitude", "77.6410")
+                        .param("radiusInKm", "-1.0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("Bad Request")))
+                .andExpect(jsonPath("$.message", containsString("Radius must be greater than 0 and cannot exceed 500.0 kilometers")));
+    }
+
+    @Test
+    void testGetNearbyPharmacies_EmptyWhenOutOfRadius() throws Exception {
+        mockMvc.perform(get("/api/pharmacies/nearby")
+                        .param("latitude", "19.0760")
+                        .param("longitude", "72.8777")
+                        .param("radiusInKm", "1.0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data", hasSize(0)));
+    }
 }

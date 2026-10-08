@@ -1,5 +1,6 @@
 package com.medicare.pharmacy;
 
+import com.medicare.common.exception.BadRequestException;
 import com.medicare.common.exception.ResourceNotFoundException;
 import com.medicare.common.response.PagedResponse;
 import com.medicare.pharmacy.dto.PharmacyDto;
@@ -153,5 +154,25 @@ class PharmacyServiceTest {
         assertNotNull(nearby);
         assertEquals(1, nearby.size());
         assertEquals("Apollo Pharmacy - Indiranagar 24x7", nearby.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequestException when coordinates are outside valid bounds")
+    void testGetNearbyPharmacies_InvalidCoordinates() {
+        assertThrows(BadRequestException.class, () ->
+                pharmacyService.getNearbyPharmacies(95.0, 77.0, 10.0));
+        assertThrows(BadRequestException.class, () ->
+                pharmacyService.getNearbyPharmacies(12.0, 190.0, 10.0));
+        assertThrows(BadRequestException.class, () ->
+                pharmacyService.getNearbyPharmacies(null, 77.0, 10.0));
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequestException when radius is negative or excessively large")
+    void testGetNearbyPharmacies_InvalidRadius() {
+        assertThrows(BadRequestException.class, () ->
+                pharmacyService.getNearbyPharmacies(12.9716, 77.6410, -5.0));
+        assertThrows(BadRequestException.class, () ->
+                pharmacyService.getNearbyPharmacies(12.9716, 77.6410, 600.0));
     }
 }
