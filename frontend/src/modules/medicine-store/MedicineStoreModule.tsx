@@ -432,12 +432,41 @@ export const MedicineStoreModule: React.FC = () => {
             </div>
           </div>
 
-          {/* Loading State */}
+          {/* Loading Skeleton Placeholders */}
           {loading && (
-            <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏳</div>
-              <div style={{ fontWeight: 600 }}>Searching medicine catalogue...</div>
-              <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>Comparing verified pharmaceutical pricing</div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '1.25rem',
+              marginBottom: '1.5rem'
+            }}>
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div
+                  key={i}
+                  className="card"
+                  style={{
+                    padding: '1.25rem',
+                    borderRadius: 'var(--radius-lg, 10px)',
+                    border: '1px solid var(--border-light)',
+                    background: 'var(--card-bg, #ffffff)',
+                    minHeight: '180px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    opacity: 0.6
+                  }}
+                >
+                  <div>
+                    <div style={{ height: '18px', width: '40%', background: 'var(--border-light)', borderRadius: '4px', marginBottom: '0.75rem' }} />
+                    <div style={{ height: '20px', width: '75%', background: 'var(--border-light)', borderRadius: '4px', marginBottom: '0.5rem' }} />
+                    <div style={{ height: '14px', width: '90%', background: 'var(--border-light)', borderRadius: '4px' }} />
+                  </div>
+                  <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ height: '24px', width: '30%', background: 'var(--border-light)', borderRadius: '4px' }} />
+                    <div style={{ height: '18px', width: '25%', background: 'var(--border-light)', borderRadius: '4px' }} />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
