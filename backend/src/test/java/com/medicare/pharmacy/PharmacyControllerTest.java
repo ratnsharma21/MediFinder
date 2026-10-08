@@ -65,6 +65,32 @@ class PharmacyControllerTest {
     }
 
     @Test
+    void testGetPharmacies_WithCoordinatesCalculatesDistance() throws Exception {
+        mockMvc.perform(get("/api/pharmacies")
+                        .param("latitude", "12.9716")
+                        .param("longitude", "77.6410"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data.content[0].distanceInKm", notNullValue()));
+    }
+
+    @Test
+    void testGetPharmacies_InvalidPaginationNegativePage() throws Exception {
+        mockMvc.perform(get("/api/pharmacies")
+                        .param("page", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Page index cannot be negative")));
+    }
+
+    @Test
+    void testGetPharmacies_InvalidPaginationExcessiveSize() throws Exception {
+        mockMvc.perform(get("/api/pharmacies")
+                        .param("size", "250"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Page size must be between 1 and 100")));
+    }
+
+    @Test
     void testGetPharmacyById() throws Exception {
         mockMvc.perform(get("/api/pharmacies/" + testPharmacy.getId()))
                 .andExpect(status().isOk())
