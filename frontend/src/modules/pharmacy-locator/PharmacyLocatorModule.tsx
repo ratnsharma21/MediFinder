@@ -10,6 +10,9 @@ import { Pharmacy } from '../../types';
 import { pharmacyService } from '../../services/pharmacyService';
 import { PharmacyCard } from './PharmacyCard';
 import { PharmacyDetailModal } from './PharmacyDetailModal';
+import { PharmacyMap } from './PharmacyMap';
+
+type ViewMode = 'split' | 'list' | 'map';
 
 export const PharmacyLocatorModule: React.FC = () => {
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
@@ -19,6 +22,8 @@ export const PharmacyLocatorModule: React.FC = () => {
   const [postalCode, setPostalCode] = useState('');
   const [is24HoursOnly, setIs24HoursOnly] = useState(false);
   const [radiusInKm, setRadiusInKm] = useState(10.0);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('split');
   const [loading, setLoading] = useState(false);
   const [locatingUser, setLocatingUser] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -62,6 +67,7 @@ export const PharmacyLocatorModule: React.FC = () => {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
           setLocationStatus(`Found location (${latitude.toFixed(3)}, ${longitude.toFixed(3)}). Searching nearby...`);
           const nearby = await pharmacyService.getNearbyPharmacies(latitude, longitude, radiusInKm);
           
@@ -104,6 +110,14 @@ export const PharmacyLocatorModule: React.FC = () => {
   const handleOpenGoogleMaps = (pharmacy: Pharmacy) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleSelectPharmacy = (pharmacy: Pharmacy) => {
+    setSelectedPharmacy(pharmacy);
+    const element = document.getElementById(`pharmacy-card-${pharmacy.id}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   };
 
   return (
@@ -202,70 +216,108 @@ export const PharmacyLocatorModule: React.FC = () => {
         </div>
       )}
 
+      {/* View Switcher Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+          Showing <strong>{pharmacies.length}</strong> licensed medical stores {userLocation ? 'near your location' : ''}
+        </div>
+
+        <div style={{ display: 'inline-flex', gap: '0.375rem', background: 'var(--border-light)', padding: '0.25rem', borderRadius: 'var(--radius-md)' }}>
+          <button
+            type="button"
+            className={`view-toggle-btn ${viewMode === 'split' ? 'active' : ''}`}
+            onClick={() => setViewMode('split')}
+          >
+            🔲 Split Map & List
+          </button>
+          <button
+            type="button"
+            className={`view-toggle-btn ${viewMode === 'map' ? 'active' : ''}`}
+            onClick={() => setViewMode('map')}
+          >
+            🗺️ Map Only
+          </button>
+          <button
+            type="button"
+            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setViewMode('list')}
+          >
+            📋 List Only
+          </button>
+        </div>
+      </div>
+
+      {/* Interactive Map Component (rendered in split or map mode) */}
+      {viewMode !== 'list' && (
+        <PharmacyMap
+          pharmacies={pharmacies}
+          selectedPharmacy={selectedPharmacy}
+          userLocation={userLocation}
+          onSelectPharmacy={handleSelectPharmacy}
+          onOpenDirections={handleOpenGoogleMaps}
+        />
+      )}
+
       {/* Content Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: selectedPharmacy ? '1fr 380px' : '1fr', gap: '2rem' }}>
-        {/* Pharmacy Card Grid */}
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-              Showing <strong>{pharmacies.length}</strong> licensed medical stores
-            </div>
+      {viewMode !== 'map' && (
+        <div style={{ display: 'grid', gridTemplateColumns: selectedPharmacy ? '1fr 380px' : '1fr', gap: '2rem' }}>
+          {/* Pharmacy Card Grid */}
+          <div>
+            {loading ? (
+              <div className="grid grid-cols-3">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="card skeleton-box" style={{ height: '220px' }}></div>
+                ))}
+              </div>
+            ) : pharmacies.length === 0 ? (
+              <Card>
+                <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏥</div>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>No pharmacies found</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '420px', margin: '0 auto 1.5rem' }}>
+                    We couldn't find any medical stores matching your search filters. Try clearing your search parameters or expanding your radius.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setCity('');
+                      setPostalCode('');
+                      setIs24HoursOnly(false);
+                    }}
+                  >
+                    Reset All Filters
+                  </button>
+                </div>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-3">
+                {pharmacies.map((pharmacy) => (
+                  <PharmacyCard
+                    key={pharmacy.id}
+                    pharmacy={pharmacy}
+                    isSelected={selectedPharmacy?.id === pharmacy.id}
+                    onSelect={handleSelectPharmacy}
+                    onViewDirections={handleOpenGoogleMaps}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-3">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="card skeleton-box" style={{ height: '220px' }}></div>
-              ))}
-            </div>
-          ) : pharmacies.length === 0 ? (
-            <Card>
-              <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏥</div>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>No pharmacies found</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '420px', margin: '0 auto 1.5rem' }}>
-                  We couldn't find any medical stores matching your search filters. Try clearing your search parameters or expanding your radius.
-                </p>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setCity('');
-                    setPostalCode('');
-                    setIs24HoursOnly(false);
-                  }}
-                >
-                  Reset All Filters
-                </button>
-              </div>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-3">
-              {pharmacies.map((pharmacy) => (
-                <PharmacyCard
-                  key={pharmacy.id}
-                  pharmacy={pharmacy}
-                  isSelected={selectedPharmacy?.id === pharmacy.id}
-                  onSelect={(p) => setSelectedPharmacy(p)}
-                  onViewDirections={handleOpenGoogleMaps}
-                />
-              ))}
+          {/* Pharmacy Details Drawer */}
+          {selectedPharmacy && (
+            <div>
+              <PharmacyDetailModal
+                pharmacy={selectedPharmacy}
+                onClose={() => setSelectedPharmacy(null)}
+                onNavigateGoogleMaps={handleOpenGoogleMaps}
+              />
             </div>
           )}
         </div>
-
-        {/* Pharmacy Details Drawer */}
-        {selectedPharmacy && (
-          <div>
-            <PharmacyDetailModal
-              pharmacy={selectedPharmacy}
-              onClose={() => setSelectedPharmacy(null)}
-              onNavigateGoogleMaps={handleOpenGoogleMaps}
-            />
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };
