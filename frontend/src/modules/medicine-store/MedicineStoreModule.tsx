@@ -37,8 +37,11 @@ export const MedicineStoreModule: React.FC = () => {
   const [dosageFormsList, setDosageFormsList] = useState<string[]>([]);
   const [categoriesList, setCategoriesList] = useState<string[]>(MEDICINE_CATEGORIES);
   const [requiresPrescription, setRequiresPrescription] = useState<boolean | undefined>(undefined);
+  const [minPrice, setMinPrice] = useState<string>('');
+  const [maxPrice, setMaxPrice] = useState<string>('');
   const [sortBy, setSortBy] = useState('name');
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
+  const [pageSize, setPageSize] = useState<number>(9);
 
   // Pagination & Status States
   const [page, setPage] = useState(0);
@@ -88,15 +91,20 @@ export const MedicineStoreModule: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
+      const minP = minPrice.trim() !== '' ? Number(minPrice) : undefined;
+      const maxP = maxPrice.trim() !== '' ? Number(maxPrice) : undefined;
+
       const data = await medicineService.getMedicines({
         query: debouncedQuery.trim() || undefined,
         category: category !== 'All Categories' ? category : undefined,
         dosageForm: dosageForm !== 'All Forms' ? dosageForm : undefined,
         requiresPrescription: requiresPrescription,
+        minPrice: minP,
+        maxPrice: maxP,
         sortBy: sortBy,
         sortDirection: sortDirection,
         page: pageNumber,
-        size: 9
+        size: pageSize
       });
       setMedicines(data.content || []);
       setTotalElements(data.totalElements || 0);
@@ -108,7 +116,7 @@ export const MedicineStoreModule: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedQuery, category, dosageForm, requiresPrescription, sortBy, sortDirection]);
+  }, [debouncedQuery, category, dosageForm, requiresPrescription, minPrice, maxPrice, sortBy, sortDirection, pageSize]);
 
   // Refetch when filters or debounced query changes
   useEffect(() => {
@@ -118,7 +126,7 @@ export const MedicineStoreModule: React.FC = () => {
     } else {
       fetchMedicines(0);
     }
-  }, [debouncedQuery, category, dosageForm, requiresPrescription, sortBy, sortDirection]);
+  }, [debouncedQuery, category, dosageForm, requiresPrescription, sortBy, sortDirection, pageSize]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,6 +140,8 @@ export const MedicineStoreModule: React.FC = () => {
     setCategory('All Categories');
     setDosageForm('All Forms');
     setRequiresPrescription(undefined);
+    setMinPrice('');
+    setMaxPrice('');
     setSortBy('name');
     setSortDirection('ASC');
   };
@@ -156,6 +166,15 @@ export const MedicineStoreModule: React.FC = () => {
     setSelectedMedicine(med);
     setIsDetailModalOpen(true);
   };
+
+  const hasActiveFilters = Boolean(
+    query ||
+    category !== 'All Categories' ||
+    dosageForm !== 'All Forms' ||
+    requiresPrescription !== undefined ||
+    minPrice !== '' ||
+    maxPrice !== ''
+  );
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '3rem' }}>
@@ -258,13 +277,13 @@ export const MedicineStoreModule: React.FC = () => {
             <button type="submit" className="btn btn-primary" style={{ minWidth: '100px' }}>
               Search
             </button>
-            {(query || category !== 'All Categories' || dosageForm !== 'All Forms' || requiresPrescription !== undefined) && (
+            {hasActiveFilters && (
               <button
                 type="button"
                 className="btn btn-secondary"
                 onClick={handleClearSearch}
               >
-                Reset
+                Reset Filters
               </button>
             )}
           </div>
@@ -344,6 +363,36 @@ export const MedicineStoreModule: React.FC = () => {
               </select>
             </div>
 
+            {/* Price Bounds */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>₹:</span>
+              <input
+                type="number"
+                placeholder="Min"
+                className="form-input"
+                style={{ width: '70px', fontSize: '0.8125rem', padding: '0.375rem 0.5rem' }}
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+              <span style={{ color: 'var(--text-muted)' }}>-</span>
+              <input
+                type="number"
+                placeholder="Max"
+                className="form-input"
+                style={{ width: '70px', fontSize: '0.8125rem', padding: '0.375rem 0.5rem' }}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => fetchMedicines(0)}
+                style={{ padding: '0.375rem 0.5rem', fontSize: '0.75rem' }}
+              >
+                Apply
+              </button>
+            </div>
+
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
               <label style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.375rem', cursor: 'pointer' }}>
                 <input
@@ -351,7 +400,7 @@ export const MedicineStoreModule: React.FC = () => {
                   checked={requiresPrescription === false}
                   onChange={(e) => setRequiresPrescription(e.target.checked ? false : undefined)}
                 />
-                OTC Only (No Rx)
+                OTC Only
               </label>
             </div>
           </div>
@@ -366,9 +415,21 @@ export const MedicineStoreModule: React.FC = () => {
             <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)' }}>
               {loading ? 'Searching catalogue...' : `Showing ${medicines.length} of ${totalElements} medicines`}
             </div>
-            {category !== 'All Categories' && (
-              <span className="badge badge-primary">{category}</span>
-            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {category !== 'All Categories' && (
+                <span className="badge badge-primary">{category}</span>
+              )}
+              <select
+                className="form-select"
+                style={{ width: 'auto', fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+              >
+                <option value={9}>9 / page</option>
+                <option value={18}>18 / page</option>
+                <option value={27}>27 / page</option>
+              </select>
+            </div>
           </div>
 
           {/* Loading State */}
@@ -380,7 +441,7 @@ export const MedicineStoreModule: React.FC = () => {
             </div>
           )}
 
-          {/* Error State */}
+          {/* Error State with Retry Button */}
           {!loading && error && (
             <Card>
               <div style={{ textAlign: 'center', padding: '2.5rem' }}>
