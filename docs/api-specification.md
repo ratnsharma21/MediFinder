@@ -68,9 +68,28 @@ Authorization: Bearer <your_jwt_token>
 ### Pharmacies & Locator
 | Method | Endpoint | Auth Required | Description |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/pharmacies` | Public | Paginated pharmacy listing with city and postal code search |
-| `GET` | `/api/pharmacies/{id}` | Public | Pharmacy operating hours, license, contact details |
-| `GET` | `/api/pharmacies/nearby` | Public | Geolocation search calculating proximity in kilometers |
+| `GET` | `/api/pharmacies` | Public | Paginated pharmacy listing with keyword, city, PIN code search, and optional GPS distance calculation |
+| `GET` | `/api/pharmacies/{id}` | Public | Detailed pharmacy operating hours, license, contact details, rating, and coordinates |
+| `GET` | `/api/pharmacies/nearby` | Public | Geolocation nearby search calculating Haversine proximity distance in kilometers |
+
+#### `GET /api/pharmacies` Query Parameters
+| Parameter | Type | Required | Default | Validation & Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `query` | string | No | `null` | Substring search against store name, address, or city |
+| `city` | string | No | `null` | Exact case-insensitive city filter (e.g. `Bengaluru`) |
+| `postalCode` | string | No | `null` | Exact Indian postal PIN code (e.g. `560038`) |
+| `is24Hours` | boolean| No | `null` | Filter only 24x7 emergency medical counters |
+| `latitude` | number | No | `null` | User GPS latitude (-90.0 to 90.0) for distance enrichment |
+| `longitude`| number | No | `null` | User GPS longitude (-180.0 to 180.0) for distance enrichment |
+| `page` | integer| No | `0` | 0-indexed page number (`>= 0`) |
+| `size` | integer| No | `10` | Page size (`1` to `100`) |
+
+#### `GET /api/pharmacies/nearby` Query Parameters
+| Parameter | Type | Required | Default | Validation & Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `latitude` | number | **Yes** | — | User GPS latitude (-90.0 to 90.0 degrees) |
+| `longitude`| number | **Yes** | — | User GPS longitude (-180.0 to 180.0 degrees) |
+| `radiusInKm` | number | No | `10.0` | Proximity radius in kilometers (`> 0.0` and `<= 500.0`) |
 
 ### Medicine Reminders & Dose Tracking
 | Method | Endpoint | Auth Required | Description |

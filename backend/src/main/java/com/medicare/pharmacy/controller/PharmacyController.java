@@ -1,5 +1,6 @@
 package com.medicare.pharmacy.controller;
 
+import com.medicare.common.exception.BadRequestException;
 import com.medicare.common.response.ApiResponse;
 import com.medicare.common.response.PagedResponse;
 import com.medicare.pharmacy.dto.PharmacyDto;
@@ -35,16 +36,35 @@ public class PharmacyController {
             @RequestParam(required = false) String postalCode,
             @Parameter(description = "Filter by 24x7 emergency open status")
             @RequestParam(required = false) Boolean is24Hours,
+            @Parameter(description = "User GPS latitude (optional, for distance calculation)")
+            @RequestParam(required = false) Double latitude,
+            @Parameter(description = "User GPS longitude (optional, for distance calculation)")
+            @RequestParam(required = false) Double longitude,
             @Parameter(description = "Page number (0-indexed)")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size")
             @RequestParam(defaultValue = "10") int size) {
 
+        if (page < 0) {
+            throw new BadRequestException("Page index cannot be negative");
+        }
+        if (size <= 0 || size > 100) {
+            throw new BadRequestException("Page size must be between 1 and 100");
+        }
+        if (latitude != null && (latitude < -90.0 || latitude > 90.0)) {
+            throw new BadRequestException("Latitude must be between -90.0 and 90.0 degrees");
+        }
+        if (longitude != null && (longitude < -180.0 || longitude > 180.0)) {
+            throw new BadRequestException("Longitude must be between -180.0 and 180.0 degrees");
+        }
+
         PharmacySearchFilter filter = new PharmacySearchFilter();
-        filter.setQuery(query);
-        filter.setCity(city);
-        filter.setPostalCode(postalCode);
+        filter.setQuery(query != null ? query.trim() : null);
+        filter.setCity(city != null ? city.trim() : null);
+        filter.setPostalCode(postalCode != null ? postalCode.trim() : null);
         filter.setIs24Hours(is24Hours);
+        filter.setLatitude(latitude);
+        filter.setLongitude(longitude);
         filter.setPage(page);
         filter.setSize(size);
 
@@ -63,11 +83,27 @@ public class PharmacyController {
     @Operation(summary = "Find nearby pharmacies by GPS coordinates", description = "Calculates proximity distance using Haversine algorithm and returns pharmacies within the specified radius in kilometers")
     public ResponseEntity<ApiResponse<List<PharmacyDto>>> getNearbyPharmacies(
             @Parameter(description = "User GPS latitude (e.g. 12.9716)", required = true)
-            @RequestParam Double latitude,
+            @RequestParam(required = false) Double latitude,
             @Parameter(description = "User GPS longitude (e.g. 77.5946)", required = true)
-            @RequestParam Double longitude,
+            @RequestParam(required = false) Double longitude,
             @Parameter(description = "Radius in kilometers (defaults to 10.0 km)")
             @RequestParam(defaultValue = "10.0") Double radiusInKm) {
+
+        if (latitude == null) {
+            throw new BadRequestException("Latitude is required for nearby pharmacy search");
+        }
+        if (latitude < -90.0 || latitude > 90.0) {
+            throw new BadRequestException("Latitude must be between -90.0 and 90.0 degrees");
+        }
+        if (longitude == null) {
+            throw new BadRequestException("Longitude is required for nearby pharmacy search");
+        }
+        if (longitude < -180.0 || longitude > 180.0) {
+            throw new BadRequestException("Longitude must be between -180.0 and 180.0 degrees");
+        }
+        if (radiusInKm == null || radiusInKm <= 0.0 || radiusInKm > 500.0) {
+            throw new BadRequestException("Radius must be greater than 0 and cannot exceed 500.0 kilometers");
+        }
 
         List<PharmacyDto> nearby = pharmacyService.getNearbyPharmacies(latitude, longitude, radiusInKm);
         return ResponseEntity.ok(ApiResponse.success("Nearby pharmacies located successfully", nearby));

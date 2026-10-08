@@ -1,5 +1,6 @@
 package com.medicare.pharmacy.service;
 
+import com.medicare.common.exception.BadRequestException;
 import com.medicare.common.exception.ResourceNotFoundException;
 import com.medicare.common.response.PagedResponse;
 import com.medicare.pharmacy.dto.PharmacyDto;
@@ -28,7 +29,9 @@ public class PharmacyService {
 
     @Transactional(readOnly = true)
     public PagedResponse<PharmacyDto> searchPharmacies(PharmacySearchFilter filter) {
-        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(Sort.Direction.ASC, "name"));
+        int pageNumber = Math.max(0, filter.getPage());
+        int pageSize = (filter.getSize() <= 0) ? 10 : Math.min(filter.getSize(), 100);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name"));
 
         String query = (filter.getQuery() != null && !filter.getQuery().trim().isEmpty()) ? filter.getQuery().trim() : null;
         String city = (filter.getCity() != null && !filter.getCity().trim().isEmpty()) ? filter.getCity().trim() : null;
@@ -36,8 +39,22 @@ public class PharmacyService {
 
         Page<Pharmacy> page = pharmacyRepository.searchPharmacies(query, city, postalCode, filter.getIs24Hours(), pageable);
 
+        Double userLat = filter.getLatitude();
+        Double userLng = filter.getLongitude();
+
         List<PharmacyDto> dtos = page.getContent().stream()
-                .map(this::mapToPharmacyDto)
+                .map(pharmacy -> {
+                    PharmacyDto dto = mapToPharmacyDto(pharmacy);
+                    if (userLat != null && userLng != null && pharmacy.getLatitude() != null && pharmacy.getLongitude() != null) {
+                        double distance = calculateHaversineDistance(
+                                userLat, userLng,
+                                pharmacy.getLatitude().doubleValue(),
+                                pharmacy.getLongitude().doubleValue()
+                        );
+                        dto.setDistanceInKm(Math.round(distance * 100.0) / 100.0);
+                    }
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
         return new PagedResponse<>(
@@ -59,24 +76,33 @@ public class PharmacyService {
 
     @Transactional(readOnly = true)
     public List<PharmacyDto> getNearbyPharmacies(Double userLat, Double userLng, Double radiusInKm) {
-        double maxRadius = (radiusInKm != null && radiusInKm > 0) ? radiusInKm : 10.0;
+        if (userLat == null || userLat < -90.0 || userLat > 90.0) {
+            throw new BadRequestException("Latitude must be between -90.0 and 90.0 degrees");
+        }
+        if (userLng == null || userLng < -180.0 || userLng > 180.0) {
+            throw new BadRequestException("Longitude must be between -180.0 and 180.0 degrees");
+        }
+        if (radiusInKm == null || radiusInKm <= 0.0 || radiusInKm > 500.0) {
+            throw new BadRequestException("Radius must be greater than 0 and cannot exceed 500.0 kilometers");
+        }
+
+        double maxRadius = radiusInKm;
         List<Pharmacy> allPharmacies = pharmacyRepository.findAll();
 
         return allPharmacies.stream()
+                .filter(pharmacy -> pharmacy.getLatitude() != null && pharmacy.getLongitude() != null)
                 .map(pharmacy -> {
                     PharmacyDto dto = mapToPharmacyDto(pharmacy);
-                    if (userLat != null && userLng != null && pharmacy.getLatitude() != null && pharmacy.getLongitude() != null) {
-                        double distance = calculateHaversineDistance(
-                                userLat, userLng,
-                                pharmacy.getLatitude().doubleValue(),
-                                pharmacy.getLongitude().doubleValue()
-                        );
-                        dto.setDistanceInKm(Math.round(distance * 100.0) / 100.0);
-                    }
+                    double distance = calculateHaversineDistance(
+                            userLat, userLng,
+                            pharmacy.getLatitude().doubleValue(),
+                            pharmacy.getLongitude().doubleValue()
+                    );
+                    dto.setDistanceInKm(Math.round(distance * 100.0) / 100.0);
                     return dto;
                 })
-                .filter(dto -> dto.getDistanceInKm() == null || dto.getDistanceInKm() <= maxRadius)
-                .sorted(Comparator.comparing(dto -> dto.getDistanceInKm() != null ? dto.getDistanceInKm() : Double.MAX_VALUE))
+                .filter(dto -> dto.getDistanceInKm() != null && dto.getDistanceInKm() <= maxRadius)
+                .sorted(Comparator.comparing(PharmacyDto::getDistanceInKm))
                 .collect(Collectors.toList());
     }
 
@@ -98,6 +124,20 @@ public class PharmacyService {
         dto.setIs24Hours(pharmacy.isIs24Hours());
         dto.setVerified(pharmacy.isVerified());
         dto.setRating(pharmacy.getRating());
+
+        boolean open = false;
+        String hoursStr = "Hours Not Available";
+        if (pharmacy.isIs24Hours()) {
+            open = true;
+            hoursStr = "Open 24 Hours (Emergency)";
+        } else if (pharmacy.getOpeningTime() != null && pharmacy.getClosingTime() != null) {
+            java.time.LocalTime now = java.time.LocalTime.now(java.time.ZoneId.of("Asia/Kolkata"));
+            open = !now.isBefore(pharmacy.getOpeningTime()) && !now.isAfter(pharmacy.getClosingTime());
+            hoursStr = pharmacy.getOpeningTime() + " - " + pharmacy.getClosingTime();
+        }
+        dto.setOpenNow(open);
+        dto.setFormattedHours(hoursStr);
+
         return dto;
     }
 
@@ -105,7 +145,7 @@ public class PharmacyService {
      * Calculates great-circle distance between two points on the Earth surface using Haversine formula
      * @return Distance in kilometers
      */
-    private double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
+    public double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
         final int EARTH_RADIUS_KM = 6371;
 
         double dLat = Math.toRadians(lat2 - lat1);

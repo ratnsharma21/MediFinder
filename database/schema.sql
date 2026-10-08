@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- MediFinder / MediCare - Initial Database Schema (V1)
 -- Database Architecture & Schema Specification
 -- Author: Ratn (Backend Lead & Database Architect)
@@ -151,7 +151,10 @@ CREATE TABLE IF NOT EXISTS pharmacies (
     INDEX idx_pharmacies_city (city),
     INDEX idx_pharmacies_postal (postal_code),
     INDEX idx_pharmacies_lat_lng (latitude, longitude),
-    INDEX idx_pharmacies_24h (is_24_hours)
+    INDEX idx_pharmacies_24h (is_24_hours),
+    INDEX idx_pharmacies_name (name),
+    INDEX idx_pharmacies_verified (is_verified),
+    INDEX idx_pharmacies_city_24h (city, is_24_hours)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 9. Reminders Table
