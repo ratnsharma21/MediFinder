@@ -36,16 +36,35 @@ public class PharmacyController {
             @RequestParam(required = false) String postalCode,
             @Parameter(description = "Filter by 24x7 emergency open status")
             @RequestParam(required = false) Boolean is24Hours,
+            @Parameter(description = "User GPS latitude (optional, for distance calculation)")
+            @RequestParam(required = false) Double latitude,
+            @Parameter(description = "User GPS longitude (optional, for distance calculation)")
+            @RequestParam(required = false) Double longitude,
             @Parameter(description = "Page number (0-indexed)")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size")
             @RequestParam(defaultValue = "10") int size) {
 
+        if (page < 0) {
+            throw new BadRequestException("Page index cannot be negative");
+        }
+        if (size <= 0 || size > 100) {
+            throw new BadRequestException("Page size must be between 1 and 100");
+        }
+        if (latitude != null && (latitude < -90.0 || latitude > 90.0)) {
+            throw new BadRequestException("Latitude must be between -90.0 and 90.0 degrees");
+        }
+        if (longitude != null && (longitude < -180.0 || longitude > 180.0)) {
+            throw new BadRequestException("Longitude must be between -180.0 and 180.0 degrees");
+        }
+
         PharmacySearchFilter filter = new PharmacySearchFilter();
-        filter.setQuery(query);
-        filter.setCity(city);
-        filter.setPostalCode(postalCode);
+        filter.setQuery(query != null ? query.trim() : null);
+        filter.setCity(city != null ? city.trim() : null);
+        filter.setPostalCode(postalCode != null ? postalCode.trim() : null);
         filter.setIs24Hours(is24Hours);
+        filter.setLatitude(latitude);
+        filter.setLongitude(longitude);
         filter.setPage(page);
         filter.setSize(size);
 
