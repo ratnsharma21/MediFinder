@@ -1,4 +1,4 @@
-// ==============================================================================
+﻿// ==============================================================================
 // MediFinder / MediCare - Shared Frontend TypeScript Interfaces
 // Integration Contract for Members 1, 2, 3, 4, 5
 // ==============================================================================
@@ -128,6 +128,8 @@ export interface Pharmacy {
   verified: boolean;
   rating?: number;
   distanceInKm?: number;
+  openNow?: boolean;
+  formattedHours?: string;
 }
 
 export interface Reminder {

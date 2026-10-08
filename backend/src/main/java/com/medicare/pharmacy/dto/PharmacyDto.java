@@ -1,4 +1,4 @@
-package com.medicare.pharmacy.dto;
+﻿package com.medicare.pharmacy.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -21,6 +21,8 @@ public class PharmacyDto {
     private boolean verified;
     private BigDecimal rating;
     private Double distanceInKm;
+    private Boolean openNow;
+    private String formattedHours;
 
     public PharmacyDto() {}
 
@@ -158,5 +160,21 @@ public class PharmacyDto {
 
     public void setDistanceInKm(Double distanceInKm) {
         this.distanceInKm = distanceInKm;
+    }
+
+    public Boolean getOpenNow() {
+        return openNow;
+    }
+
+    public void setOpenNow(Boolean openNow) {
+        this.openNow = openNow;
+    }
+
+    public String getFormattedHours() {
+        return formattedHours;
+    }
+
+    public void setFormattedHours(String formattedHours) {
+        this.formattedHours = formattedHours;
     }
 }

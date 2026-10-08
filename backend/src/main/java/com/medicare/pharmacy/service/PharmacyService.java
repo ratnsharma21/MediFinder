@@ -1,4 +1,4 @@
-package com.medicare.pharmacy.service;
+﻿package com.medicare.pharmacy.service;
 
 import com.medicare.common.exception.ResourceNotFoundException;
 import com.medicare.common.response.PagedResponse;
@@ -97,7 +97,21 @@ public class PharmacyService {
         dto.setClosingTime(pharmacy.getClosingTime());
         dto.setIs24Hours(pharmacy.isIs24Hours());
         dto.setVerified(pharmacy.isVerified());
-        dto.setRating(pharmacy.getRating());
+                dto.setRating(pharmacy.getRating());
+
+        boolean open = false;
+        String hoursStr = "Hours Not Available";
+        if (pharmacy.isIs24Hours()) {
+            open = true;
+            hoursStr = "Open 24 Hours (Emergency)";
+        } else if (pharmacy.getOpeningTime() != null && pharmacy.getClosingTime() != null) {
+            java.time.LocalTime now = java.time.LocalTime.now(java.time.ZoneId.of("Asia/Kolkata"));
+            open = !now.isBefore(pharmacy.getOpeningTime()) && !now.isAfter(pharmacy.getClosingTime());
+            hoursStr = pharmacy.getOpeningTime() + " - " + pharmacy.getClosingTime();
+        }
+        dto.setOpenNow(open);
+        dto.setFormattedHours(hoursStr);
+
         return dto;
     }
 
