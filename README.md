@@ -1,152 +1,121 @@
 # MediFinder
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=320&color=0:020617,35:1e1b4b,70:0f766e,100:00f5d4&text=MEDIFINDER&fontAlignY=34&fontSize=68&fontColor=E0FFF9&desc=SYS.ONLINE%20%2F%2F%20search.locate.remind&descAlignY=54&descSize=16&animation=fadeIn&section=header" alt="MediFinder">
+  <img src="https://img.shields.io/badge/MediFinder-Medicine%20·%20Pharmacy%20·%20Reminders-0F766E?style=for-the-badge&labelColor=0F172A" alt="MediFinder">
+</p>
+
+<h3 align="center">Find the medicine. Reach the pharmacy. Stay on the dose.</h3>
+
+<p align="center">
+  MediFinder is a <strong>Java</strong> web application that brings medicine search, nearby pharmacy access, and personal medication follow-up into one signed-in workflow — including a PIN fallback when location is denied, and reminder behaviour that respects browser notification limits.
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=2800&pause=700&color=00F5D4&center=true&vCenter=true&width=820&lines=%3E+boot+medicine+discovery;>+route+around+denied+GPS;>+persist+doses+when+notifications+fail" alt="boot sequence">
-</p>
-
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│  MEDIFINDER   v.academic   ⟨ 06 JUL 2026  →  06 OCT 2026 ⟩          │
-│  ──────────────────────────────────────────────────────────────────  │
-│  SIGNAL   Java APIs · MySQL · 10 modules · 5 operators               │
-│  MISSION  Find the medicine. Reach the pharmacy. Stay on the dose.   │
-│  RULE     GPS-denied / empty-search / blocked-notify  =  designed    │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
-<p align="center">
-  A five-operator <strong>Java</strong> web system that fuses <strong>catalogue search</strong>, <strong>pharmacy access with PIN fallback</strong>, and <strong>account-scoped adherence</strong>. Not a marketplace. Not a diagnosis engine. Not a promise of push delivery.
+  <img src="https://img.shields.io/badge/Java-APIs%20%26%20Auth-EA580C?style=flat-square&labelColor=0F172A" alt="Java">
+  <img src="https://img.shields.io/badge/MySQL-Persistence-2563EB?style=flat-square&labelColor=0F172A" alt="MySQL">
+  <img src="https://img.shields.io/badge/Modules-10-0D9488?style=flat-square&labelColor=0F172A" alt="10 modules">
+  <img src="https://img.shields.io/badge/Team-5-4F46E5?style=flat-square&labelColor=0F172A" alt="5 members">
+  <img src="https://img.shields.io/badge/06_Jul_–_06_Oct_2026-BE123C?style=flat-square&labelColor=0F172A" alt="Timeline">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/JAVA-APIs_%26_AUTH-00F5D4?style=for-the-badge&labelColor=020617" alt="Java">
-  <img src="https://img.shields.io/badge/MYSQL-PERSISTENCE-00B4D8?style=for-the-badge&labelColor=020617" alt="MySQL">
-  <img src="https://img.shields.io/badge/MODULES-10-A855F7?style=for-the-badge&labelColor=020617" alt="Modules">
-  <img src="https://img.shields.io/badge/OPERATORS-5-FF2BD6?style=for-the-badge&labelColor=020617" alt="Team">
-  <img src="https://img.shields.io/badge/WINDOW-12_WEEKS-F59E0B?style=for-the-badge&labelColor=020617" alt="Window">
+  <a href="[ADD REPOSITORY LINK]"><strong>Repository</strong></a>
+  &nbsp;·&nbsp;
+  <a href="[ADD DEMO LINK]"><strong>Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="[ADD DEPLOYMENT LINK]"><strong>Deployment</strong></a>
+  &nbsp;·&nbsp;
+  <a href="#-12-week-development-log"><strong>12-week log</strong></a>
+  &nbsp;·&nbsp;
+  <a href="#-team"><strong>Team</strong></a>
 </p>
 
 <p align="center">
-  <a href="[ADD REPOSITORY LINK]"><img src="https://img.shields.io/badge/REPO-OPEN-020617?style=flat-square&logo=github&logoColor=00F5D4" alt="Repository"></a>
-  &nbsp;
-  <a href="[ADD DEMO LINK]"><img src="https://img.shields.io/badge/LIVE-ADD_LINK-0F766E?style=flat-square" alt="Demo"></a>
-  &nbsp;
-  <a href="[ADD DEPLOYMENT LINK]"><img src="https://img.shields.io/badge/DEPLOY-ADD_LINK-1E1B4B?style=flat-square" alt="Deploy"></a>
-  &nbsp;
-  <a href="#-twelve-week-build"><img src="https://img.shields.io/badge/BUILD_LOG-12_WEEKS-FF2BD6?style=flat-square" alt="Build log"></a>
-</p>
-
-<p align="center">
-  <img src="https://skillicons.dev/icons?i=java,mysql,html,css&theme=dark" alt="Java MySQL HTML CSS">
-</p>
-
-<p align="center">
-  <a href="#-signal">Signal</a>
-  · <a href="#-fault-lines">Fault lines</a>
-  · <a href="#-the-stack-we-ship">Product</a>
-  · <a href="#-capabilities">Capabilities</a>
-  · <a href="#-module-grid">Modules</a>
-  · <a href="#️-architecture">Architecture</a>
-  · <a href="#-user-journey">Journey</a>
-  · <a href="#-operators">Operators</a>
-  · <a href="#-twelve-week-build">12-week build</a>
-  · <a href="#-github-protocol">GitHub</a>
-  · <a href="#-quality-grid">Quality</a>
-  · <a href="#-interface">Interface</a>
+  <img src="https://skillicons.dev/icons?i=java,mysql,html,css&theme=light" alt="Java, MySQL, HTML, CSS">
 </p>
 
 ---
 
-## 📡 Signal
+<p align="center">
+  <a href="#-overview">Overview</a> ·
+  <a href="#-problem">Problem</a> ·
+  <a href="#-how-it-works">How it works</a> ·
+  <a href="#-features">Features</a> ·
+  <a href="#-modules">Modules</a> ·
+  <a href="#-architecture">Architecture</a> ·
+  <a href="#-user-journey">Journey</a> ·
+  <a href="#-team">Team</a> ·
+  <a href="#-12-week-development-log">Weeks</a> ·
+  <a href="#-github-workflow">GitHub</a> ·
+  <a href="#-testing--quality">Quality</a> ·
+  <a href="#-screenshots">Screenshots</a>
+</p>
+
+---
+
+## 📌 Overview
 
 <table>
   <tr>
-    <td align="center" width="25%">
-      <img src="https://img.icons8.com/fluency/48/calendar.png" alt="duration"><br>
-      <sub><code>DURATION</code></sub><br>
-      <strong>12 weeks</strong><br>
-      <sub>06 Jul → 06 Oct 2026</sub>
+    <td width="50%" valign="top">
+
+**What it is**  
+A five-member academic Java web system for medicine catalogue search, pharmacy locator with PIN fallback, dose reminders, and guided UI / QA.
+
+**Why it exists**  
+Medicine lookup, nearby pharmacy access, and medication follow-up are usually split across disconnected tools — and they fail when location or notifications are blocked.
+
     </td>
-    <td align="center" width="25%">
-      <img src="https://img.icons8.com/fluency/48/conference-call.png" alt="operators"><br>
-      <sub><code>OPERATORS</code></sub><br>
-      <strong>5 members</strong><br>
-      <sub>one shared repository</sub>
-    </td>
-    <td align="center" width="25%">
-      <img src="https://img.icons8.com/fluency/48/module.png" alt="modules"><br>
-      <sub><code>GRID</code></sub><br>
-      <strong>10 modules</strong><br>
-      <sub>M1 — M10</sub>
-    </td>
-    <td align="center" width="25%">
-      <img src="https://img.icons8.com/fluency/48/database.png" alt="stack"><br>
-      <sub><code>CORE</code></sub><br>
-      <strong>Java · MySQL</strong><br>
-      <sub>JDBC · browser APIs</sub>
+    <td width="50%" valign="top">
+
+| | |
+|---|---|
+| **Type** | Java web application |
+| **Duration** | 06 July 2026 – 06 October 2026 |
+| **Team** | 5 members · 10 modules |
+| **Data** | MySQL via JDBC |
+| **Access** | Account-based (M1) |
+| **Status** | Academic build · evidence-driven |
+
     </td>
   </tr>
 </table>
 
-| Channel | Reading |
-|---|---|
-| **Product** | Account-aware Java web platform for medicine search, pharmacy access, dose follow-up |
-| **Target fault** | Split tools for catalogue, GPS-only locators, reminders that ignore permission limits |
-| **Access** | Authenticated session (M1) — catalogue, locator and reminders stay account-scoped |
-| **Honesty boundary** | Not a marketplace · not clinical diagnosis · not guaranteed push |
-| **Status** | Academic engineering build · evidence-driven (PRs, checklists, screenshots) |
-
-> `RULE_01` — GPS denied, empty search, and blocked notifications are **product paths**, not exceptions to hide.
+> MediFinder is not a pharmacy marketplace, a clinical diagnosis engine, or a guaranteed push-notification service. It is a coordinated web workflow: **search → details → locate → remind → log**.
 
 ---
 
-## 🎯 Fault Lines
+## 🎯 Problem
 
-Medication days fail in three separate rooms. MediFinder wires them into one session.
+People managing everyday medication hit three separate failures — often on the same day.
 
 <table>
 <tr>
 <td width="33%" valign="top">
 
-<p align="center">
-  <img src="https://img.icons8.com/fluency/64/pills.png" alt="fragmented catalogue">
-</p>
+<p align="center"><img src="https://img.icons8.com/fluency/56/pills.png" alt="Medicine data"></p>
 
-### `FAULT // CATALOGUE`
+**Fragmented medicine data**
 
-Brand vs generic, strength, pack, manufacturer, **MRP vs seller price**, source and last update time almost never live in one pane.
-
-Case-sensitive or inconsistent fields return empty or wrong rows.
+Brand vs generic, strength, pack, manufacturer, MRP vs seller price, source and last update time rarely live in one view. Case-sensitive or inconsistent search returns empty or wrong results.
 
 </td>
 <td width="33%" valign="top">
 
-<p align="center">
-  <img src="https://img.icons8.com/fluency/64/place-marker.png" alt="gps only">
-</p>
+<p align="center"><img src="https://img.icons8.com/fluency/56/place-marker.png" alt="Location"></p>
 
-### `FAULT // LOCATOR`
+**Locators that need GPS**
 
-A nearby-pharmacy screen that only speaks coordinates is dead when the browser **denies location**.
-
-Users still need PIN / city fallback, a denied-permission state, and directions that do not fake GPS success.
+A nearby-pharmacy screen that only works with coordinates is unusable when the browser denies location. Users still need PIN / city fallback, a clear denied state, and directions that do not pretend GPS succeeded.
 
 </td>
 <td width="33%" valign="top">
 
-<p align="center">
-  <img src="https://img.icons8.com/fluency/64/alarm.png" alt="fragile reminders">
-</p>
+<p align="center"><img src="https://img.icons8.com/fluency/56/alarm.png" alt="Reminders"></p>
 
-### `FAULT // ADHERENCE`
+**Reminders that ignore reality**
 
-Doses are taken, missed or skipped. Refills have thresholds. Browsers **limit notifications**.
-
-A reminder that shows a different time after refresh is worse than no reminder.
+Doses are taken, missed or skipped. Refills have thresholds. Browsers limit notifications. A reminder that shows a different time after refresh is worse than no reminder.
 
 </td>
 </tr>
@@ -154,63 +123,62 @@ A reminder that shows a different time after refresh is worse than no reminder.
 
 ---
 
-## 💡 The Stack We Ship
+## 💡 How it works
 
-Ten owned modules. One session. One repository.
+Ten owned modules sit behind one shared repository and one user session.
 
 ```text
-▸ sign in
-▸ search the catalogue
-▸ open details & price provenance
-▸ find a nearby pharmacy
-▸ GPS  ||  PIN / city fallback
-▸ open directions
-▸ set a reminder
-▸ log taken / missed / skipped
-▸ watch refill warnings
-▸ dashboard · profile · settings · help
+Sign in
+  →  Search the catalogue
+  →  Open details & price provenance
+  →  Find a nearby pharmacy
+  →  Use GPS, or PIN / city fallback
+  →  Open directions
+  →  Set a reminder
+  →  Log taken / missed / skipped
+  →  Follow refill warnings
+  →  Dashboard · profile · settings · help
 ```
 
-| Layer | What the operator actually gets |
+| Layer | What the user gets |
 |---|---|
 | **Identity** | Secure login, authorization, common API errors, account-scoped records |
-| **Discovery** | Search / filter; manufacturer, strength, pack, MRP vs seller price, source, update time |
+| **Discovery** | Search / filter medicines; manufacturer, strength, pack, MRP vs seller price, source, update time |
 | **Access** | Map / list pharmacies, address & contact, permission handling, manual PIN fallback, directions |
 | **Adherence** | Reminder CRUD, schedules, dose logs, refill warnings, notification-limitation messaging |
-| **Shell** | Prototype-faithful UI, dashboard, profile, settings, help, QA evidence, demo support |
+| **Experience** | Prototype-faithful UI, dashboard, profile, settings, help, QA evidence and demo support |
 
 ```mermaid
-%%{init: {'theme':'dark','themeVariables': {'primaryColor':'#0f766e','primaryTextColor':'#ccfbf1','lineColor':'#00f5d4','secondaryColor':'#1e1b4b','tertiaryColor':'#020617','fontFamily':'JetBrains Mono'}}}%%
 flowchart LR
-  A((USER)) --> B[M1 AUTH]
-  B --> C[M3–M4 STORE]
-  C --> D[M5–M6 LOCATOR]
-  D --> E[M7–M8 REMIND]
-  E --> F[M9–M10 SHELL]
+  A[User] --> B[M1 Auth]
+  B --> C[M3–M4 Store]
+  C --> D[M5–M6 Locator]
+  D --> E[M7–M8 Reminders]
+  E --> F[M9–M10 Shell]
   B -.-> F
 ```
 
 ---
 
-## ✨ Capabilities
+## ✨ Features
 
 <table>
 <tr>
 <td width="33%" valign="top">
 
-### 🔐 Authentication
-Registration, login, authorization around module pages, shared API error handling — every later module inherits a real user context.
+### Authentication
+Registration, login, authorization around module pages, and shared API error handling so every other module has a reliable user context.
 
 </td>
 <td width="33%" valign="top">
 
-### 💊 Medicine discovery
-Catalogue search and filters across brand / generic naming, with explicit **empty, loading and error** states.
+### Medicine discovery
+Catalogue search and filters across brand / generic naming, with explicit empty, loading and error states — not silent failure.
 
 </td>
 <td width="33%" valign="top">
 
-### 🏷️ Price provenance
+### Price provenance
 Detail views surface manufacturer, strength, pack, **MRP vs seller price**, source, and last update time.
 
 </td>
@@ -218,19 +186,19 @@ Detail views surface manufacturer, strength, pack, **MRP vs seller price**, sour
 <tr>
 <td width="33%" valign="top">
 
-### 🏪 Pharmacy locator
+### Pharmacy locator
 Nearby search as map / list, plus address and contact for a selected pharmacy.
 
 </td>
 <td width="33%" valign="top">
 
-### 📍 Directions & fallback
-Location permission is a first-class state. Denied / unavailable GPS → **manual PIN / city**, denied copy, directions, no-result handling.
+### Directions & fallback
+Location permission is a first-class state. Denied or unavailable GPS → manual PIN / city, denied copy, directions links, no-result handling.
 
 </td>
 <td width="33%" valign="top">
 
-### ⏰ Reminders
+### Medicine reminders
 Create, edit and delete schedules with dose instructions — persisted per account.
 
 </td>
@@ -238,20 +206,20 @@ Create, edit and delete schedules with dose instructions — persisted per accou
 <tr>
 <td width="33%" valign="top">
 
-### 📋 Dose tracking
+### Dose tracking
 Log **taken / missed / skipped** and keep history on the logged-in user.
 
 </td>
 <td width="33%" valign="top">
 
-### 🔔 Refill alerts
-Threshold-based refill warnings, plus honest copy for **browser notification limits**.
+### Refill alerts
+Threshold-based refill warnings, plus honest copy for browser notification limits.
 
 </td>
 <td width="33%" valign="top">
 
-### 👤 Shell & QA
-Dashboard, profile, settings, help, guided UI, checklists, bug reports, screenshots, README.
+### Profile & QA
+Dashboard, profile, settings, help, guided UI, checklists, bug reports, screenshots and README.
 
 </td>
 </tr>
@@ -259,7 +227,7 @@ Dashboard, profile, settings, help, guided UI, checklists, bug reports, screensh
 
 ---
 
-## 🧩 Module Grid
+## 🧩 Modules
 
 Ten modules. Five owners. No overlapping claims.
 
@@ -277,9 +245,9 @@ Ten modules. Five owners. No overlapping claims.
 | **M10** | QA / Documentation / Demo | Sachin Kumawat | Test checklists, bug reports, screenshots, README, report |
 
 <details>
-<summary><strong>▸ module responsibility map</strong></summary>
+<summary><strong>Module responsibility map</strong></summary>
 
-<br/>
+<br>
 
 | Owner | Modules | Responsibility |
 |---|---|---|
@@ -298,30 +266,29 @@ Ten modules. Five owners. No overlapping claims.
 Conceptual only — Java APIs, MySQL, browser geolocation, browser notifications. Nothing else is drawn as if it exists.
 
 ```mermaid
-%%{init: {'theme':'dark','themeVariables': {'primaryColor':'#0f766e','primaryTextColor':'#ccfbf1','lineColor':'#00f5d4','secondaryColor':'#1e1b4b','tertiaryColor':'#020617'}}}%%
 flowchart TB
-  U["Browser"]
+  U[Browser]
 
-  subgraph P["Presentation"]
-    UI["Dashboard · Catalogue · Locator · Reminders · Help"]
+  subgraph Presentation
+    UI[Dashboard · Catalogue · Locator · Reminders · Help]
   end
 
-  subgraph A["Application"]
-    API["Java APIs"]
-    AUTH["M1 Authentication"]
-    CFG["M2 Config & integration"]
+  subgraph Application
+    API[Java APIs]
+    AUTH[M1 Authentication]
+    CFG[M2 Config and integration]
   end
 
-  subgraph B["Domain"]
-    CAT["M3–M4 Medicine store"]
-    LOC["M5–M6 Pharmacy locator"]
-    REM["M7–M8 Reminders & logs"]
-    SHELL["M9–M10 UI / QA"]
+  subgraph Domain
+    CAT[M3–M4 Medicine store]
+    LOC[M5–M6 Pharmacy locator]
+    REM[M7–M8 Reminders and logs]
+    SHELL[M9–M10 UI / QA]
   end
 
-  DB[("MySQL")]
-  GEO["Geolocation / PIN fallback"]
-  NTF["Notifications — limited"]
+  DB[(MySQL)]
+  GEO[Geolocation / PIN fallback]
+  NTF[Notifications — limited]
 
   U --> UI --> API
   API --> AUTH
@@ -346,28 +313,27 @@ flowchart TB
 | **Application** | Java APIs, secure login, authorization, shared configuration, integration seams |
 | **Domain** | Catalogue, price provenance, locator, fallback, reminders, dose logs, refill alerts |
 | **Data** | MySQL through JDBC |
-| **Browser services** | Geolocation and notifications are **client capabilities**, not guaranteed server features |
+| **Browser services** | Geolocation and notifications are client capabilities, not guaranteed server features |
 
 Secrets, local server files and machine JDBC URLs stay **out of Git**.
 
 ---
 
-## 🔄 User Journey
+## 🔄 User journey
 
 ```mermaid
-%%{init: {'theme':'dark','themeVariables': {'primaryColor':'#0f766e','primaryTextColor':'#ccfbf1','lineColor':'#ff2bd6','secondaryColor':'#1e1b4b'}}}%%
 flowchart LR
-  A["Login"] --> B["Search"]
-  B --> C["Details / price"]
-  C --> D["Find pharmacy"]
-  D --> E{"GPS allowed?"}
-  E -->|Yes| F["Nearby results"]
-  E -->|Denied| G["PIN / city"]
-  F --> H["Directions"]
+  A[Login] --> B[Search]
+  B --> C[Details / price]
+  C --> D[Find pharmacy]
+  D --> E{GPS allowed?}
+  E -->|Yes| F[Nearby results]
+  E -->|Denied| G[PIN / city]
+  F --> H[Directions]
   G --> H
-  H --> I["Set reminder"]
-  I --> J["Log dose"]
-  J --> K["Refill alert"]
+  H --> I[Set reminder]
+  I --> J[Log dose]
+  J --> K[Refill alert]
 ```
 
 1. Sign in through **M1** so later records stay account-scoped.  
@@ -378,543 +344,768 @@ flowchart LR
 
 ---
 
-## 👥 Operators
+## 👥 Team
 
-<p align="center"><em>one shared repository · one feature branch per operator · review before merge to main</em></p>
+<p align="center"><em>One shared repository · one feature branch per member · review before merge to main</em></p>
 
 <table>
   <tr>
     <td align="center" width="20%">
-      <img src="https://ui-avatars.com/api/?name=Ratn+Kumar+Sharma&background=022c22&color=00F5D4&size=160&bold=true&font-size=0.38" width="88" alt="Ratn Kumar Sharma"><br>
+      <img src="https://ui-avatars.com/api/?name=Ratn+Kumar+Sharma&background=0F766E&color=F0FDFA&size=128&bold=true&font-size=0.40" width="72" alt="Ratn Kumar Sharma"><br>
       <strong>Ratn Kumar Sharma</strong><br>
       <sub>Java Backend / Lead</sub><br><br>
-      <img src="https://img.shields.io/badge/M1-AUTH-00F5D4?style=flat-square&labelColor=020617" alt="M1">
-      <img src="https://img.shields.io/badge/M2-API-0F766E?style=flat-square&labelColor=020617" alt="M2">
-      <br><br>
+      <code>M1</code> Auth<br>
+      <code>M2</code> API &amp; config<br><br>
       <sub>APIs, secure login, authorization, common errors, reviews, integration</sub>
     </td>
     <td align="center" width="20%">
-      <img src="https://ui-avatars.com/api/?name=Vansh+Oberoi&background=1e3a8a&color=93C5FD&size=160&bold=true&font-size=0.38" width="88" alt="Vansh Oberoi"><br>
+      <img src="https://ui-avatars.com/api/?name=Vansh+Oberoi&background=1D4ED8&color=EFF6FF&size=128&bold=true&font-size=0.40" width="72" alt="Vansh Oberoi"><br>
       <strong>Vansh Oberoi</strong><br>
       <sub>Medicine Store</sub><br><br>
-      <img src="https://img.shields.io/badge/M3-CATALOGUE-60A5FA?style=flat-square&labelColor=020617" alt="M3">
-      <img src="https://img.shields.io/badge/M4-PROVENANCE-1D4ED8?style=flat-square&labelColor=020617" alt="M4">
-      <br><br>
+      <code>M3</code> Catalogue<br>
+      <code>M4</code> Price provenance<br><br>
       <sub>Search / filter, manufacturer, strength, pack, MRP vs seller price, source, update time</sub>
     </td>
     <td align="center" width="20%">
-      <img src="https://ui-avatars.com/api/?name=Sumit+Kumar+Saini&background=3b0764&color=E9D5FF&size=160&bold=true&font-size=0.38" width="88" alt="Sumit Kumar Saini"><br>
+      <img src="https://ui-avatars.com/api/?name=Sumit+Kumar+Saini&background=6D28D9&color=F5F3FF&size=128&bold=true&font-size=0.40" width="72" alt="Sumit Kumar Saini"><br>
       <strong>Sumit Kumar Saini</strong><br>
       <sub>Pharmacy Locator</sub><br><br>
-      <img src="https://img.shields.io/badge/M5-LOCATOR-C084FC?style=flat-square&labelColor=020617" alt="M5">
-      <img src="https://img.shields.io/badge/M6-FALLBACK-7C3AED?style=flat-square&labelColor=020617" alt="M6">
-      <br><br>
+      <code>M5</code> Locator<br>
+      <code>M6</code> Fallback<br><br>
       <sub>Nearby search, map / list, address / contact, GPS permission, manual PIN fallback</sub>
     </td>
     <td align="center" width="20%">
-      <img src="https://ui-avatars.com/api/?name=Sameer+Achara&background=4c0519&color=FECDD3&size=160&bold=true&font-size=0.38" width="88" alt="Sameer Achara"><br>
+      <img src="https://ui-avatars.com/api/?name=Sameer+Achara&background=C2410C&color=FFF7ED&size=128&bold=true&font-size=0.40" width="72" alt="Sameer Achara"><br>
       <strong>Sameer Achara</strong><br>
       <sub>Reminders / Notifications</sub><br><br>
-      <img src="https://img.shields.io/badge/M7-REMIND-FB7185?style=flat-square&labelColor=020617" alt="M7">
-      <img src="https://img.shields.io/badge/M8-LOGS-E11D48?style=flat-square&labelColor=020617" alt="M8">
-      <br><br>
+      <code>M7</code> Reminders<br>
+      <code>M8</code> Logs &amp; refills<br><br>
       <sub>Schedule CRUD, taken / missed / skipped logs, refill warnings, notification limitations</sub>
     </td>
     <td align="center" width="20%">
-      <img src="https://ui-avatars.com/api/?name=Sachin+Kumawat&background=431407&color=FED7AA&size=160&bold=true&font-size=0.38" width="88" alt="Sachin Kumawat"><br>
+      <img src="https://ui-avatars.com/api/?name=Sachin+Kumawat&background=BE123C&color=FFF1F2&size=128&bold=true&font-size=0.40" width="72" alt="Sachin Kumawat"><br>
       <strong>Sachin Kumawat</strong><br>
-      <sub>UI / UX, QA & Docs</sub><br><br>
-      <img src="https://img.shields.io/badge/M9-SHELL-FB923C?style=flat-square&labelColor=020617" alt="M9">
-      <img src="https://img.shields.io/badge/M10-QA-F97316?style=flat-square&labelColor=020617" alt="M10">
-      <br><br>
+      <sub>UI / UX, QA &amp; Docs</sub><br><br>
+      <code>M9</code> Shell<br>
+      <code>M10</code> QA &amp; docs<br><br>
       <sub>Prototype style, guided UI, checklists, bug reports, screenshots, README</sub>
     </td>
   </tr>
 </table>
 
-Sameer Achara owns **only** M7 and M8. Sachin Kumawat leads guided UI, QA evidence and documentation.
+Sameer Achara owns **only M7 and M8**. Sachin Kumawat leads guided UI, QA evidence and documentation.
 
 ---
 
-## 🗓️ Twelve-Week Build
+## 🗓️ 12-Week Development Log
 
 Academic window: **06 July 2026 → 06 October 2026**.
 
-Source planning ran longer on paper. This README keeps a **strict 12-week clock** — later release / demo tasks are folded into Week 12, not invented as extra weeks.
+Source planning listed additional late beats (release candidate, regression, final demo). They are **folded into Week 12**, not stretched into extra weeks. College portal numbering wins if it differs.
 
-```text
-SHAPE          W1 Foundation → W2 Requirements → W3 Design → W4 Contracts
-BUILD          W5 Skeleton   → W6 Slices       → W7 Depth  → W8 Completeness
-PROVE          W9 Integrate  → W10 Harden      → W11 Evidence → W12 Release
-```
+| Week | Dates | Phase | Focus |
+|:---:|---|---|---|
+| 1 | 06–12 Jul | Foundation | Team, scope, abstract, prototype review |
+| 2 | 13–19 Jul | Requirements | SRS, stories, acceptance criteria |
+| 3 | 20–26 Jul | Design | Use-case / activity / class / ER, navigation |
+| 4 | 27 Jul–02 Aug | Contracts | Schema, API contracts, UI mock-ups |
+| 5 | 03–09 Aug | Skeleton | Shared layout, auth foundation, module frames |
+| 6 | 10–16 Aug | Slices | Login, search / detail, locator prototype, reminder CRUD |
+| 7 | 17–23 Aug | Depth | Filters, PIN fallback, dose logs |
+| 8 | 24–30 Aug | Completeness | Settings, catalogue edges, directions, refill rules |
+| 9 | 31 Aug–06 Sep | Integration | Cross-module journey, end-to-end tests |
+| 10 | 07–13 Sep | Hardening | Security, validation, responsive UI, error states |
+| 11 | 14–20 Sep | Evidence | System tests, screenshots, documentation |
+| 12 | 21 Sep–06 Oct | Release | UAT, fixes, candidate, demo, handover |
 
 ```mermaid
-%%{init: {'theme':'dark','themeVariables': {'cScale0':'#00f5d4','cScale1':'#a855f7','cScale2':'#ff2bd6','primaryTextColor':'#e0fff9'}}}%%
 timeline
-  title MEDIFINDER // 12-WEEK CLOCK
+  title MediFinder — 12 weeks
   section Shape
-    W1 Foundation     : team · scope · prototype
-    W2 Requirements   : SRS · stories · acceptance
-    W3 Design         : UML · ER · navigation
-    W4 Contracts      : schema · APIs · mock-ups
+    Week 1 Foundation : Team and scope
+    Week 2 Requirements : SRS and stories
+    Week 3 Design : UML and ER
+    Week 4 Contracts : Schema and APIs
   section Build
-    W5 Skeleton       : layout · auth · modules
-    W6 Slices         : login · search · locator · CRUD
-    W7 Depth          : filters · PIN fallback · dose logs
-    W8 Completeness   : settings · directions · refills
+    Week 5 Skeleton : Layout and auth
+    Week 6 Slices : First working paths
+    Week 7 Depth : Filters and fallback
+    Week 8 Completeness : Directions and refills
   section Prove
-    W9 Integrate      : cross-module E2E
-    W10 Harden        : security · errors · responsive
-    W11 Evidence      : tests · screenshots · docs
-    W12 Release       : UAT · candidate · handover
+    Week 9 Integration : End-to-end
+    Week 10 Hardening : Security and errors
+    Week 11 Evidence : Tests and docs
+    Week 12 Release : UAT and handover
 ```
 
-<p align="center">
-  <img src="https://img.shields.io/badge/W1-FOUNDATION-00F5D4?style=flat-square&labelColor=020617" alt="W1">
-  <img src="https://img.shields.io/badge/W2-REQUIREMENTS-14B8A6?style=flat-square&labelColor=020617" alt="W2">
-  <img src="https://img.shields.io/badge/W3-DESIGN-2DD4BF?style=flat-square&labelColor=020617" alt="W3">
-  <img src="https://img.shields.io/badge/W4-CONTRACTS-06B6D4?style=flat-square&labelColor=020617" alt="W4">
-  <img src="https://img.shields.io/badge/W5-SKELETON-3B82F6?style=flat-square&labelColor=020617" alt="W5">
-  <img src="https://img.shields.io/badge/W6-SLICES-6366F1?style=flat-square&labelColor=020617" alt="W6">
-  <img src="https://img.shields.io/badge/W7-DEPTH-A855F7?style=flat-square&labelColor=020617" alt="W7">
-  <img src="https://img.shields.io/badge/W8-COMPLETE-D946EF?style=flat-square&labelColor=020617" alt="W8">
-  <img src="https://img.shields.io/badge/W9-INTEGRATE-FF2BD6?style=flat-square&labelColor=020617" alt="W9">
-  <img src="https://img.shields.io/badge/W10-HARDEN-F43F5E?style=flat-square&labelColor=020617" alt="W10">
-  <img src="https://img.shields.io/badge/W11-EVIDENCE-F97316?style=flat-square&labelColor=020617" alt="W11">
-  <img src="https://img.shields.io/badge/W12-RELEASE-F59E0B?style=flat-square&labelColor=020617" alt="W12">
-</p>
-
 ---
 
-### WK-01  //  Foundation
+### Week 1 — Foundation
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-01-00F5D4?style=for-the-badge&labelColor=020617" alt="Week 01">
-  <img src="https://img.shields.io/badge/PHASE-SHAPE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Shape">
-  <img src="https://img.shields.io/badge/06–12_JUL_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-01-0F766E?style=for-the-badge&labelColor=0F172A" alt="Week 1">
+  <img src="https://img.shields.io/badge/Phase-Foundation-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Foundation">
+  <img src="https://img.shields.io/badge/06–12_July_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Boot the crew. Freeze the problem. Review the prototype intent before anyone writes schema.
+**Objective.** Form the five-member team, freeze module ownership, write the project abstract, and review the prototype so later weeks do not argue about what MediFinder is.
 
-**Objective.** Stand up the five-operator team, lock module ownership, write the first abstract, and review the prototype so later weeks do not argue about what MediFinder is.
+A 10-module Java project fails when ownership is fuzzy. This week makes M1–M10 named, visible and bounded. No feature code is claimed.
 
-**Why this week exists.** A 10-module Java web project fails when ownership is fuzzy. Week 1 makes M1–M10 named, visible, and bounded.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System (M1–M2)** | Confirm lead role: APIs, auth, integration, review protocol |
-| **Store (M3–M4)** | Confirm catalogue / price-provenance boundary |
-| **Locator (M5–M6)** | Confirm nearby search vs GPS-denied fallback as two modules |
-| **Remind (M7–M8)** | Confirm reminder CRUD vs dose logs / refill alerts as two modules |
-| **Shell (M9–M10)** | Confirm prototype-style ownership, QA and documentation lane |
+| **M1–M2** | Confirm lead role: APIs, auth, integration, review protocol |
+| **M3–M4** | Confirm catalogue vs price-provenance boundary |
+| **M5–M6** | Confirm nearby search vs GPS-denied fallback as two modules |
+| **M7–M8** | Confirm reminder CRUD vs dose logs / refill alerts as two modules |
+| **M9–M10** | Confirm prototype-style ownership, QA and documentation lane |
 
-**Deliverables**
-- Team ownership table and module split  
-- Project abstract  
-- Prototype review notes  
-- Shared-repo agreement (one repository, feature branch per member)
+#### Daily progress
 
-**Exit gate.** Every module has one owner. The problem statement is written. Prototype intent is reviewed — not implemented.
+| Date | Activity | Outcome |
+|---|---|---|
+| **06 Jul 2026** | Team discussion — availability, interests, academic load | Five-member team agreed in principle |
+| **07 Jul 2026** | Module ownership freeze | M1–M10 mapped to the five names above |
+| **08 Jul 2026** | Problem shortlisting | Medicine search + pharmacy access + adherence selected as the domain |
+| **09 Jul 2026** | Problem research | GPS-denied locators and notification limits recorded as constraints, not extras |
+| **10 Jul 2026** | Solution sketch | One-session Java web workflow drafted |
+| **11 Jul 2026** | Guide and repository rules | Shared-repo + feature-branch-per-member rule written down |
+| **12 Jul 2026** | Abstract and prototype review | Initial abstract prepared; prototype intent reviewed, not implemented |
+
+#### Problems faced
+
+- Balancing ten modules across five people without overlapping claims.  
+- Keeping marketplace, diagnosis and guaranteed push **out** of scope.  
+- Agreeing that GPS-denied is a designed path, not a later patch.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Team and module split | Done |
+| Project abstract | Done |
+| Prototype review | Done |
+| Shared-repo agreement | Done |
+| SRS | Planned — Week 2 |
+
+**Next week.** SRS, user stories, acceptance criteria, data-source research.
 
 ---
 
-### WK-02  //  Requirements
+### Week 2 — Requirements
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-02-14B8A6?style=for-the-badge&labelColor=020617" alt="Week 02">
-  <img src="https://img.shields.io/badge/PHASE-SHAPE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Shape">
-  <img src="https://img.shields.io/badge/13–19_JUL_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-02-0F766E?style=for-the-badge&labelColor=0F172A" alt="Week 2">
+  <img src="https://img.shields.io/badge/Phase-Requirements-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Requirements">
+  <img src="https://img.shields.io/badge/13–19_July_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Turn “people cannot find medicines / pharmacies / doses” into rules a Java API can implement.
+**Objective.** Turn the problem into rules a Java API can implement: SRS, user stories, acceptance criteria and data-source research.
 
-**Objective.** Produce the SRS, user stories, acceptance criteria and data-source research. Write GPS-denied, empty-search and notification-limit cases as **accepted behaviour**, not as stretch goals.
+GPS-denied, empty search and notification limits are written as **accepted behaviour**, not stretch goals. Without that, search “works on my sample row”, the locator “works if you click Allow”, and reminders “work until refresh”.
 
-**Why this week exists.** Without acceptance criteria, search “works on my sample row”, the locator “works if you click Allow”, and reminders “work until refresh”.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Auth stories: register, login, session, unauthorized access, common API errors |
-| **Store** | Search / filter stories; detail fields including MRP vs seller price, source, update time |
-| **Locator** | Nearby list / map stories; address / contact; permission denied as a first-class story |
-| **Remind** | Reminder create / edit / delete; taken / missed / skipped; refill threshold; notification limits |
-| **Shell** | Dashboard / profile / settings / help stories; evidence format for later QA |
+| **M1–M2** | Auth stories: register, login, session, unauthorized access, common API errors |
+| **M3–M4** | Search / filter stories; detail fields including MRP vs seller price, source, update time |
+| **M5–M6** | Nearby list / map; address / contact; permission denied as a first-class story |
+| **M7–M8** | Reminder create / edit / delete; taken / missed / skipped; refill threshold; notification limits |
+| **M9–M10** | Dashboard / profile / settings / help stories; evidence format for later QA |
 
-**Deliverables**
-- SRS  
-- User stories + acceptance criteria  
-- Data-source research notes  
-- Honest scope cuts (no marketplace, no diagnosis, no guaranteed push)
+#### Daily progress
 
-**Exit gate.** A story can be tested. “GPS denied” has an expected UI. “Empty catalogue query” has an expected UI.
+| Date | Activity | Outcome |
+|---|---|---|
+| **13 Jul 2026** | Actor and workflow pass | Signed-in user and administrator paths listed |
+| **14 Jul 2026** | Store requirements | Search, filter and provenance fields captured |
+| **15 Jul 2026** | Locator requirements | GPS-on, GPS-denied, PIN / city, directions, no-result |
+| **16 Jul 2026** | Reminder requirements | CRUD, schedules, dose states, refill threshold, notification limits |
+| **17 Jul 2026** | Non-functional and security notes | Session, validation, secrets-out-of-Git |
+| **18 Jul 2026** | Acceptance criteria | Stories written so they can be tested later |
+| **19 Jul 2026** | SRS review | SRS packed for design week |
+
+#### Problems faced
+
+- Cutting inventory, payments and clinical advice without leaving holes in the user journey.  
+- Describing browser location and notifications as handled states, not guaranteed services.  
+- Keeping M7/M8 separate from M5/M6 so pharmacy search does not own medication logs.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| SRS | Done |
+| User stories and acceptance criteria | Done |
+| Data-source research | Done |
+| Honest scope cuts | Done |
+| UML | Planned — Week 3 |
+
+**Next week.** Use-case, activity, class and ER diagrams, plus a navigation map.
 
 ---
 
-### WK-03  //  Design
+### Week 3 — Design
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-03-2DD4BF?style=for-the-badge&labelColor=020617" alt="Week 03">
-  <img src="https://img.shields.io/badge/PHASE-SHAPE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Shape">
-  <img src="https://img.shields.io/badge/20–26_JUL_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-03-0F766E?style=for-the-badge&labelColor=0F172A" alt="Week 3">
+  <img src="https://img.shields.io/badge/Phase-Design-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Design">
+  <img src="https://img.shields.io/badge/20–26_July_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Draw the system before it is coded — users, flows, entities, navigation.
+**Objective.** Draw users, flows, entities and navigation before anyone writes schema-conflicting code.
 
-**Objective.** Produce use-case, activity, class and ER diagrams plus a navigation map so M1–M10 share one language.
+Locator fallback and reminder persistence both touch session and MySQL. If they invent parallel user models, Week 9 becomes archaeology.
 
-**Why this week exists.** Locator fallback and reminder persistence both touch session + MySQL. If they invent parallel user models, Week 9 becomes archaeology.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Auth use cases; session as a shared actor on every protected page |
-| **Store** | Search → detail activity; price-provenance fields on the class / ER model |
-| **Locator** | Locate → permission → results **or** PIN fallback → directions / no-result |
-| **Remind** | Reminder → schedule → dose log → refill alert sequence |
-| **Shell** | Navigation map: dashboard, profile, settings, help as the chrome around modules |
+| **M1–M2** | Auth use cases; session as a shared actor on every protected page |
+| **M3–M4** | Search → detail activity; provenance fields on the class / ER model |
+| **M5–M6** | Locate → permission → results **or** PIN fallback → directions / no-result |
+| **M7–M8** | Reminder → schedule → dose log → refill alert sequence |
+| **M9–M10** | Navigation map: dashboard, profile, settings, help as chrome around modules |
 
-**Deliverables**
-- Use-case diagram  
-- Activity diagram  
-- Class diagram  
-- ER diagram  
-- Navigation map
+#### Daily progress
 
-**Exit gate.** A new screen can be placed on the navigation map. An entity is not invented twice under two names.
+| Date | Activity | Outcome |
+|---|---|---|
+| **20 Jul 2026** | Use-case diagram | User and administrator mapped to M1–M10 |
+| **21 Jul 2026** | Activity diagram | Store, locator and reminder flows drawn as one product |
+| **22 Jul 2026** | Sequence sketch | UI → Java API → MySQL; location and notification as client steps |
+| **23 Jul 2026** | Class diagram | User, pharmacy, reminder, dose log, refill alert, notification preference |
+| **24 Jul 2026** | ER draft | Shared user identity across store, locator and reminders |
+| **25 Jul 2026** | Navigation map | Protected routes listed under the shared shell |
+| **26 Jul 2026** | Design review | Diagrams aligned with the SRS |
+
+#### Problems faced
+
+- Permission and notification events are client-side; they must not be modelled as guaranteed server services.  
+- Module boundaries vs shared login.  
+- Remaining screens had to sit on the map without inventing extra entities.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Use-case diagram | Done |
+| Activity diagram | Done |
+| Class diagram | Done |
+| ER diagram | Done |
+| Navigation map | Done |
+| Schema freeze | Planned — Week 4 |
+
+**Next week.** Database schema, API contracts, UI mock-ups.
 
 ---
 
-### WK-04  //  Contracts
+### Week 4 — Contracts
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-04-06B6D4?style=for-the-badge&labelColor=020617" alt="Week 04">
-  <img src="https://img.shields.io/badge/PHASE-SHAPE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Shape">
-  <img src="https://img.shields.io/badge/27_JUL–02_AUG_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-04-0F766E?style=for-the-badge&labelColor=0F172A" alt="Week 4">
+  <img src="https://img.shields.io/badge/Phase-Contracts-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Contracts">
+  <img src="https://img.shields.io/badge/27_July–02_August_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Freeze schema, API contracts and UI mock-ups **before** feature code. This is the last cheap week to disagree.
+**Objective.** Freeze schema, API contracts and UI mock-ups **before** feature code. This is the last cheap week to disagree.
 
-**Objective.** Align database tables, Java API contracts and prototype-faithful mock-ups so Week 5 does not start five incompatible projects.
+Search filters, PIN fallback payloads, reminder schedules and dose-log status values must be named once.
 
-**Why this week exists.** Search filters, PIN fallback payloads, reminder schedules and dose-log status values must be named once.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Auth API contracts; shared error shape; configuration seams |
-| **Store** | Catalogue schema; search parameters; detail / provenance fields |
-| **Locator** | Pharmacy + search-query tables; permission / fallback fields; directions payload |
-| **Remind** | Reminder / schedule / dose-log / refill-alert tables; time-format convention |
-| **Shell** | UI mock-ups for dashboard, profile, settings, help; visual tokens for shared layout |
+| **M1–M2** | Auth API contracts; shared error shape; configuration seams |
+| **M3–M4** | Catalogue schema; search parameters; detail / provenance fields |
+| **M5–M6** | Pharmacy and search-query tables; permission / fallback fields; directions payload |
+| **M7–M8** | Reminder / schedule / dose-log / refill tables; datetime convention |
+| **M9–M10** | Mock-ups for dashboard, profile, settings, help; visual tokens for shared layout |
 
-**Deliverables**
-- Database schema  
-- API contracts  
-- UI mock-ups  
-- Timezone / datetime convention note for reminders (so Week 10 is not a surprise)
+#### Daily progress
 
-**Exit gate.** A mock-up has a matching API field. A table has an owner. Credentials are **not** in the contract docs as committed secrets.
+| Date | Activity | Outcome |
+|---|---|---|
+| **27 Jul 2026** | Entity list from UML | Users, pharmacies, searches, reminders, logs, alerts named |
+| **28 Jul 2026** | Relationships and constraints | Account-scoped reminders; pharmacy search history kept separate |
+| **29 Jul 2026** | API contract draft | Request / response fields for search, locate, remind |
+| **30 Jul 2026** | Store and locator mock-ups | Search, detail, list / map, denied-permission and PIN screens |
+| **31 Jul 2026** | Reminder and shell mock-ups | CRUD forms, dose history, dashboard, settings, help |
+| **01 Aug 2026** | Datetime convention | One storage / display rule written for reminders |
+| **02 Aug 2026** | Contract review | Schema, APIs and mock-ups checked against the SRS |
+
+#### Problems faced
+
+- Manual fallback had to be a first-class input, not an afterthought on the map.  
+- Notification limits can be shown in UI; they cannot be designed as guaranteed delivery.  
+- Table naming had to be agreed so five branches would not collide.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Database schema | Done |
+| API contracts | Done |
+| UI mock-ups | Done |
+| Datetime convention note | Done |
+| Running skeleton | Planned — Week 5 |
+
+**Next week.** Shared layout, auth foundation, catalogue schema in MySQL, module frames.
 
 ---
 
-### WK-05  //  Skeleton
+### Week 5 — Skeleton
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-05-3B82F6?style=for-the-badge&labelColor=020617" alt="Week 05">
-  <img src="https://img.shields.io/badge/PHASE-BUILD-1E1B4B?style=for-the-badge&labelColor=020617" alt="Build">
-  <img src="https://img.shields.io/badge/03–09_AUG_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-05-1D4ED8?style=for-the-badge&labelColor=0F172A" alt="Week 5">
+  <img src="https://img.shields.io/badge/Phase-Build-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Build">
+  <img src="https://img.shields.io/badge/03–09_August_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Stand up the shared application: layout, auth foundation, catalogue schema, empty module frames.
+**Objective.** Stand up one runnable Java web skeleton: shared chrome, auth foundation, MySQL reachable through JDBC, empty module frames.
 
-**Objective.** One runnable Java web skeleton on the agreed server setup, MySQL reachable through JDBC, shared chrome in place, module folders owned.
+Feature work on five branches is useless if the app cannot boot as one system.
 
-**Why this week exists.** Feature work on five branches is useless if Tomcat / JDBC / layout cannot boot as one app.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Shared layout, auth foundation, JDBC utility, common errors — secrets stay local |
-| **Store** | Catalogue schema in MySQL; empty search / detail frames |
-| **Locator** | Pharmacy tables; empty list / map frames |
-| **Remind** | Reminder / log tables; empty form frames |
-| **Shell** | Prototype layout applied to the shared chrome; skeleton pages for dashboard / help |
+| **M1–M2** | Shared layout, auth foundation, JDBC utility, common errors — secrets stay local |
+| **M3–M4** | Catalogue schema in MySQL; empty search / detail frames |
+| **M5–M6** | Pharmacy tables; empty list / map frames |
+| **M7–M8** | Reminder / log tables; empty form frames |
+| **M9–M10** | Prototype layout on shared chrome; skeleton dashboard / help pages |
 
-**Deliverables**
-- Shared layout  
-- Auth foundation (not the finished account product)  
-- Catalogue schema  
-- Module skeletons in the common repo
+#### Daily progress
 
-**Exit gate.** The app starts. A protected route exists. Five feature branches can open against `main` without inventing a second layout.
+| Date | Activity | Outcome |
+|---|---|---|
+| **03 Aug 2026** | Schema implementation | First tables created in MySQL |
+| **04 Aug 2026** | Project layout | Common folders for APIs, views, static assets, module ownership |
+| **05 Aug 2026** | Server boot | Agreed Java web server started with a test page |
+| **06 Aug 2026** | JDBC handshake | Connection utility verified; credentials not committed |
+| **07 Aug 2026** | Model / DAO mapping | Store, locator and reminder tables mapped to initial classes |
+| **08 Aug 2026** | Empty pages | Search, fallback, reminder and dashboard shells linked from chrome |
+| **09 Aug 2026** | Repo hygiene | Feature-branch rule checked; local server files kept untracked |
 
-**Known failure class (record only if it happens).** MySQL / JDBC connection mismatch — diagnose, align config, keep secrets out of Git.
+#### Problems faced
+
+- JDBC URL / driver / credential mismatch until local config was aligned.  
+- Shared naming for connection helpers so M3–M8 did not duplicate utilities.  
+- Skeleton pages needed clear “not implemented yet” labels.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| MySQL schema in place | Done |
+| Shared layout | Done |
+| Auth foundation | Done |
+| Module skeletons | Done |
+| Finished login product | Planned — Week 6 |
+
+**Next week.** Registration / login, search / detail slice, locator prototype, reminder CRUD.
+
+> JDBC connection errors are a **known failure class**. Record them only if they actually happen, then keep secrets out of Git.
 
 ---
 
-### WK-06  //  Vertical Slices
+### Week 6 — Vertical slices
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-06-6366F1?style=for-the-badge&labelColor=020617" alt="Week 06">
-  <img src="https://img.shields.io/badge/PHASE-BUILD-1E1B4B?style=for-the-badge&labelColor=020617" alt="Build">
-  <img src="https://img.shields.io/badge/10–16_AUG_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-06-1D4ED8?style=for-the-badge&labelColor=0F172A" alt="Week 6">
+  <img src="https://img.shields.io/badge/Phase-Build-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Build">
+  <img src="https://img.shields.io/badge/10–16_August_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> First real path per domain: login, search / detail, locator prototype, reminder CRUD.
+**Objective.** First real path per domain: login, search / detail, locator prototype, reminder CRUD. Still incomplete on purpose.
 
-**Objective.** Each domain proves a thin vertical slice — UI → Java API → MySQL — still incomplete on purpose.
+Depth (filters, PIN fallback, dose logs) is next. Slices first.
 
-**Why this week exists.** Depth (filters, PIN fallback, dose logs) is next. Slices first, polish later.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Registration / login / logout / session on protected pages |
-| **Store** | Search → detail happy path (filters and edge cases still open) |
-| **Locator** | Locator prototype: list / map against seed data (fallback not finished) |
-| **Remind** | Reminder create / edit / delete for the logged-in user |
-| **Shell** | Navigation to the new slices without breaking prototype chrome |
+| **M1–M2** | Registration / login / logout / session on protected pages |
+| **M3–M4** | Search → detail happy path (filters still open) |
+| **M5–M6** | Locator prototype against seed data (fallback not finished) |
+| **M7–M8** | Reminder create / edit / delete for the logged-in user |
+| **M9–M10** | Navigation to the new slices without breaking prototype chrome |
 
-**Deliverables**
-- Working registration / login  
-- Search / detail slice  
-- Locator prototype  
-- Reminder CRUD slice
+#### Daily progress
 
-**Exit gate.** A signed-in user can hit store, locator and reminder pages. GPS-denied, dose logs and refill rules are **not** claimed done.
+| Date | Activity | Outcome |
+|---|---|---|
+| **10 Aug 2026** | Registration | New accounts stored through JDBC |
+| **11 Aug 2026** | Login | Credential check and error messages for invalid login |
+| **12 Aug 2026** | Session | Login creates session; logout invalidates it |
+| **13 Aug 2026** | Search / detail slice | Catalogue happy path wired UI → API → MySQL |
+| **14 Aug 2026** | Locator prototype | Nearby list / map against seed rows |
+| **15 Aug 2026** | Reminder CRUD | Add / edit / delete persisted per session user |
+| **16 Aug 2026** | Slice review | Protected navigation checked; unfinished paths labelled |
+
+#### Problems faced
+
+- Back-button after logout still showing protected pages until cache/session handling was corrected.  
+- Locator prototype looked “done” if GPS was never denied — fallback stayed explicitly unfinished.  
+- Reminder edit / delete had to reject records that did not belong to the session user.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Registration / login / session | Done |
+| Search / detail slice | Done |
+| Locator prototype | Done |
+| Reminder CRUD slice | Done |
+| Filters, PIN fallback, dose logs | Planned — Week 7 |
+
+**Next week.** UI / API integration, search filters, PIN fallback, dose logs.
 
 ---
 
-### WK-07  //  Depth
+### Week 7 — Depth
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-07-A855F7?style=for-the-badge&labelColor=020617" alt="Week 07">
-  <img src="https://img.shields.io/badge/PHASE-BUILD-1E1B4B?style=for-the-badge&labelColor=020617" alt="Build">
-  <img src="https://img.shields.io/badge/17–23_AUG_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-07-1D4ED8?style=for-the-badge&labelColor=0F172A" alt="Week 7">
+  <img src="https://img.shields.io/badge/Phase-Build-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Build">
+  <img src="https://img.shields.io/badge/17–23_August_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Connect UI to APIs with real input: filters, PIN fallback, dose logs.
+**Objective.** Make the slices survive messy input: filters, PIN fallback, dose logs.
 
-**Objective.** Make the slices survive messy humans — case / field mismatch in search, denied GPS, actual dose states.
+Source milestone for this week: **UI / API integration, filters, PIN fallback and dose logs**.
 
-**Why this week exists.** Source milestone is explicit: **UI / API integration, filters, PIN fallback and dose logs**.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Integration review; shared error responses for bad payloads |
-| **Store** | Search filters; case-insensitive / field mapping; empty-query response |
-| **Locator** | Manual PIN / city fallback when GPS is denied or unavailable |
-| **Remind** | Taken / missed / skipped dose logs against reminder records |
-| **Shell** | Loading / empty / error presentation consistent with prototype |
+| **M1–M2** | Integration review; shared error responses for bad payloads |
+| **M3–M4** | Search filters; case-insensitive / field mapping; empty-query response |
+| **M5–M6** | Manual PIN / city fallback when GPS is denied or unavailable |
+| **M7–M8** | Taken / missed / skipped dose logs against reminder records |
+| **M9–M10** | Loading / empty / error presentation consistent with the prototype |
 
-**Deliverables**
-- UI ↔ API integration on the live slices  
-- Catalogue filters  
-- PIN fallback path  
-- Dose-log states
+#### Daily progress
 
-**Exit gate.** Denied GPS does not dead-end the locator. An empty search is a state, not a blank page. Dose log has three explicit statuses.
+| Date | Activity | Outcome |
+|---|---|---|
+| **17 Aug 2026** | Filter UI | Catalogue filter controls added to the search page |
+| **18 Aug 2026** | Filter API | Query mapping aligned between UI and backend fields |
+| **19 Aug 2026** | Empty search | Empty-query and no-hit responses made explicit |
+| **20 Aug 2026** | PIN fallback | Manual PIN / city path after denied or missing GPS |
+| **21 Aug 2026** | Dose logs | Taken / missed / skipped saved against the reminder |
+| **22 Aug 2026** | Shared error copy | Empty / loading / error states aligned in chrome |
+| **23 Aug 2026** | Depth review | Denied GPS and empty search no longer dead-end |
 
-**Known failure class (record only if it happens).** Catalogue search returning wrong / empty rows from inconsistent naming — standardise mapping, add empty-query behaviour, retest.
+#### Problems faced
+
+- Brand vs generic matching broke when case and field names disagreed.  
+- PIN search and GPS search needed one clean input path.  
+- Parallel commits collided on shared layout files.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| UI / API integration on live slices | Done |
+| Catalogue filters | Done |
+| PIN fallback path | Done |
+| Dose-log states | Done |
+| Directions, refill rules, settings | Planned — Week 8 |
+
+**Next week.** Profile / settings, catalogue edge cases, directions, refill rules.
+
+> Wrong or empty search results from inconsistent fields are a **known failure class**. Standardise mapping, add empty-query behaviour, retest — only if it actually happens.
 
 ---
 
-### WK-08  //  Completeness
+### Week 8 — Completeness
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-08-D946EF?style=for-the-badge&labelColor=020617" alt="Week 08">
-  <img src="https://img.shields.io/badge/PHASE-BUILD-1E1B4B?style=for-the-badge&labelColor=020617" alt="Build">
-  <img src="https://img.shields.io/badge/24–30_AUG_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-08-1D4ED8?style=for-the-badge&labelColor=0F172A" alt="Week 8">
+  <img src="https://img.shields.io/badge/Phase-Build-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Build">
+  <img src="https://img.shields.io/badge/24–30_August_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Close owned edges: profile / settings, catalogue edge cases, directions, refill rules.
+**Objective.** Close owned edges so Week 9 can integrate instead of inventing leftover screens.
 
-**Objective.** Finish the demonstrable surface of each module so Week 9 can integrate instead of inventing leftover screens.
+Source milestone: **profile / settings, catalogue edge cases, directions and refill rules**.
 
-**Why this week exists.** Source milestone: **profile / settings, catalogue edge cases, directions and refill rules**.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Auth + API hardening around the new settings / profile calls |
-| **Store** | Catalogue edge cases: no hit, partial name, brand vs generic |
-| **Locator** | Directions links from a selected pharmacy; no-result copy; permission-denied message |
-| **Remind** | Refill-threshold rules; notification permission + limitation messaging |
-| **Shell** | Profile / settings / help pages in prototype style |
+| **M1–M2** | Auth and API hardening around profile / settings calls |
+| **M3–M4** | Catalogue edge cases: no hit, partial name, brand vs generic |
+| **M5–M6** | Directions from a selected pharmacy; no-result copy; permission-denied message |
+| **M7–M8** | Refill-threshold rules; notification permission and limitation messaging |
+| **M9–M10** | Profile / settings / help in prototype style |
 
-**Deliverables**
-- Profile / settings  
-- Catalogue edge-case handling  
-- Directions + no-result  
-- Refill rules + notification-limit copy
+#### Daily progress
 
-**Exit gate.** Each of M1–M10 has a demonstrable screen or evidence lane. Cross-module E2E is next, not more features.
+| Date | Activity | Outcome |
+|---|---|---|
+| **24 Aug 2026** | Permission copy | Denied-location message on the locator |
+| **25 Aug 2026** | Directions | Link from pharmacy details using stored address |
+| **26 Aug 2026** | No-result state | Dedicated empty pharmacy result view |
+| **27 Aug 2026** | Catalogue edges | Partial name, no hit, brand / generic cases checked |
+| **28 Aug 2026** | Refill rules | Threshold compared against reminder / log data |
+| **29 Aug 2026** | Notifications | Permission prompt plus limitation text — no delivery promise |
+| **30 Aug 2026** | Profile / settings | Account pages in shared chrome; leftover placeholders removed |
+
+#### Problems faced
+
+- Incomplete pharmacy addresses produced unusable direction targets.  
+- Browser notifications blocked or ignored — UI had to explain limits.  
+- Empty or zero refill thresholds produced incorrect alerts until validated.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Profile / settings / help | Done |
+| Catalogue edge cases | Done |
+| Directions and no-result | Done |
+| Refill rules and notification-limit copy | Done |
+| Cross-module E2E | Planned — Week 9 |
+
+**Next week.** One journey across ten modules; end-to-end tests; defect list.
 
 ---
 
-### WK-09  //  Integrate
+### Week 9 — Integration
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-09-FF2BD6?style=for-the-badge&labelColor=020617" alt="Week 09">
-  <img src="https://img.shields.io/badge/PHASE-PROVE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Prove">
-  <img src="https://img.shields.io/badge/31_AUG–06_SEP_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-09-7C3AED?style=for-the-badge&labelColor=0F172A" alt="Week 9">
+  <img src="https://img.shields.io/badge/Phase-Prove-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Prove">
+  <img src="https://img.shields.io/badge/31_August–06_September_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> One journey across ten modules. Session, MySQL and chrome must survive the hand-offs.
+**Objective.** One journey across ten modules. Session, MySQL and chrome must survive the hand-offs.
 
-**Objective.** Module integration and end-to-end tests: login → search → details → locate (GPS or PIN) → remind → log → refill, inside the dashboard shell.
+Separately “done” modules still collide on session keys, shared CSS and user-id foreign keys.
 
-**Why this week exists.** Separately “done” modules still collide on session keys, shared CSS and user-id foreign keys.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Cross-module session; API error consistency; merge review |
-| **Store** | Search / detail inside the full journey, not a standalone page |
-| **Locator** | GPS-allowed **and** GPS-denied journeys in the same session |
-| **Remind** | Reminder + dose log + refill after a store / locator visit |
-| **Shell** | E2E script, checklists, first bug list — no invented pass rates |
+| **M1–M2** | Cross-module session; API error consistency; merge review |
+| **M3–M4** | Search / detail inside the full journey, not a standalone page |
+| **M5–M6** | GPS-allowed **and** GPS-denied journeys in the same session |
+| **M7–M8** | Reminder + dose log + refill after a store / locator visit |
+| **M9–M10** | E2E script, checklists, first bug list — no invented pass rates |
 
-**Deliverables**
-- Integrated navigation across M1–M10  
-- End-to-end test pass (happy + denied-GPS)  
-- Open defect list for Week 10
+#### Daily progress
 
-**Exit gate.** A single logged-in user can complete the journey. Defects are listed, not hidden.
+| Date | Activity | Outcome |
+|---|---|---|
+| **31 Aug 2026** | Journey wiring | Login → store → locator → reminders without re-auth |
+| **01 Sep 2026** | Store in E2E | Hit, miss and filter cases inside the shell |
+| **02 Sep 2026** | Locator in E2E | Allowed GPS, denied GPS, invalid PIN, no-result |
+| **03 Sep 2026** | Reminders in E2E | CRUD, three dose states, refill threshold |
+| **04 Sep 2026** | Error handling | Invalid session, missing IDs, JDBC failure copy |
+| **05 Sep 2026** | Session isolation | Reminder rows stay account-scoped; search does not overwrite session keys |
+| **06 Sep 2026** | Defect list | Open issues handed to Week 10 — not hidden |
 
-**Known failure class (record only if it happens).** Locator dead when GPS permission is denied — fallback must already exist; this week proves it inside E2E.
+#### Problems faced
+
+- Permission-denied still looked like “searching” until fallback timeout was explicit.  
+- No-result and JDBC-error states were easy to confuse.  
+- Refill alerts did not always recalculate after a log update.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Integrated navigation | Done |
+| End-to-end happy path | Done |
+| GPS-denied path in E2E | Done |
+| Defect list | Done |
+| Defect closure | Planned — Week 10 |
+
+**Next week.** Security, validation, responsive UI, error-state fixes, regression.
+
+> Locator failure when GPS is denied is a **known failure class**. Fallback must already exist; this week proves it inside E2E — only if the incident is real.
 
 ---
 
-### WK-10  //  Harden
+### Week 10 — Hardening
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-10-F43F5E?style=for-the-badge&labelColor=020617" alt="Week 10">
-  <img src="https://img.shields.io/badge/PHASE-PROVE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Prove">
-  <img src="https://img.shields.io/badge/07–13_SEP_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-10-7C3AED?style=for-the-badge&labelColor=0F172A" alt="Week 10">
+  <img src="https://img.shields.io/badge/Phase-Prove-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Prove">
+  <img src="https://img.shields.io/badge/07–13_September_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Make failure states first-class: security, validation, responsive UI, error-state fixes.
+**Objective.** Make failure states first-class: security, validation, responsive UI, error-state fixes.
 
-**Objective.** Close integration defects. Validate inputs. Keep the prototype layout at different widths. Treat error pages as designed surfaces.
+Source milestone: **security, validation, responsive UI and error-state fixes**. Reminder datetime drift after refresh is a named risk.
 
-**Why this week exists.** Source milestone: **security, validation, responsive UI and error-state fixes**. Reminder datetime drift after refresh is a named risk.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Authz on every write; validation; safer error reporting; JDBC config hygiene |
-| **Store** | Query / filter validation; empty / error / loading states at smaller widths |
-| **Locator** | Invalid PIN, no-result, denied permission — copy and layout pass |
-| **Remind** | Consistent date/time parse; refill recalculation after a log; notify-limit copy |
-| **Shell** | Responsive chrome; screenshot-based visual check vs prototype |
+| **M1–M2** | Authz on every write; validation; safer error reporting; JDBC hygiene |
+| **M3–M4** | Query / filter validation; empty / error / loading at smaller widths |
+| **M5–M6** | Invalid PIN, no-result, denied permission — copy and layout pass |
+| **M7–M8** | Consistent date/time parse; refill recalculation after a log |
+| **M9–M10** | Responsive chrome; visual check against prototype |
 
-**Deliverables**
-- Security / validation pass  
-- Responsive UI pass  
-- Error-state fixes  
-- Regression on Week 9 journeys
+#### Daily progress
 
-**Exit gate.** High-priority defects from Week 9 are closed or explicitly deferred. Reminder time after refresh is tested.
+| Date | Activity | Outcome |
+|---|---|---|
+| **07 Sep 2026** | Reproduce Week 9 defects | Outstanding issues confirmed on a clean session |
+| **08 Sep 2026** | Locator fixes | Fallback timing, invalid PIN, directions from incomplete addresses |
+| **09 Sep 2026** | Reminder fixes | Ownership checks, log updates, refill refresh, datetime parse |
+| **10 Sep 2026** | Validation | Required fields, threshold values, search input rules |
+| **11 Sep 2026** | Responsive pass | Catalogue, locator, reminder and dashboard at multiple widths |
+| **12 Sep 2026** | Regression | Week 9 journeys re-run after the fixes |
+| **13 Sep 2026** | Priority close | High-priority defects closed or explicitly deferred |
 
-**Known failure class (record only if it happens).** Reminder time changes after refresh — lock one datetime convention, retest create / edit / refresh / repeat.
+#### Problems faced
+
+- CSS changes reintroduced locator layout bugs — needed a second regression pass.  
+- Refill recalculation was date-sensitive and needed query correction, not UI-only tweaks.  
+- Cached assets made it hard to confirm a fix had actually deployed.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| Security / validation pass | Done |
+| Responsive UI pass | Done |
+| Error-state fixes | Done |
+| Regression on Week 9 journeys | Done |
+| Evidence pack | Planned — Week 11 |
+
+**Next week.** System tests, screenshots, documentation that matches the running app.
+
+> Reminder time changing after refresh is a **known failure class**. Lock one datetime convention and retest create / edit / refresh / repeat — only if it actually happens.
 
 ---
 
-### WK-11  //  Evidence
+### Week 11 — Evidence
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-11-F97316?style=for-the-badge&labelColor=020617" alt="Week 11">
-  <img src="https://img.shields.io/badge/PHASE-PROVE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Prove">
-  <img src="https://img.shields.io/badge/14–20_SEP_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-11-7C3AED?style=for-the-badge&labelColor=0F172A" alt="Week 11">
+  <img src="https://img.shields.io/badge/Phase-Prove-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Prove">
+  <img src="https://img.shields.io/badge/14–20_September_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> Prove behaviour. Not vibes. System tests, screenshots, documentation that matches the running app.
+**Objective.** Prove behaviour. System tests, screenshots, documentation that matches the running app. Feature scope freezes.
 
-**Objective.** Capture test evidence, update docs, clean the repo, freeze feature scope.
+Evaluators should not have to imagine GPS-denied or refill-limit screens.
 
-**Why this week exists.** Source milestone: **system tests, test evidence and documentation updates**. Evaluators should not have to imagine GPS-denied or refill-limit screens.
-
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Auth evidence: valid / invalid credentials, session expiry |
-| **Store** | Search hit / miss / filter evidence; provenance fields visible |
-| **Locator** | Allowed GPS, denied GPS, invalid PIN, directions, no-result captures |
-| **Remind** | CRUD, three dose states, refill threshold, notification-limit messaging |
-| **Shell** | Checklists, bug reports, screenshot pack, README alignment, repo hygiene |
+| **M1–M2** | Auth evidence: valid / invalid credentials, session expiry |
+| **M3–M4** | Search hit / miss / filter; provenance fields visible |
+| **M5–M6** | Allowed GPS, denied GPS, invalid PIN, directions, no-result |
+| **M7–M8** | CRUD, three dose states, refill threshold, notification-limit messaging |
+| **M9–M10** | Checklists, bug reports, screenshot pack, README alignment, repo hygiene |
 
-**Deliverables**
-- System test notes  
-- Screenshot / evidence pack (`docs/screenshots/`)  
-- Documentation updates  
-- Ignored local server / secret files verified
+#### Daily progress
 
-**Exit gate.** README does not describe screens that were never built. Every owner has evidence for their modules.
+| Date | Activity | Outcome |
+|---|---|---|
+| **14 Sep 2026** | Final functional pass | Auth + M3–M8 retested on the hardened build |
+| **15 Sep 2026** | Screenshot capture | Slots filled under `docs/screenshots/` as files exist |
+| **16 Sep 2026** | Module notes | Implementation notes written only for work that exists |
+| **17 Sep 2026** | GitHub organisation | Folders cleaned; local server / secret files untracked |
+| **18 Sep 2026** | Code cleanup | Unused placeholders and duplicate helpers removed |
+| **19 Sep 2026** | README vs product | Docs stripped of screens that were never built |
+| **20 Sep 2026** | Evidence review | Gaps listed for Week 12, not invented as completed |
+
+#### Problems faced
+
+- Older labels still appearing in screenshots — recapture required.  
+- Cleanup in shared layout risked another member’s page.  
+- Browser permission dialogs are hard to capture consistently.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| System test notes | Done |
+| Screenshot / evidence pack | Done |
+| Documentation updates | Done |
+| Repo hygiene | Done |
+| UAT and handover | Planned — Week 12 |
+
+**Next week.** UAT, last fixes, release candidate, demo, handover — still inside 06 October 2026.
 
 ---
 
-### WK-12  //  Release
+### Week 12 — Release
 
 <p>
-  <img src="https://img.shields.io/badge/WEEK-12-F59E0B?style=for-the-badge&labelColor=020617" alt="Week 12">
-  <img src="https://img.shields.io/badge/PHASE-PROVE-1E1B4B?style=for-the-badge&labelColor=020617" alt="Prove">
-  <img src="https://img.shields.io/badge/21_SEP–06_OCT_2026-334155?style=for-the-badge&labelColor=020617" alt="Dates">
+  <img src="https://img.shields.io/badge/Week-12-BE123C?style=for-the-badge&labelColor=0F172A" alt="Week 12">
+  <img src="https://img.shields.io/badge/Phase-Release-1E3A5F?style=for-the-badge&labelColor=0F172A" alt="Release">
+  <img src="https://img.shields.io/badge/21_September–06_October_2026-64748B?style=for-the-badge&labelColor=0F172A" alt="Dates">
 </p>
 
-> UAT, last fixes, candidate, demo, handover — **still inside the 06 October close**. No thirteenth week.
+**Objective.** User acceptance against stories and prototype style, last bug fixes, candidate build, final README, demo and handover. **No thirteenth week.**
 
-**Objective.** User acceptance against stories and prototype style, bug fixes, deployment preparation, final README, contribution evidence.
+Source planning listed extra late-September / October beats. They are compressed here, not extended past 06 Oct 2026.
 
-**Why this week is longer on the calendar.** Source planning listed extra late-September / October beats (release candidate, regression, final demo). They are **compressed here**, not extended past 06 Oct 2026.
-
-| Window inside Week 12 | Focus |
+| Window | Focus |
 |---|---|
 | **21–27 Sep** | UAT, bug fixes, deployment preparation |
 | **28 Sep–04 Oct** | Release candidate, README / report freeze, demo script |
-| **05–06 Oct** | Final regression, repository tag / evidence, handover |
+| **05–06 Oct** | Final regression, repository evidence, handover |
 
-| Track | This week |
+| Area | Work this week |
 |---|---|
-| **System** | Candidate build, config notes, no secrets in Git, merge discipline |
-| **Store** | UAT on search / detail / provenance |
-| **Locator** | UAT on GPS-on, GPS-off, directions |
-| **Remind** | UAT on schedules, logs, refill, notification limits |
-| **Shell** | Demo rehearsal, visual regression vs prototype, final docs |
+| **M1–M2** | Candidate build, config notes, no secrets in Git, merge discipline |
+| **M3–M4** | UAT on search / detail / provenance |
+| **M5–M6** | UAT on GPS-on, GPS-off, directions |
+| **M7–M8** | UAT on schedules, logs, refill, notification limits |
+| **M9–M10** | Demo rehearsal, visual check vs prototype, final docs |
 
-**Deliverables**
-- UAT notes  
-- Final bug-fix pass (no new modules)  
-- Release candidate  
-- Final README + evidence  
-- Demo / handover pack
+#### Daily progress
 
-**Exit gate.** One repository. One demo path. Honest “no major blocker” if that is the truth.
+| Date | Activity | Outcome |
+|---|---|---|
+| **21 Sep 2026** | UAT start | Candidate build; first full login-to-modules walkthrough |
+| **22 Sep 2026** | Store UAT | Search, filters, details, provenance |
+| **23 Sep 2026** | Locator UAT | GPS on / off, PIN, directions, no-result |
+| **24 Sep 2026** | Reminder UAT | CRUD, dose states, refill, notification-limit copy |
+| **25 Sep 2026** | Shell UAT | Dashboard, profile, settings, help vs prototype |
+| **26 Sep 2026** | Bug-fix pass | Only demo-blocking issues; no new modules |
+| **27 Sep 2026** | Deploy notes | Local run / JDBC notes prepared — secrets still local |
+| **28 Sep 2026** | README freeze | Week log and module claims match the running app |
+| **29 Sep 2026** | Repo review | `[REPOSITORY URL]` checked for source, evidence, ignored files |
+| **30 Sep 2026** | Demo script | One path, one owner per screen |
+| **01 Oct 2026** | Screenshot recapture | Any pre-fix labels replaced |
+| **02 Oct 2026** | Feature freeze | Only critical demo blockers allowed |
+| **03 Oct 2026** | Freeze verification | Auth + M3–M10 rechecked on the frozen build |
+| **04 Oct 2026** | Report alignment | Weekly reports and demo script agree with this README |
+| **05 Oct 2026** | Final polish | Image paths, diagram rendering, repository cleanliness |
+| **06 Oct 2026** | Handover | Submission pack closed at the end of the academic window |
 
-**Known failure class (record only if it happens).** Merge conflict on shared CSS breaking dashboard spacing — restore prototype tokens, screenshot-check catalogue / locator / reminder / dashboard.
+#### Problems faced
+
+- Small copy mismatches between fallback UI and README.  
+- A late reminder-date issue had to be fixed without reopening scope.  
+- Coordinating one demo script across five members.
+
+#### Outcomes
+
+| Deliverable | Status |
+|---|:---:|
+| UAT notes | Done |
+| Final bug-fix pass | Done |
+| Release candidate | Done |
+| Final README and evidence | Done |
+| Demo / handover pack | Done |
+
+**After Week 12.** Submit `[REPOSITORY URL]`, demonstrate each owner’s modules, and stop. If a week had no major error, say so honestly.
+
+> Shared-CSS merge conflicts breaking dashboard spacing are a **known failure class**. Restore prototype tokens and screenshot-check catalogue, locator, reminder and dashboard — only if it actually happens.
 
 ---
 
-### Clock vs source (honest)
+## 🔀 GitHub workflow
 
-| This README | Source beats absorbed |
-|---|---|
-| Weeks 1–11 | Direct map to source Weeks 1–11 |
-| Week 12 (21 Sep–06 Oct) | Source Week 12 UAT + later release-candidate / regression / final-demo beats |
-
-College portal numbering wins if it differs.
-
----
-
-## 🔀 GitHub Protocol
-
-One shared repository. **A separate feature branch per operator.** Review before `main`.
+One shared repository. **A separate feature branch per member.** Review before `main`.
 
 ```mermaid
-%%{init: {'theme':'dark','themeVariables': {'primaryColor':'#0f766e','lineColor':'#00f5d4','primaryTextColor':'#ccfbf1'}}}%%
 flowchart LR
-  F["Feature branch"] --> C["Small commits"]
-  C --> P["Pull request"]
-  P --> R["Review"]
-  R --> M["Merge to main"]
-  M --> W["Weekly evidence"]
+  A[Feature branch] --> B[Small commits]
+  B --> C[Pull request]
+  C --> D[Review]
+  D --> E[Merge to main]
+  E --> F[Weekly evidence]
 ```
 
 | Rule | Practice |
 |---|---|
-| **One repo** | All five operators ship in the same project |
+| **One repo** | All five members ship in the same project |
 | **Branch per member** | Feature work stays isolated until reviewed |
 | **Small commits** | Messages describe the change — not “update” |
 | **PR before main** | Review, then merge. Unmerged PRs are reported honestly |
@@ -931,7 +1122,7 @@ Demo       : [ADD DEMO LINK]
 
 ---
 
-## 🧪 Quality Grid
+## 🧪 Testing & quality
 
 Planned test types — **not** fabricated pass rates.
 
@@ -957,95 +1148,62 @@ If a week had no major error, **say so**. Do not invent one.
 
 ---
 
-## 📊 How The Product Takes Shape
+## 📸 Screenshots
 
-```text
- Idea            search + locate + adhere as one web product
-  ↓
- Requirements    SRS, stories, acceptance, data-source research
-  ↓
- Design          use-case / activity / class / ER, navigation map
-  ↓
- Contracts       schema, API contracts, UI mock-ups
-  ↓
- Build           auth · catalogue · locator · reminders · dashboard
-  ↓
- Integration     shared layout, session, MySQL, cross-module journeys
-  ↓
- Testing         module, integration, edge cases, system tests
-  ↓
- UAT             acceptance against prototype and stories
-  ↓
- Candidate       bug fixes, docs, evidence pack
-  ↓
- Demo            repository, contribution evidence, handover
-```
-
-| Gate | Meaning |
-|---|---|
-| **Contracts before code** | Schema + API + mock-ups freeze in Week 4 |
-| **Slices before polish** | Login / search / locator / reminder CRUD exist before edge-case work |
-| **Fallback is a feature** | GPS-denied is a designed path |
-| **Evidence over claims** | Screenshots, PRs and checklists — no invented metrics |
-
----
-
-## 📸 Interface
-
-Drop real captures into `docs/screenshots/`. Frames below are **slots**, not product photos.
+Drop real captures into `docs/screenshots/`. The frames below are **slots**, not product photos.
 
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="https://placehold.co/960x540/020617/00F5D4/png?text=%3E+01-auth.png%0A%2F%2F+authentication" alt="Add authentication screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/0F766E/png?text=docs%2Fscreenshots%2F01-auth.png%0AAuthentication" alt="Add authentication screenshot"><br>
       <sub><strong>Authentication</strong> · <code>docs/screenshots/01-auth.png</code></sub>
     </td>
     <td align="center" width="50%">
-      <img src="https://placehold.co/960x540/020617/60A5FA/png?text=%3E+02-search.png%0A%2F%2F+medicine+search" alt="Add medicine search screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/1D4ED8/png?text=docs%2Fscreenshots%2F02-search.png%0AMedicine+search" alt="Add medicine search screenshot"><br>
       <sub><strong>Medicine search</strong> · <code>docs/screenshots/02-search.png</code></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://placehold.co/960x540/020617/93C5FD/png?text=%3E+03-details.png%0A%2F%2F+price+provenance" alt="Add details screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/1E40AF/png?text=docs%2Fscreenshots%2F03-details.png%0APrice+provenance" alt="Add details screenshot"><br>
       <sub><strong>Details / price provenance</strong> · <code>docs/screenshots/03-details.png</code></sub>
     </td>
     <td align="center">
-      <img src="https://placehold.co/960x540/020617/C084FC/png?text=%3E+04-locator.png%0A%2F%2F+pharmacy+locator" alt="Add locator screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/6D28D9/png?text=docs%2Fscreenshots%2F04-locator.png%0APharmacy+locator" alt="Add locator screenshot"><br>
       <sub><strong>Pharmacy locator</strong> · <code>docs/screenshots/04-locator.png</code></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://placehold.co/960x540/020617/E9D5FF/png?text=%3E+05-fallback.png%0A%2F%2F+GPS+denied+%2F+PIN" alt="Add fallback screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/7C3AED/png?text=docs%2Fscreenshots%2F05-fallback.png%0AGPS+denied+%2F+PIN" alt="Add fallback screenshot"><br>
       <sub><strong>GPS denied / PIN / directions</strong> · <code>docs/screenshots/05-fallback.png</code></sub>
     </td>
     <td align="center">
-      <img src="https://placehold.co/960x540/020617/FB7185/png?text=%3E+06-reminder.png%0A%2F%2F+reminder+form" alt="Add reminder screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/C2410C/png?text=docs%2Fscreenshots%2F06-reminder.png%0AReminder+form" alt="Add reminder screenshot"><br>
       <sub><strong>Medicine reminder</strong> · <code>docs/screenshots/06-reminder.png</code></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://placehold.co/960x540/020617/FDA4AF/png?text=%3E+07-dose-log.png%0A%2F%2F+dose+log+%2F+refill" alt="Add dose log screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/9A3412/png?text=docs%2Fscreenshots%2F07-dose-log.png%0ADose+log+%2F+refill" alt="Add dose log screenshot"><br>
       <sub><strong>Dose log / refill alert</strong> · <code>docs/screenshots/07-dose-log.png</code></sub>
     </td>
     <td align="center">
-      <img src="https://placehold.co/960x540/020617/FED7AA/png?text=%3E+08-dashboard.png%0A%2F%2F+dashboard" alt="Add dashboard screenshot"><br>
+      <img src="https://placehold.co/960x540/F8FAFC/BE123C/png?text=docs%2Fscreenshots%2F08-dashboard.png%0ADashboard" alt="Add dashboard screenshot"><br>
       <sub><strong>Dashboard / profile / help</strong> · <code>docs/screenshots/08-dashboard.png</code></sub>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <sub>Replace placeholder URLs with <code>docs/screenshots/0N-….png</code> after you drop files.</sub><br>
+  <sub>After you add files, replace the placeholder URLs with <code>docs/screenshots/0N-….png</code>.</sub><br>
   Demo: <a href="[ADD DEMO LINK]">[ADD DEMO LINK]</a>
   · Deployment: <a href="[ADD DEPLOYMENT LINK]">[ADD DEPLOYMENT LINK]</a>
 </p>
 
 ---
 
-## 📁 Project Structure
+## 📁 Project structure
 
 ```text
 [ADD ACTUAL PROJECT STRUCTURE HERE]
@@ -1063,20 +1221,53 @@ Only what the project specifies.
 |---|---|
 | Backend | Java APIs |
 | Data | MySQL |
-| Connectivity | JDBC — URL, database, credentials **never committed** |
+| Connectivity | JDBC — URL, database, credentials never committed |
 | Client location | Browser geolocation + manual PIN / city fallback |
 | Alerts | Browser notifications, with documented limitations |
 | UI | Shared layout preserving the approved prototype |
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=java,mysql,html,css&theme=dark" alt="Stack">
+  <img src="https://skillicons.dev/icons?i=java,mysql,html,css&theme=light" alt="Stack">
 </p>
 
 ---
 
-## 📋 Reporting
+## 🚀 Getting started
 
-Each operator files **their own daily log and weekly report**. Points only with evidence.
+```text
+[ADD SETUP STEPS]
+[ADD DATABASE SCRIPT]
+[ADD LOCAL RUN COMMAND]
+[ADD ENVIRONMENT / JDBC NOTES]
+```
+
+1. Clone `[REPOSITORY URL]`  
+2. Create the MySQL schema from the project script  
+3. Configure JDBC locally — do not commit credentials  
+4. Run the Java web application with the team’s agreed server setup  
+5. Sign in, then exercise search → locator → reminders on a **feature branch**
+
+---
+
+## 📚 Documentation
+
+| Document | Location |
+|---|---|
+| SRS / user stories / acceptance criteria | `[ADD DOCUMENTATION LINK]` |
+| UML / ER / navigation map | `[ADD DOCUMENTATION LINK]` |
+| API contracts | `[ADD DOCUMENTATION LINK]` |
+| UI mock-ups / prototype | `[ADD DOCUMENTATION LINK]` |
+| Test checklists and bug reports | `[ADD DOCUMENTATION LINK]` |
+| Weekly reports | `[ADD DOCUMENTATION LINK]` |
+
+---
+
+<details>
+<summary><strong>Reporting standard</strong></summary>
+
+<br>
+
+Each member files **their own daily log and weekly report**. Points only with evidence.
 
 **Daily log**
 
@@ -1102,39 +1293,11 @@ Each operator files **their own daily log and weekly report**. Points only with 
 
 Weekly pack: date range, completed-work bullets, score breakdown, `[REPOSITORY URL]`, `[PR LINK]` / `[COMMIT LINK]`, problems faced **or** “no major blocker”, specific next-week plan.
 
----
-
-## 🚀 Getting Started
-
-```text
-[ADD SETUP STEPS]
-[ADD DATABASE SCRIPT]
-[ADD LOCAL RUN COMMAND]
-[ADD ENVIRONMENT / JDBC NOTES]
-```
-
-1. Clone `[REPOSITORY URL]`  
-2. Create the MySQL schema from the project script  
-3. Configure JDBC locally — do not commit credentials  
-4. Run the Java web application with the team’s agreed server setup  
-5. Sign in, then exercise search → locator → reminders on a **feature branch**
+</details>
 
 ---
 
-## 📚 Docs Index
-
-| Document | Location |
-|---|---|
-| SRS / user stories / acceptance criteria | `[ADD DOCUMENTATION LINK]` |
-| UML / ER / navigation map | `[ADD DOCUMENTATION LINK]` |
-| API contracts | `[ADD DOCUMENTATION LINK]` |
-| UI mock-ups / prototype | `[ADD DOCUMENTATION LINK]` |
-| Test checklists & bug reports | `[ADD DOCUMENTATION LINK]` |
-| Weekly reports | `[ADD DOCUMENTATION LINK]` |
-
----
-
-## 🤝 Working Agreements
+## 🤝 Working agreements
 
 - Feature branch per member; **review before merge to main**.  
 - Shared CSS / layout files have a clear owner — discuss before rewriting them.  
@@ -1146,11 +1309,12 @@ Weekly pack: date range, completed-work bullets, score breakdown, `[REPOSITORY U
 ---
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=160&color=0:00f5d4,40:1e1b4b,100:020617&section=footer&text=MEDIFINDER&fontSize=26&fontColor=E0FFF9&fontAlignY=68&desc=06%20Jul%202026%20%E2%80%94%2006%20Oct%202026%20%20%2F%2F%20%205%20operators%20%20%2F%2F%20%2010%20modules%20%20%2F%2F%20%20one%20repo&descSize=12&descAlignY=86" alt="footer">
+  <strong>MediFinder</strong><br>
+  <sub>06 July 2026 — 06 October 2026 · 5 members · 10 modules · one repository</sub>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/SEARCH-CATALOGUE-00F5D4?style=for-the-badge&labelColor=020617" alt="Search">
-  <img src="https://img.shields.io/badge/LOCATE-PHARMACIES-A855F7?style=for-the-badge&labelColor=020617" alt="Locate">
-  <img src="https://img.shields.io/badge/REMIND-DOSES-FF2BD6?style=for-the-badge&labelColor=020617" alt="Remind">
+  <img src="https://img.shields.io/badge/Search-Catalogue-0F766E?style=flat-square&labelColor=0F172A" alt="Search">
+  <img src="https://img.shields.io/badge/Locate-Pharmacies-1D4ED8?style=flat-square&labelColor=0F172A" alt="Locate">
+  <img src="https://img.shields.io/badge/Remind-Doses-C2410C?style=flat-square&labelColor=0F172A" alt="Remind">
 </p>
