@@ -1,4 +1,4 @@
-﻿package com.medicare.pharmacy.service;
+package com.medicare.pharmacy.service;
 
 import com.medicare.common.exception.ResourceNotFoundException;
 import com.medicare.common.response.PagedResponse;

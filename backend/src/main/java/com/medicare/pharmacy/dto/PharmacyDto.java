@@ -1,4 +1,4 @@
-﻿package com.medicare.pharmacy.dto;
+package com.medicare.pharmacy.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
