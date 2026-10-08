@@ -4,11 +4,22 @@
 // Backend Integration: /api/medicines, /api/medicines/{id}, /api/medicines/{id}/offers
 // ==============================================================================
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Card } from '../../components/common/Card';
 import { Medicine, MedicineDetail, RetailerOffer } from '../../types';
 import { medicineService } from '../../services/medicineService';
 import { MEDICINE_CATEGORIES } from '../../utils/constants';
+
+const POPULAR_SEARCH_TAGS = [
+  'Paracetamol',
+  'Amoxicillin',
+  'Pantoprazole',
+  'Metformin',
+  'Telmisartan',
+  'Cetirizine',
+  'Azithromycin',
+  'Vitamin C'
+];
 
 export const MedicineStoreModule: React.FC = () => {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -19,6 +30,7 @@ export const MedicineStoreModule: React.FC = () => {
 
   // Filter and Query States
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [category, setCategory] = useState('All Categories');
   const [dosageForm, setDosageForm] = useState('All Forms');
   const [dosageFormsList, setDosageFormsList] = useState<string[]>([]);
@@ -34,7 +46,18 @@ export const MedicineStoreModule: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load initial dropdown data (Categories & Dosage Forms)
+  const isInitialMount = useRef(true);
+
+  // Debounce search query changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 350);
+
+    return () => clearTimeout(handler);
+  }, [query]);
+
+  // Load initial metadata (Categories & Dosage Forms)
   useEffect(() => {
     const loadMetadata = async () => {
       try {
@@ -65,7 +88,7 @@ export const MedicineStoreModule: React.FC = () => {
     setError(null);
     try {
       const data = await medicineService.getMedicines({
-        query: query.trim() || undefined,
+        query: debouncedQuery.trim() || undefined,
         category: category !== 'All Categories' ? category : undefined,
         dosageForm: dosageForm !== 'All Forms' ? dosageForm : undefined,
         requiresPrescription: requiresPrescription,
@@ -84,20 +107,27 @@ export const MedicineStoreModule: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [query, category, dosageForm, requiresPrescription, sortBy, sortDirection]);
+  }, [debouncedQuery, category, dosageForm, requiresPrescription, sortBy, sortDirection]);
 
-  // Refetch when filters change
+  // Refetch when filters or debounced query changes
   useEffect(() => {
-    fetchMedicines(0);
-  }, [category, dosageForm, requiresPrescription, sortBy, sortDirection]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      fetchMedicines(0);
+    } else {
+      fetchMedicines(0);
+    }
+  }, [debouncedQuery, category, dosageForm, requiresPrescription, sortBy, sortDirection]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setDebouncedQuery(query);
     fetchMedicines(0);
   };
 
   const handleClearSearch = () => {
     setQuery('');
+    setDebouncedQuery('');
     setCategory('All Categories');
     setDosageForm('All Forms');
     setRequiresPrescription(undefined);
@@ -137,7 +167,7 @@ export const MedicineStoreModule: React.FC = () => {
       </div>
 
       {/* Featured / Quick Highlights Banner (when not actively searching) */}
-      {!query && category === 'All Categories' && featuredMedicines.length > 0 && (
+      {!debouncedQuery && category === 'All Categories' && featuredMedicines.length > 0 && (
         <div style={{
           background: 'linear-gradient(135deg, rgba(15, 118, 110, 0.08) 0%, rgba(37, 99, 235, 0.06) 100%)',
           border: '1px solid var(--border)',
@@ -200,7 +230,7 @@ export const MedicineStoreModule: React.FC = () => {
               {query && (
                 <button
                   type="button"
-                  onClick={() => setQuery('')}
+                  onClick={() => { setQuery(''); setDebouncedQuery(''); }}
                   style={{
                     position: 'absolute',
                     right: '0.75rem',
@@ -233,8 +263,32 @@ export const MedicineStoreModule: React.FC = () => {
             )}
           </div>
 
+          {/* Quick Search Suggestion Tags */}
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>Popular:</span>
+            {POPULAR_SEARCH_TAGS.map(tag => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => { setQuery(tag); setDebouncedQuery(tag); }}
+                style={{
+                  fontSize: '0.6875rem',
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '12px',
+                  background: query.toLowerCase() === tag.toLowerCase() ? 'var(--primary)' : 'var(--border-light, #f1f5f9)',
+                  color: query.toLowerCase() === tag.toLowerCase() ? '#ffffff' : 'var(--text-main)',
+                  border: '1px solid var(--border)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+
           {/* Quick Filter Bar */}
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center', borderTop: '1px solid var(--border-light)', paddingTop: '0.875rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>Category:</label>
               <select
@@ -315,7 +369,7 @@ export const MedicineStoreModule: React.FC = () => {
           {loading && (
             <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
               <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏳</div>
-              <div style={{ fontWeight: 600 }}>Loading medicine catalogue...</div>
+              <div style={{ fontWeight: 600 }}>Searching medicine catalogue...</div>
               <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>Comparing verified pharmaceutical pricing</div>
             </div>
           )}
@@ -345,7 +399,7 @@ export const MedicineStoreModule: React.FC = () => {
                   No matching medicines found
                 </h3>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '420px', margin: '0 auto 1.5rem auto' }}>
-                  We couldn't find any medications matching "<strong>{query}</strong>" with the selected filters.
+                  We couldn't find any medications matching "<strong>{debouncedQuery || query}</strong>" with the selected filters.
                 </p>
                 <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                   <button className="btn btn-secondary" onClick={handleClearSearch}>
