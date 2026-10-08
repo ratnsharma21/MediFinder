@@ -108,3 +108,28 @@ Once started:
 | `ratn_lead` | `ratn@medicare.demo` | `Password@123` | `ROLE_ADMIN` | Admin & full access |
 | `demo_user` | `user@medicare.demo` | `Password@123` | `ROLE_USER` | Standard patient user |
 | `rahul_sharma`| `rahul@medicare.demo`| `Password@123` | `ROLE_USER` | Standard patient user |
+
+---
+
+## 6. Pharmacy Locator & Maps Configuration (Member 3 - Sumit)
+
+### Map Provider Architecture & Dual-Mode Operation
+MediFinder features a flexible dual-engine mapping architecture:
+1. **Google Maps JavaScript API Mode**: Used when `VITE_GOOGLE_MAPS_API_KEY` is specified in your frontend environment.
+2. **High-Fidelity SVG Vector Radar Mode**: Zero-configuration default when no API key is provided, ensuring full offline capability, zero third-party dependency failures, and smooth pin synchronization.
+
+### Google Maps API Key Setup
+To enable live Google Maps tiles:
+1. Navigate to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Enable the **Maps JavaScript API** for your project.
+3. Generate an API Key under Credentials.
+4. **Security Best Practice**: Restrict the key using **Application Restrictions -> HTTP referrers** (e.g., `http://localhost:5173/*`, `http://localhost:3000/*`). Never commit private keys to version control.
+5. Add the key to `frontend/.env` (or copy `.env.example` to `.env`):
+   ```env
+   VITE_GOOGLE_MAPS_API_KEY=AIzaSyYourActualKeyHere
+   ```
+6. Restart the Vite dev server (`npm run dev`).
+
+### Geolocation Notes
+- Browser geolocation (`navigator.geolocation`) requires a secure context (`https://` or `http://localhost`).
+- When location permissions are denied or unavailable, MediFinder provides instant fallback options including quick city presets (Bengaluru, Gurugram) and manual postal code/keyword search.
