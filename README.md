@@ -63,11 +63,11 @@ Additional role-specific responsibilities belonging to other assigned modules ar
 
 | # | Team Member | Enrollment No. |
 |:---:|---|---|
-| 🧑‍💻 **01** | **Sahil Saini** | `24E1ARCSM30P141` |
-| 🧑‍💻 **02** | **Nitin Singh Shekhawat** | `24E1ARITM40P037` |
-| 🧑‍💻 **03** | **Sakshi Kumari Singh** | `24E1ARCSF40P143` |
-| 🧑‍💻 **04** | **Rajat Tailor** | `24E1ARCSM30P126` |
-| 🧑‍💻 **05** | **[Team Member 5]** | `[ENROLLMENT_NO]` |
+| 🧑‍💻 **01** | **Sameer Achara** | `24E1ARCSM30P141` |
+| 🧑‍💻 **02** | **Ratn Kumar Sharma** | `24E1ARITM40P037` |
+| 🧑‍💻 **03** | **Sachin Kumawat** | `24E1ARCSF40P143` |
+| 🧑‍💻 **04** | **Sumit Saini** | `24E1ARCSM30P126` |
+| 🧑‍💻 **05** | **Vansh Oberoi** | `[ENROLLMENT_NO]` |
 
 ### Module Assignment
 
@@ -75,8 +75,8 @@ Additional role-specific responsibilities belonging to other assigned modules ar
 |---|---|
 | **Member 1** | [Assigned modules] |
 | **Member 2** | [Assigned modules] |
-| **Member 3 — Sakshi Kumari Singh** | **M5 — Pharmacy Locator** · **M6 — Directions & Location Fallback** |
-| **Member 4 — Rajat Tailor** | **M7 — Medicine Reminders** · **M8 — Dose Logs & Refill Alerts** |
+| **Member 3 — Sumit Saini** | **M5 — Pharmacy Locator** · **M6 — Directions & Location Fallback** |
+| **Member 4 — Sameer Achara** | **M7 — Medicine Reminders** · **M8 — Dose Logs & Refill Alerts** |
 | **Member 5** | [Assigned modules] |
 
 The project uses **one common GitHub repository** for all five members: [GITHUB_REPOSITORY_LINK]
