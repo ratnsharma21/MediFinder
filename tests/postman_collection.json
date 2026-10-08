@@ -1,0 +1,173 @@
+{
+  "info": {
+    "name": "MediFinder REST API Collection",
+    "_postman_id": "medicare-api-collection-v1",
+    "description": "Comprehensive Postman test collection for MediCare / MediFinder Backend APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api", "type": "string" },
+    { "key": "authToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"postman_user\",\n  \"email\": \"postman@medicare.demo\",\n  \"password\": \"Password@123\",\n  \"fullName\": \"Postman Test User\",\n  \"phoneNumber\": \"+919876543210\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailOrUsername\": \"user@medicare.demo\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User Profile (/api/users/me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Jane Customer Updated\",\n  \"city\": \"Bengaluru\",\n  \"bloodGroup\": \"O+\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medicines",
+      "item": [
+        {
+          "name": "Search Medicines",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/medicines?query=Paracetamol&size=10", "host": ["{{baseUrl}}"], "path": ["medicines"], "query": [{ "key": "query", "value": "Paracetamol" }] }
+          }
+        },
+        {
+          "name": "Get Medicine Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/medicines/1", "host": ["{{baseUrl}}"], "path": ["medicines", "1"] }
+          }
+        },
+        {
+          "name": "Get Retailer Offers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/medicines/1/offers", "host": ["{{baseUrl}}"], "path": ["medicines", "1", "offers"] }
+          }
+        },
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/medicines/categories", "host": ["{{baseUrl}}"], "path": ["medicines", "categories"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pharmacies",
+      "item": [
+        {
+          "name": "Get Pharmacies List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/pharmacies?city=Bengaluru", "host": ["{{baseUrl}}"], "path": ["pharmacies"], "query": [{ "key": "city", "value": "Bengaluru" }] }
+          }
+        },
+        {
+          "name": "Nearby GPS Search",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/pharmacies/nearby?latitude=12.9716&longitude=77.6410&radiusInKm=10", "host": ["{{baseUrl}}"], "path": ["pharmacies", "nearby"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reminders & Dose Logs",
+      "item": [
+        {
+          "name": "Get Reminders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/reminders", "host": ["{{baseUrl}}"], "path": ["reminders"] }
+          }
+        },
+        {
+          "name": "Create Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customMedicineName\": \"Dolo 650 Tablet\",\n  \"dosage\": \"1 tablet\",\n  \"unit\": \"tablet\",\n  \"frequency\": \"TWICE_DAILY\",\n  \"timeOfDay\": \"09:00, 21:00\",\n  \"startDate\": \"2026-10-08\",\n  \"instructions\": \"Take after meals with water\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/reminders", "host": ["{{baseUrl}}"], "path": ["reminders"] }
+          }
+        },
+        {
+          "name": "Get Dose Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/dose-logs", "host": ["{{baseUrl}}"], "path": ["dose-logs"] }
+          }
+        }
+      ]
+    }
+  ]
+}
