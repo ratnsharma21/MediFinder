@@ -702,7 +702,7 @@ export const MedicineStoreModule: React.FC = () => {
                     </div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', marginTop: '0.25rem' }}>
                       {selectedMedicine.manufacturer?.name || 'Verified Manufacturer'}
-                      {selectedMedicine.manufacturer?.isVerified && (
+                      {(selectedMedicine.manufacturer?.verified || (selectedMedicine.manufacturer as any)?.isVerified) && (
                         <span style={{ color: 'var(--primary)', marginLeft: '0.25rem' }}>✓ Verified</span>
                       )}
                     </div>

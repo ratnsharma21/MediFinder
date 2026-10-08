@@ -95,6 +95,13 @@ public class MedicineService {
         Medicine medicine = medicineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Medicine", "id", id));
 
+        if (medicine.getOffers() == null || medicine.getOffers().isEmpty()) {
+            List<RetailerOffer> offers = retailerOfferRepository.findByMedicineIdOrderBySellingPriceAsc(id);
+            if (offers != null && !offers.isEmpty()) {
+                medicine.setOffers(offers);
+            }
+        }
+
         return mapToMedicineDetailDto(medicine);
     }
 
