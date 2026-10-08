@@ -20,6 +20,10 @@ public class MedicineDetailDto {
     private String storageInstructions;
     private boolean requiresPrescription;
     private BigDecimal mrp;
+    private BigDecimal lowestPrice;
+    private BigDecimal maxDiscountPercent;
+    private String bestRetailerName;
+    private int totalOffersCount;
     private ManufacturerDto manufacturer;
     private String imageUrl;
     private boolean available;
@@ -146,6 +150,38 @@ public class MedicineDetailDto {
 
     public void setMrp(BigDecimal mrp) {
         this.mrp = mrp;
+    }
+
+    public BigDecimal getLowestPrice() {
+        return lowestPrice;
+    }
+
+    public void setLowestPrice(BigDecimal lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public BigDecimal getMaxDiscountPercent() {
+        return maxDiscountPercent;
+    }
+
+    public void setMaxDiscountPercent(BigDecimal maxDiscountPercent) {
+        this.maxDiscountPercent = maxDiscountPercent;
+    }
+
+    public String getBestRetailerName() {
+        return bestRetailerName;
+    }
+
+    public void setBestRetailerName(String bestRetailerName) {
+        this.bestRetailerName = bestRetailerName;
+    }
+
+    public int getTotalOffersCount() {
+        return totalOffersCount;
+    }
+
+    public void setTotalOffersCount(int totalOffersCount) {
+        this.totalOffersCount = totalOffersCount;
     }
 
     public ManufacturerDto getManufacturer() {
