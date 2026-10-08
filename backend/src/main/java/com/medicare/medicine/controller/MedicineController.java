@@ -28,12 +28,14 @@ public class MedicineController {
     }
 
     @GetMapping
-    @Operation(summary = "Search and list medicines", description = "Retrieves paginated medicine list with optional full-text search query, category filter, prescription requirement filter, price range, and sorting")
+    @Operation(summary = "Search and list medicines", description = "Retrieves paginated medicine list with optional full-text search query, category filter, dosage form, prescription requirement filter, price range, and sorting")
     public ResponseEntity<ApiResponse<PagedResponse<MedicineDto>>> getMedicines(
             @Parameter(description = "Search query matching medicine name, generic name, brand, or composition")
             @RequestParam(required = false) String query,
-            @Parameter(description = "Filter by category (e.g. Antibiotic, Analgesic, Antidiabetic)")
+            @Parameter(description = "Filter by category (e.g. Antibiotics & Anti-infectives, Analgesics & Antipyretics)")
             @RequestParam(required = false) String category,
+            @Parameter(description = "Filter by dosage form (e.g. Tablet, Capsule, Syrup)")
+            @RequestParam(required = false) String dosageForm,
             @Parameter(description = "Filter by prescription requirement")
             @RequestParam(required = false) Boolean requiresPrescription,
             @Parameter(description = "Minimum MRP filter")
@@ -52,6 +54,7 @@ public class MedicineController {
         MedicineSearchFilter filter = new MedicineSearchFilter();
         filter.setQuery(query);
         filter.setCategory(category);
+        filter.setDosageForm(dosageForm);
         filter.setRequiresPrescription(requiresPrescription);
         filter.setMinPrice(minPrice);
         filter.setMaxPrice(maxPrice);
@@ -72,7 +75,7 @@ public class MedicineController {
     }
 
     @GetMapping("/{id}/offers")
-    @Operation(summary = "Get online retailer offers for a medicine", description = "Retrieves current price comparison quotes from verified online medical stores (e.g. Tata 1mg, PharmEasy, Netmeds)")
+    @Operation(summary = "Get online retailer offers for a medicine", description = "Retrieves current price comparison quotes from verified online medical stores (e.g. Tata 1mg, PharmEasy, Netmeds, Apollo)")
     public ResponseEntity<ApiResponse<List<RetailerOfferDto>>> getMedicineOffers(@PathVariable Long id) {
         List<RetailerOfferDto> offers = medicineService.getMedicineOffers(id);
         return ResponseEntity.ok(ApiResponse.success("Offers retrieved successfully", offers));
@@ -83,5 +86,19 @@ public class MedicineController {
     public ResponseEntity<ApiResponse<List<String>>> getCategories() {
         List<String> categories = medicineService.getCategories();
         return ResponseEntity.ok(ApiResponse.success("Categories retrieved successfully", categories));
+    }
+
+    @GetMapping("/dosage-forms")
+    @Operation(summary = "Get all available dosage forms", description = "Retrieves the list of distinct dosage forms (Tablet, Capsule, Syrup, etc.)")
+    public ResponseEntity<ApiResponse<List<String>>> getDosageForms() {
+        List<String> dosageForms = medicineService.getDosageForms();
+        return ResponseEntity.ok(ApiResponse.success("Dosage forms retrieved successfully", dosageForms));
+    }
+
+    @GetMapping("/featured")
+    @Operation(summary = "Get featured medicine highlights", description = "Retrieves recent and popular catalogue medicines for showcase on the catalogue home")
+    public ResponseEntity<ApiResponse<List<MedicineDto>>> getFeaturedMedicines() {
+        List<MedicineDto> featured = medicineService.getFeaturedMedicines();
+        return ResponseEntity.ok(ApiResponse.success("Featured medicines retrieved successfully", featured));
     }
 }
