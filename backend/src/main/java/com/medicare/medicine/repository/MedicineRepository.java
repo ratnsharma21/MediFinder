@@ -18,6 +18,36 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>, JpaSp
     @Query("SELECT DISTINCT m.category FROM Medicine m WHERE m.category IS NOT NULL ORDER BY m.category ASC")
     List<String> findDistinctCategories();
 
+    @Query("SELECT DISTINCT m.dosageForm FROM Medicine m WHERE m.dosageForm IS NOT NULL ORDER BY m.dosageForm ASC")
+    List<String> findDistinctDosageForms();
+
+    Page<Medicine> findByCategoryIgnoreCase(String category, Pageable pageable);
+
+    Page<Medicine> findByGenericNameIgnoreCaseContaining(String genericName, Pageable pageable);
+
+    List<Medicine> findTop8ByAvailableTrueOrderByCreatedAtDesc();
+
+    @Query("SELECT m FROM Medicine m " +
+           "WHERE (:query IS NULL OR :query = '' OR " +
+           "       LOWER(m.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "       LOWER(m.genericName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "       LOWER(m.brandName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "       LOWER(m.composition) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+           "AND (:category IS NULL OR :category = '' OR LOWER(m.category) = LOWER(:category)) " +
+           "AND (:dosageForm IS NULL OR :dosageForm = '' OR LOWER(m.dosageForm) = LOWER(:dosageForm)) " +
+           "AND (:prescription IS NULL OR m.requiresPrescription = :prescription) " +
+           "AND (:minPrice IS NULL OR m.mrp >= :minPrice) " +
+           "AND (:maxPrice IS NULL OR m.mrp <= :maxPrice)")
+    Page<Medicine> searchMedicinesWithFilters(
+            @Param("query") String query,
+            @Param("category") String category,
+            @Param("dosageForm") String dosageForm,
+            @Param("prescription") Boolean prescription,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            Pageable pageable
+    );
+
     @Query("SELECT m FROM Medicine m " +
            "WHERE (:query IS NULL OR :query = '' OR " +
            "       LOWER(m.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
