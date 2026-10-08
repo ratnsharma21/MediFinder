@@ -44,9 +44,9 @@ public class MedicineController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @Parameter(description = "Page number (0-indexed)")
             @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Page size")
+            @Parameter(description = "Page size (1 to 100)")
             @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "Sort by field (name or price)")
+            @Parameter(description = "Sort by field (name, price, mrp, category, createdAt)")
             @RequestParam(defaultValue = "name") String sortBy,
             @Parameter(description = "Sort direction (ASC or DESC)")
             @RequestParam(defaultValue = "ASC") String sortDirection) {
