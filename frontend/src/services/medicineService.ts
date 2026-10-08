@@ -9,6 +9,7 @@ import { ApiResponse, PagedResponse, Medicine, MedicineDetail, RetailerOffer } f
 export interface MedicineQueryParams {
   query?: string;
   category?: string;
+  dosageForm?: string;
   requiresPrescription?: boolean;
   minPrice?: number;
   maxPrice?: number;
@@ -23,6 +24,7 @@ export const medicineService = {
     const searchParams = new URLSearchParams();
     if (params.query) searchParams.append('query', params.query);
     if (params.category && params.category !== 'All Categories') searchParams.append('category', params.category);
+    if (params.dosageForm && params.dosageForm !== 'All Forms') searchParams.append('dosageForm', params.dosageForm);
     if (params.requiresPrescription !== undefined) searchParams.append('requiresPrescription', String(params.requiresPrescription));
     if (params.minPrice !== undefined) searchParams.append('minPrice', String(params.minPrice));
     if (params.maxPrice !== undefined) searchParams.append('maxPrice', String(params.maxPrice));
@@ -49,6 +51,16 @@ export const medicineService = {
 
   async getCategories(): Promise<string[]> {
     const res = await request<ApiResponse<string[]>>('/medicines/categories');
+    return res.data;
+  },
+
+  async getDosageForms(): Promise<string[]> {
+    const res = await request<ApiResponse<string[]>>('/medicines/dosage-forms');
+    return res.data;
+  },
+
+  async getFeaturedMedicines(): Promise<Medicine[]> {
+    const res = await request<ApiResponse<Medicine[]>>('/medicines/featured');
     return res.data;
   },
 
