@@ -17,6 +17,8 @@ export interface PagedResponse<T> {
   totalElements: number;
   totalPages: number;
   last: boolean;
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export interface User {
@@ -105,6 +107,9 @@ export interface MedicineDetail extends Medicine {
   sideEffects?: string;
   precautions?: string;
   storageInstructions?: string;
+  maxDiscountPercent?: number;
+  bestRetailerName?: string;
+  totalOffersCount?: number;
   manufacturer?: Manufacturer;
   offers?: RetailerOffer[];
   updatedAt?: string;
