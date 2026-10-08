@@ -37,12 +37,12 @@ public class MedicineService {
         String sortField = "price".equalsIgnoreCase(filter.getSortBy()) || "mrp".equalsIgnoreCase(filter.getSortBy()) ? "mrp" : "name";
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(direction, sortField));
 
-        String query = (filter.getQuery() != null && !filter.getQuery().trim().isEmpty()) ? filter.getQuery().trim() : null;
+        String sanitizedQuery = sanitizeSearchQuery(filter.getQuery());
         String category = (filter.getCategory() != null && !filter.getCategory().trim().isEmpty()) ? filter.getCategory().trim() : null;
         String dosageForm = (filter.getDosageForm() != null && !filter.getDosageForm().trim().isEmpty()) ? filter.getDosageForm().trim() : null;
 
         Page<Medicine> page = medicineRepository.searchMedicinesWithFilters(
-                query,
+                sanitizedQuery,
                 category,
                 dosageForm,
                 filter.getRequiresPrescription(),
@@ -67,6 +67,10 @@ public class MedicineService {
 
     @Transactional(readOnly = true)
     public MedicineDetailDto getMedicineById(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid medicine ID: " + id);
+        }
+
         Medicine medicine = medicineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Medicine", "id", id));
 
@@ -75,7 +79,7 @@ public class MedicineService {
 
     @Transactional(readOnly = true)
     public List<RetailerOfferDto> getMedicineOffers(Long medicineId) {
-        if (!medicineRepository.existsById(medicineId)) {
+        if (medicineId == null || !medicineRepository.existsById(medicineId)) {
             throw new ResourceNotFoundException("Medicine", "id", medicineId);
         }
 
@@ -97,6 +101,17 @@ public class MedicineService {
     public List<MedicineDto> getFeaturedMedicines() {
         List<Medicine> featured = medicineRepository.findTop8ByAvailableTrueOrderByCreatedAtDesc();
         return featured.stream().map(this::mapToMedicineDto).collect(Collectors.toList());
+    }
+
+    /**
+     * Sanitizes user search query by trimming whitespace and normalizing input.
+     */
+    public String sanitizeSearchQuery(String query) {
+        if (query == null) return null;
+        String trimmed = query.trim();
+        if (trimmed.isEmpty()) return null;
+        // Strip out excessive wildcards or malformed punctuation
+        return trimmed.replaceAll("[%_]{2,}", " ");
     }
 
     public MedicineDto mapToMedicineDto(Medicine medicine) {
