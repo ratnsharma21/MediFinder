@@ -1,10 +1,10 @@
 -- ==============================================================================
--- Flyway Migration V2__seed_medicine_catalogue.sql
+-- Flyway Migration V4__seed_medicine_catalogue.sql
 -- MediFinder / MediCare - Comprehensive Medicine Catalogue & Seed Data
 -- ==============================================================================
 
 -- 1. Insert Verified Pharmaceutical Manufacturers
-INSERT INTO manufacturers (id, name, country, website, contact_email, is_verified) VALUES
+INSERT IGNORE INTO manufacturers (id, name, country, website, contact_email, is_verified) VALUES
 (1, 'Cipla Ltd', 'India', 'https://www.cipla.com', 'contactus@cipla.com', TRUE),
 (2, 'Sun Pharmaceutical Industries Ltd', 'India', 'https://www.sunpharma.com', 'info@sunpharma.com', TRUE),
 (3, 'Dr. Reddy''s Laboratories', 'India', 'https://www.drreddys.com', 'mail@drreddys.com', TRUE),
@@ -14,19 +14,17 @@ INSERT INTO manufacturers (id, name, country, website, contact_email, is_verifie
 (7, 'Mankind Pharma Ltd', 'India', 'https://www.mankindpharma.com', 'contact@mankindpharma.com', TRUE),
 (8, 'Glenmark Pharmaceuticals', 'India', 'https://www.glenmarkpharma.com', 'global@glenmarkpharma.com', TRUE),
 (9, 'Zydus Lifesciences', 'India', 'https://www.zyduslife.com', 'contact@zyduslife.com', TRUE),
-(10, 'Alkem Laboratories', 'India', 'https://www.alkemlabs.com', 'contactus@alkem.com', TRUE)
-ON DUPLICATE KEY UPDATE name=VALUES(name);
+(10, 'Alkem Laboratories', 'India', 'https://www.alkemlabs.com', 'contactus@alkem.com', TRUE);
 
 -- 2. Insert Verified Online Medical Retailers
-INSERT INTO retailers (id, name, website_url, logo_url, rating, is_verified) VALUES
+INSERT IGNORE INTO retailers (id, name, website_url, logo_url, rating, is_verified) VALUES
 (1, 'Tata 1mg', 'https://www.1mg.com', 'https://assets.1mg.com/images/1mg-logo.svg', 4.80, TRUE),
 (2, 'PharmEasy', 'https://pharmeasy.in', 'https://assets.pharmeasy.in/web-assets/dist/fca22bc9.png', 4.60, TRUE),
 (3, 'Netmeds', 'https://www.netmeds.com', 'https://www.netmeds.com/assets/gloryweb/images/netmeds-new-logo.svg', 4.50, TRUE),
-(4, 'Apollo Pharmacy', 'https://www.apollopharmacy.in', 'https://images.apollo247.in/images/logos/apollo-pharmacy-logo.svg', 4.70, TRUE)
-ON DUPLICATE KEY UPDATE name=VALUES(name);
+(4, 'Apollo Pharmacy', 'https://www.apollopharmacy.in', 'https://images.apollo247.in/images/logos/apollo-pharmacy-logo.svg', 4.70, TRUE);
 
 -- 3. Insert Comprehensive Medicine Catalogue Records
-INSERT INTO medicines (id, name, generic_name, brand_name, category, dosage_form, strength, pack_size, composition, indications, side_effects, precautions, storage_instructions, requires_prescription, mrp, manufacturer_id, image_url, is_available) VALUES
+INSERT IGNORE INTO medicines (id, name, generic_name, brand_name, category, dosage_form, strength, pack_size, composition, indications, side_effects, precautions, storage_instructions, requires_prescription, mrp, manufacturer_id, image_url, is_available) VALUES
 (1, 'Dolo 650 Tablet', 'Paracetamol', 'Dolo', 'Analgesics & Antipyretics', 'Tablet', '650mg', '15 Tablets', 'Paracetamol (Acetaminophen) IP 650mg', 'Relief from mild to moderate pain, headache, toothache, muscle aches, and fever reduction.', 'Nausea, allergic skin rash (rare), liver toxicity with overdose.', 'Do not exceed 4000mg per day. Avoid alcohol consumption while taking this medication.', 'Store in a cool, dry place below 25°C away from direct sunlight.', FALSE, 34.00, 7, 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500', TRUE),
 
 (2, 'Augmentin 625 Duo Tablet', 'Amoxicillin + Clavulanic Acid', 'Augmentin', 'Antibiotics & Anti-infectives', 'Tablet', '625mg', '10 Tablets', 'Amoxicillin Trihydrate IP 500mg + Potassium Clavulanate IP 125mg', 'Bacterial infections of the respiratory tract, urinary tract, skin, soft tissue, and dental infections.', 'Diarrhea, nausea, vomiting, skin rashes, mild digestive upset.', 'Complete the full prescribed course. Inform doctor in case of penicillin allergies.', 'Store below 25°C in moisture-proof packaging.', TRUE, 223.50, 6, 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=500', TRUE),
@@ -49,11 +47,10 @@ INSERT INTO medicines (id, name, generic_name, brand_name, category, dosage_form
 
 (11, 'Shelcal 500 Tablet', 'Calcium + Vitamin D3', 'Shelcal', 'Vitamins & Supplements', 'Tablet', '500mg/250IU', '15 Tablets', 'Elemental Calcium 500mg (from Calcium Carbonate) + Vitamin D3 250 IU', 'Calcium and vitamin D deficiency, osteoporosis, bone strengthening during aging and pregnancy.', 'Constipation, mild bloating, hypercalcemia with excessive dosage.', 'Maintain adequate daily fluid intake while taking calcium supplements.', 'Store protected from moisture at room temperature.', FALSE, 131.50, 5, 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500', TRUE),
 
-(12, 'Rosuvas 10 Tablet', 'Rosuvastatin', 'Rosuvas', 'Cardiovascular & Antihypertensives', 'Tablet', '10mg', '15 Tablets', 'Rosuvastatin Calcium IP equivalent to Rosuvastatin 10mg', 'Hypercholesterolemia, prevention of cardiovascular disease, reduction of LDL cholesterol and triglycerides.', 'Muscle pain, weakness, headache, abdominal cramps, mild nausea.', 'Report unexplained muscle pain or weakness immediately to your healthcare provider.', 'Store in original blister packaging protected from moisture.', TRUE, 265.00, 2, 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=500', TRUE)
-ON DUPLICATE KEY UPDATE name=VALUES(name);
+(12, 'Rosuvas 10 Tablet', 'Rosuvastatin', 'Rosuvas', 'Cardiovascular & Antihypertensives', 'Tablet', '10mg', '15 Tablets', 'Rosuvastatin Calcium IP equivalent to Rosuvastatin 10mg', 'Hypercholesterolemia, prevention of cardiovascular disease, reduction of LDL cholesterol and triglycerides.', 'Muscle pain, weakness, headache, abdominal cramps, mild nausea.', 'Report unexplained muscle pain or weakness immediately to your healthcare provider.', 'Store in original blister packaging protected from moisture.', TRUE, 265.00, 2, 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=500', TRUE);
 
 -- 4. Insert Verified Online Retailer Quotes & Offers
-INSERT INTO retailer_offers (id, medicine_id, retailer_id, selling_price, discount_percent, product_url, in_stock, delivery_estimate_days) VALUES
+INSERT IGNORE INTO retailer_offers (id, medicine_id, retailer_id, selling_price, discount_percent, product_url, in_stock, delivery_estimate_days) VALUES
 -- Dolo 650 (MRP 34.00)
 (1, 1, 1, 28.90, 15.00, 'https://www.1mg.com/drugs/dolo-650-tablet-41634', TRUE, 1),
 (2, 1, 2, 29.50, 13.24, 'https://pharmeasy.in/online-medicine-order/dolo-650mg-strip-of-15-tablets-10651', TRUE, 2),
@@ -92,5 +89,4 @@ INSERT INTO retailer_offers (id, medicine_id, retailer_id, selling_price, discou
 -- Shelcal 500 (MRP 131.50)
 (22, 11, 1, 111.77, 15.00, 'https://www.1mg.com/drugs/shelcal-500-tablet-67931', TRUE, 1),
 (23, 11, 2, 109.14, 17.00, 'https://pharmeasy.in/online-medicine-order/shelcal-500mg-strip-of-15-tablets-8932', TRUE, 2),
-(24, 11, 3, 111.77, 15.00, 'https://www.netmeds.com/prescriptions/shelcal-500-tablet-15-s', TRUE, 2)
-ON DUPLICATE KEY UPDATE selling_price=VALUES(selling_price);
+(24, 11, 3, 111.77, 15.00, 'https://www.netmeds.com/prescriptions/shelcal-500-tablet-15-s', TRUE, 2);
