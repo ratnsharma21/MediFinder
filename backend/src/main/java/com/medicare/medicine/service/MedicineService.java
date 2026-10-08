@@ -39,10 +39,12 @@ public class MedicineService {
 
         String query = (filter.getQuery() != null && !filter.getQuery().trim().isEmpty()) ? filter.getQuery().trim() : null;
         String category = (filter.getCategory() != null && !filter.getCategory().trim().isEmpty()) ? filter.getCategory().trim() : null;
+        String dosageForm = (filter.getDosageForm() != null && !filter.getDosageForm().trim().isEmpty()) ? filter.getDosageForm().trim() : null;
 
-        Page<Medicine> page = medicineRepository.searchMedicines(
+        Page<Medicine> page = medicineRepository.searchMedicinesWithFilters(
                 query,
                 category,
+                dosageForm,
                 filter.getRequiresPrescription(),
                 filter.getMinPrice(),
                 filter.getMaxPrice(),
@@ -86,7 +88,20 @@ public class MedicineService {
         return medicineRepository.findDistinctCategories();
     }
 
+    @Transactional(readOnly = true)
+    public List<String> getDosageForms() {
+        return medicineRepository.findDistinctDosageForms();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MedicineDto> getFeaturedMedicines() {
+        List<Medicine> featured = medicineRepository.findTop8ByAvailableTrueOrderByCreatedAtDesc();
+        return featured.stream().map(this::mapToMedicineDto).collect(Collectors.toList());
+    }
+
     public MedicineDto mapToMedicineDto(Medicine medicine) {
+        if (medicine == null) return null;
+
         MedicineDto dto = new MedicineDto();
         dto.setId(medicine.getId());
         dto.setName(medicine.getName());
@@ -119,6 +134,8 @@ public class MedicineService {
     }
 
     public MedicineDetailDto mapToMedicineDetailDto(Medicine medicine) {
+        if (medicine == null) return null;
+
         MedicineDetailDto dto = new MedicineDetailDto();
         dto.setId(medicine.getId());
         dto.setName(medicine.getName());

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class MedicineSearchFilter {
     private String query;
     private String category;
+    private String dosageForm;
     private Boolean requiresPrescription;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
@@ -29,6 +30,14 @@ public class MedicineSearchFilter {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getDosageForm() {
+        return dosageForm;
+    }
+
+    public void setDosageForm(String dosageForm) {
+        this.dosageForm = dosageForm;
     }
 
     public Boolean getRequiresPrescription() {
