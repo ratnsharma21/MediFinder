@@ -1,155 +1,192 @@
-// ==============================================================================
-// MediFinder / MediCare - Dashboard Module
-// Primary Owner: Member 5 (Sachin) - feature/dashboard-ui, feature/profile-settings
-// ==============================================================================
-
 import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/common/Card';
-import { User, Reminder, DoseLog } from '../../types';
+import { DoseLog, Reminder, User } from '../../types';
 import { reminderService } from '../../services/reminderService';
 import { medicineService } from '../../services/medicineService';
-import { pharmacyService } from '../../services/pharmacyService';
+import { ApiError } from '../../services/api';
 
 interface DashboardModuleProps {
   user: User | null;
   isAuthenticated: boolean;
   onNavigate: (tab: string) => void;
   onOpenAuth: () => void;
+  onSessionExpired: () => void;
 }
 
 export const DashboardModule: React.FC<DashboardModuleProps> = ({
   user,
   isAuthenticated,
   onNavigate,
-  onOpenAuth
+  onOpenAuth,
+  onSessionExpired,
 }) => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [doseLogs, setDoseLogs] = useState<DoseLog[]>([]);
-  const [medicineCount, setMedicineCount] = useState<number>(0);
-  const [pharmacyCount, setPharmacyCount] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [savedMedicineCount, setSavedMedicineCount] = useState(0);
+  const [loading, setLoading] = useState(isAuthenticated);
+  const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
-    async function loadStats() {
-      try {
-        const medRes = await medicineService.getMedicines({ size: 1 });
-        setMedicineCount(medRes.totalElements || 8);
+    let current = true;
 
-        const pharmRes = await pharmacyService.getPharmacies({ size: 1 });
-        setPharmacyCount(pharmRes.totalElements || 6);
-
-        if (isAuthenticated) {
-          const rems = await reminderService.getReminders();
-          setReminders(rems);
-          const logs = await reminderService.getDoseLogs();
-          setDoseLogs(logs);
-        }
-      } catch (err) {
-        console.error('Failed to load dashboard data', err);
-      } finally {
-        setLoading(false);
-      }
+    if (!isAuthenticated) {
+      setReminders([]);
+      setDoseLogs([]);
+      setSavedMedicineCount(0);
+      setLoading(false);
+      setError(null);
+      return () => { current = false; };
     }
-    loadStats();
-  }, [isAuthenticated]);
+
+    setLoading(true);
+    setError(null);
+    Promise.all([
+      reminderService.getReminders(),
+      reminderService.getDoseLogs(),
+      medicineService.getSavedMedicines(),
+    ]).then(([userReminders, userDoseLogs, savedMedicines]) => {
+      if (!current) return;
+      setReminders(userReminders);
+      setDoseLogs(userDoseLogs);
+      setSavedMedicineCount(savedMedicines.length);
+    }).catch((requestError: unknown) => {
+      if (!current) return;
+      if (requestError instanceof ApiError && requestError.status === 401) {
+        onSessionExpired();
+        setError('Your session expired. Sign in again to view your dashboard.');
+      } else {
+        setError(requestError instanceof Error ? requestError.message : 'Dashboard data could not be loaded.');
+      }
+    }).finally(() => {
+      if (current) setLoading(false);
+    });
+
+    return () => { current = false; };
+  }, [isAuthenticated, onSessionExpired, reloadKey]);
+
+  const activeReminderCount = reminders.filter(reminder => reminder.active).length;
+  const today = new Date().toLocaleDateString();
+  const todayDoseCount = doseLogs.filter(log => new Date(log.scheduledTime).toLocaleDateString() === today).length;
+  const recentDoseLogs = [...doseLogs]
+    .sort((first, second) => Date.parse(second.scheduledTime) - Date.parse(first.scheduledTime))
+    .slice(0, 5);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Hero Welcome Banner */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0284c7 0%, #0f766e 100%)',
-        borderRadius: 'var(--radius-lg)',
-        padding: '2.5rem',
-        color: '#ffffff',
-        boxShadow: 'var(--shadow-lg)'
-      }}>
-        <div style={{ maxWidth: '640px' }}>
-          <span className="badge" style={{ background: 'rgba(255, 255, 255, 0.2)', color: '#ffffff', marginBottom: '0.75rem' }}>
-            MediCare Platform v1.0 • Ratn Foundation
+    <div className="dashboard-page">
+      <section className="dashboard-hero">
+        <div>
+          <span className="badge" style={{ background: 'rgba(255,255,255,.18)', color: '#fff' }}>
+            MediFinder care overview
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, lineHeight: 1.2, marginBottom: '0.75rem' }}>
-            {isAuthenticated && user
-              ? `Welcome back, ${user.profile?.fullName || user.username}!`
-              : 'Smart Medicine Discovery & Pharmacy Locator'}
-          </h1>
-          <p style={{ fontSize: '1rem', color: 'rgba(255, 255, 255, 0.9)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-            Compare verified online pharmacy prices, find nearby 24x7 medical stores with GPS mapping, and stay on top of daily medication schedules.
-          </p>
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button onClick={() => onNavigate('medicines')} className="btn" style={{ background: '#ffffff', color: '#0369a1', fontWeight: 700 }}>
-              🔍 Search Medicines
-            </button>
-            <button onClick={() => onNavigate('pharmacies')} className="btn" style={{ background: 'rgba(255, 255, 255, 0.15)', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.3)' }}>
-              📍 Locate Nearby Stores
-            </button>
-            {!isAuthenticated && (
-              <button onClick={onOpenAuth} className="btn" style={{ background: '#ffffff', color: '#0f766e', fontWeight: 700 }}>
-                ⏰ Set Dose Alarms
-              </button>
-            )}
+          <h1>{isAuthenticated && user ? `Welcome back, ${user.profile?.fullName || user.username}` : 'Your care, in one place'}</h1>
+          <p>Manage your medication schedule, review dose history, and keep useful medicines close at hand.</p>
+          <div className="dashboard-actions">
+            <button onClick={() => onNavigate('reminders')} className="btn dashboard-action-primary">View reminders</button>
+            <button onClick={() => onNavigate('medicines')} className="btn dashboard-action-secondary">Find medicines</button>
+            {!isAuthenticated && <button onClick={onOpenAuth} className="btn dashboard-action-primary">Sign in</button>}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Quick Summary Cards */}
-      <div className="grid grid-cols-4">
+      {!isAuthenticated ? (
         <Card>
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 600 }}>Catalogue Medicines</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)', marginTop: '0.25rem' }}>
-            {loading ? '...' : medicineCount}
+          <div className="dashboard-empty">
+            <h2>Sign in to see your personal dashboard</h2>
+            <p>Your reminders, dose history, and saved medicines appear here after you sign in.</p>
+            <button onClick={onOpenAuth} className="btn btn-primary">Sign in or create an account</button>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>Indexed formulations</div>
         </Card>
+      ) : (
+        <>
+          {error ? (
+            <div className="dashboard-error" role="alert">
+              <span>{error}</span>
+              <button className="btn btn-secondary btn-sm" onClick={() => setReloadKey(value => value + 1)}>
+                Retry
+              </button>
+            </div>
+          ) : (
+            <>
+              <section className="grid grid-cols-3" aria-label="Personal activity summary">
+            <Card>
+              <div className="dashboard-stat-label">Active reminders</div>
+              <div className="dashboard-stat-value">{loading ? '...' : activeReminderCount}</div>
+              <button className="dashboard-text-link" onClick={() => onNavigate('reminders')}>Manage schedule</button>
+            </Card>
+            <Card>
+              <div className="dashboard-stat-label">Doses logged today</div>
+              <div className="dashboard-stat-value">{loading ? '...' : todayDoseCount}</div>
+              <button className="dashboard-text-link" onClick={() => onNavigate('reminders')}>Review dose history</button>
+            </Card>
+            <Card>
+              <div className="dashboard-stat-label">Saved medicines</div>
+              <div className="dashboard-stat-value">{loading ? '...' : savedMedicineCount}</div>
+              <button className="dashboard-text-link" onClick={() => onNavigate('medicines')}>Browse medicines</button>
+            </Card>
+              </section>
 
-        <Card>
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 600 }}>Partner Pharmacies</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--secondary)', marginTop: '0.25rem' }}>
-            {loading ? '...' : pharmacyCount}
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>Geo-located medical stores</div>
-        </Card>
+              <section className="grid grid-cols-2 dashboard-detail-grid">
+            <Card title="Medication schedule" subtitle="Your active reminders">
+              {loading ? (
+                <p className="dashboard-muted" role="status">Loading reminders...</p>
+              ) : reminders.filter(reminder => reminder.active).length === 0 ? (
+                <div className="dashboard-empty-inline">
+                  <p>No active reminders yet.</p>
+                  <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('reminders')}>Create a reminder</button>
+                </div>
+              ) : (
+                <div className="dashboard-list">
+                  {reminders.filter(reminder => reminder.active).slice(0, 4).map(reminder => (
+                    <div className="dashboard-list-row" key={reminder.id}>
+                      <div>
+                        <strong>{reminder.customMedicineName}</strong>
+                        <span>{reminder.dosage} · {reminder.frequency.replace(/_/g, ' ').toLowerCase()}</span>
+                      </div>
+                      <span className="badge badge-secondary">{reminder.timeOfDay}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
 
-        <Card>
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 600 }}>Active Reminders</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent)', marginTop: '0.25rem' }}>
-            {isAuthenticated ? reminders.filter(r => r.active).length : '—'}
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
-            {isAuthenticated ? 'Scheduled dose alerts' : 'Sign in to track'}
-          </div>
-        </Card>
+            <Card title="Recent dose history" subtitle="Most recent recorded doses">
+              {loading ? (
+                <p className="dashboard-muted" role="status">Loading dose history...</p>
+              ) : recentDoseLogs.length === 0 ? (
+                <div className="dashboard-empty-inline">
+                  <p>No doses have been logged yet.</p>
+                  <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('reminders')}>Open reminders</button>
+                </div>
+              ) : (
+                <div className="dashboard-list">
+                  {recentDoseLogs.map(log => (
+                    <div className="dashboard-list-row" key={log.id}>
+                      <div>
+                        <strong>{log.medicineName}</strong>
+                        <span>{new Date(log.scheduledTime).toLocaleString()}</span>
+                      </div>
+                      <span className={`badge ${log.status === 'TAKEN' ? 'badge-success' : log.status === 'SKIPPED' ? 'badge-warning' : 'badge-danger'}`}>
+                        {log.status.toLowerCase()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+              </section>
 
-        <Card>
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 600 }}>Logged Doses</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--success)', marginTop: '0.25rem' }}>
-            {isAuthenticated ? doseLogs.length : '—'}
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
-            {isAuthenticated ? 'Adherence history' : 'Sign in to view'}
-          </div>
-        </Card>
-      </div>
-
-      {/* Module Overview for Team Members */}
-      <div className="grid grid-cols-2">
-        <Card title="📦 Medicine Store & Price Comparison (Member 2)" subtitle="Managed on branch: feature/medicine-catalogue">
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            Search medicines by brand name, generic compound, or category. Compare pricing across online partners (Tata 1mg, PharmEasy, Netmeds, Apollo).
-          </p>
-          <button onClick={() => onNavigate('medicines')} className="btn btn-secondary btn-sm">
-            Open Medicine Catalogue →
-          </button>
-        </Card>
-
-        <Card title="📍 Pharmacy Locator & Map Integration (Member 3)" subtitle="Managed on branch: feature/pharmacy-locator">
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            Locate physical pharmacies near you using GPS coordinates, filter 24x7 emergency medical counters, and access direct contact numbers.
-          </p>
-          <button onClick={() => onNavigate('pharmacies')} className="btn btn-secondary btn-sm">
-            Open Pharmacy Locator →
-          </button>
-        </Card>
-      </div>
+              <section className="dashboard-navigation" aria-label="Explore MediFinder">
+            <div>
+              <h2>Find care nearby</h2>
+              <p>Search pharmacies and review location details.</p>
+            </div>
+            <button onClick={() => onNavigate('pharmacies')} className="btn btn-secondary">Open pharmacy locator</button>
+              </section>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 };
