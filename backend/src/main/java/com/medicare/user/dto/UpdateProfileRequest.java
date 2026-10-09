@@ -1,17 +1,41 @@
 package com.medicare.user.dto;
 
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public class UpdateProfileRequest {
+    @Size(max = 100)
     private String fullName;
+
+    @Size(max = 20)
+    @Pattern(regexp = "^$|^\\+?[0-9][0-9\\s().-]{6,18}$")
     private String phoneNumber;
+
+    @Past
     private LocalDate dateOfBirth;
+
+    @Size(max = 20)
     private String gender;
+
+    @Size(max = 10)
     private String bloodGroup;
+
+    @Size(max = 100)
     private String emergencyContact;
+
+    @Size(max = 255)
     private String address;
+
+    @Size(max = 100)
     private String city;
+
+    @Size(max = 100)
     private String state;
+
+    @Size(max = 20)
+    @Pattern(regexp = "^$|^[A-Za-z0-9][A-Za-z0-9 -]{2,19}$")
     private String postalCode;
 
     public UpdateProfileRequest() {}
