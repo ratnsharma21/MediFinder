@@ -23,18 +23,18 @@ export const Navbar: React.FC<NavbarProps> = ({
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      backgroundColor: 'var(--bg-glass)',
       backdropFilter: 'blur(8px)',
       borderBottom: '1px solid var(--border)',
     }}>
-      <div className="container" style={{
+      <div className="container navbar-shell" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '4.25rem'
+        minHeight: '4.25rem'
       }}>
         {/* Logo */}
-        <div 
+        <div className="navbar-brand"
           onClick={() => setActiveTab('dashboard')} 
           style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', cursor: 'pointer' }}
         >
@@ -64,12 +64,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <nav className="navbar-tabs" aria-label="Main navigation" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {[
             { id: 'dashboard', label: 'Dashboard', icon: '📊' },
             { id: 'medicines', label: 'Medicine Store', icon: '💊' },
             { id: 'pharmacies', label: 'Pharmacy Locator', icon: '📍' },
-            { id: 'reminders', label: 'Adherence Reminders', icon: '⏰' }
+            { id: 'reminders', label: 'Adherence Reminders', icon: '⏰' },
+            ...(isAuthenticated ? [{ id: 'account', label: 'Profile & Settings', icon: '◉' }] : [])
           ].map(tab => (
             <button
               key={tab.id}
@@ -96,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Auth / Profile action */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="navbar-account" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           {isAuthenticated && user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ textAlign: 'right' }}>
