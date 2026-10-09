@@ -1,5 +1,6 @@
 package com.medicare.reminder.service;
 
+import com.medicare.common.exception.BadRequestException;
 import com.medicare.common.exception.ForbiddenException;
 import com.medicare.common.exception.ResourceNotFoundException;
 import com.medicare.medicine.entity.Medicine;
@@ -13,11 +14,20 @@ import com.medicare.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ReminderService {
+
+    private static final Set<String> SUPPORTED_FREQUENCIES = Set.of(
+            "ONCE_DAILY", "TWICE_DAILY", "THRICE_DAILY", "FOUR_TIMES_DAILY",
+            "EVERY_8_HOURS", "AS_NEEDED"
+    );
 
     private final ReminderRepository reminderRepository;
     private final UserRepository userRepository;
@@ -52,13 +62,23 @@ public class ReminderService {
 
     @Transactional
     public ReminderResponse createReminder(Long userId, ReminderRequest request) {
+        validateReminderText(request.getCustomMedicineName(), "Medicine name", 150);
+        validateReminderText(request.getDosage(), "Dosage", 50);
+        validateOptionalReminderText(request.getUnit(), "Unit", 30);
+        validateReminderText(request.getFrequency(), "Frequency", 50);
+        validateReminderText(request.getTimeOfDay(), "Scheduled times", 100);
+        validateOptionalReminderText(request.getInstructions(), "Instructions", 255);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
         Medicine medicine = null;
         if (request.getMedicineId() != null) {
-            medicine = medicineRepository.findById(request.getMedicineId()).orElse(null);
+            medicine = medicineRepository.findById(request.getMedicineId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Medicine", "id", request.getMedicineId()));
         }
+
+        validateSchedule(request.getFrequency(), request.getTimeOfDay(), request.getStartDate(), request.getEndDate());
 
         Reminder reminder = new Reminder();
         reminder.setUser(user);
@@ -86,8 +106,16 @@ public class ReminderService {
             throw new ForbiddenException("You do not have permission to update this reminder");
         }
 
+        validateOptionalReminderText(request.getCustomMedicineName(), "Medicine name", 150);
+        validateOptionalReminderText(request.getDosage(), "Dosage", 50);
+        validateOptionalReminderText(request.getUnit(), "Unit", 30);
+        validateOptionalReminderText(request.getFrequency(), "Frequency", 50);
+        validateOptionalReminderText(request.getTimeOfDay(), "Scheduled times", 100);
+        validateOptionalReminderText(request.getInstructions(), "Instructions", 255);
+
         if (request.getMedicineId() != null) {
-            Medicine medicine = medicineRepository.findById(request.getMedicineId()).orElse(null);
+            Medicine medicine = medicineRepository.findById(request.getMedicineId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Medicine", "id", request.getMedicineId()));
             reminder.setMedicine(medicine);
         }
         if (request.getCustomMedicineName() != null) {
@@ -108,7 +136,9 @@ public class ReminderService {
         if (request.getStartDate() != null) {
             reminder.setStartDate(request.getStartDate());
         }
-        if (request.getEndDate() != null) {
+        if (request.getStartDate() != null) {
+            reminder.setEndDate(request.getEndDate());
+        } else if (request.getEndDate() != null) {
             reminder.setEndDate(request.getEndDate());
         }
         if (request.getInstructions() != null) {
@@ -118,8 +148,46 @@ public class ReminderService {
             reminder.setActive(request.getActive());
         }
 
+        validateSchedule(reminder.getFrequency(), reminder.getTimeOfDay(), reminder.getStartDate(), reminder.getEndDate());
+
         Reminder updated = reminderRepository.save(reminder);
         return mapToResponse(updated);
+    }
+
+    private void validateSchedule(String frequency, String timeOfDay, LocalDate startDate,
+                                  LocalDate endDate) {
+        if (!SUPPORTED_FREQUENCIES.contains(frequency)) {
+            throw new BadRequestException("Frequency must be one of the supported schedule options");
+        }
+        if (startDate == null || (endDate != null && endDate.isBefore(startDate))) {
+            throw new BadRequestException("End date cannot be earlier than the start date");
+        }
+
+        String[] times = timeOfDay.split(",", -1);
+        for (String value : times) {
+            String time = value.trim();
+            if (!time.matches("\\d{2}:\\d{2}")) {
+                throw new BadRequestException("Each scheduled time must use the HH:mm format");
+            }
+            try {
+                LocalTime.parse(time);
+            } catch (DateTimeParseException exception) {
+                throw new BadRequestException("Each scheduled time must be a valid time of day");
+            }
+        }
+    }
+
+    private void validateReminderText(String value, String field, int maxLength) {
+        if (value == null || value.isBlank()) {
+            throw new BadRequestException(field + " is required");
+        }
+        validateOptionalReminderText(value, field, maxLength);
+    }
+
+    private void validateOptionalReminderText(String value, String field, int maxLength) {
+        if (value != null && (value.isBlank() || value.length() > maxLength)) {
+            throw new BadRequestException(field + " must be non-empty and no longer than " + maxLength + " characters");
+        }
     }
 
     @Transactional

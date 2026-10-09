@@ -14,7 +14,7 @@ export interface CreateReminderPayload {
   frequency: string;
   timeOfDay: string;
   startDate: string;
-  endDate?: string;
+  endDate?: string | null;
   instructions?: string;
   active?: boolean;
 }
@@ -64,7 +64,7 @@ export const reminderService = {
   },
 
   async getDoseLogs(reminderId?: number): Promise<DoseLog[]> {
-    const query = reminderId ? `?reminderId=${reminderId}` : '';
+    const query = reminderId !== undefined ? `?reminderId=${reminderId}` : '';
     const res = await request<ApiResponse<DoseLog[]>>(`/dose-logs${query}`, { requiresAuth: true });
     return res.data;
   },
