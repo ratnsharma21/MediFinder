@@ -7,6 +7,7 @@ import com.medicare.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class UserController {
     @Operation(summary = "Update current user profile (PATCH /api/users/me)", description = "Updates personal contact, emergency contact, or address details")
     public ResponseEntity<ApiResponse<UserProfileDto>> updateProfilePatch(
             @AuthenticationPrincipal UserPrincipal currentUser,
-            @RequestBody UpdateProfileRequest request) {
+            @Valid @RequestBody UpdateProfileRequest request) {
         UserProfileDto updated = userService.updateUserProfile(currentUser.getId(), request);
         return ResponseEntity.ok(ApiResponse.success("Profile updated successfully", updated));
     }
@@ -50,7 +51,7 @@ public class UserController {
     @Operation(summary = "Update user profile", description = "Updates personal contact, emergency contact, or address details")
     public ResponseEntity<ApiResponse<UserProfileDto>> updateProfile(
             @AuthenticationPrincipal UserPrincipal currentUser,
-            @RequestBody UpdateProfileRequest request) {
+            @Valid @RequestBody UpdateProfileRequest request) {
         UserProfileDto updated = userService.updateUserProfile(currentUser.getId(), request);
         return ResponseEntity.ok(ApiResponse.success("Profile updated successfully", updated));
     }
