@@ -8,6 +8,13 @@ interface RequestOptions extends RequestInit {
   requiresAuth?: boolean;
 }
 
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 export async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { requiresAuth = false, headers = {}, ...rest } = options;
   const requestHeaders: Record<string, string> = {
@@ -32,7 +39,7 @@ export async function request<T>(endpoint: string, options: RequestOptions = {})
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
     const message = errorBody.message || errorBody.error || `HTTP error: ${response.status}`;
-    throw new Error(message);
+    throw new ApiError(message, response.status);
   }
 
   return response.json();
