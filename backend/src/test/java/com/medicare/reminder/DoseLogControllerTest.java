@@ -110,6 +110,63 @@ class DoseLogControllerTest {
     }
 
     @Test
+    void testLogsSkippedAndMissedStatuses() throws Exception {
+        for (DoseStatus status : new DoseStatus[] { DoseStatus.SKIPPED, DoseStatus.MISSED }) {
+            DoseLogRequest request = new DoseLogRequest();
+            request.setReminderId(reminder1.getId());
+            request.setScheduledTime(LocalDateTime.now().plusMinutes(status == DoseStatus.SKIPPED ? 1 : 2));
+            request.setStatus(status);
+
+            mockMvc.perform(post("/api/dose-logs")
+                            .header("Authorization", "Bearer " + token1)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.data.status", is(status.name())));
+        }
+    }
+
+    @Test
+    void testRejectsDuplicateDoseForScheduledTime() throws Exception {
+        LocalDateTime scheduledTime = LocalDateTime.now().withSecond(0).withNano(0);
+        DoseLogRequest request = new DoseLogRequest();
+        request.setReminderId(reminder1.getId());
+        request.setScheduledTime(scheduledTime);
+        request.setStatus(DoseStatus.TAKEN);
+
+        mockMvc.perform(post("/api/dose-logs")
+                        .header("Authorization", "Bearer " + token1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+
+        request.setScheduledTime(scheduledTime.withSecond(35));
+        mockMvc.perform(post("/api/dose-logs")
+                        .header("Authorization", "Bearer " + token1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message", containsString("already been recorded")));
+    }
+
+    @Test
+    void testRejectsDoseOutsideReminderDateRange() throws Exception {
+        reminder1.setEndDate(LocalDate.now());
+        reminderRepository.save(reminder1);
+
+        DoseLogRequest request = new DoseLogRequest();
+        request.setReminderId(reminder1.getId());
+        request.setScheduledTime(LocalDateTime.now().plusDays(1));
+        request.setStatus(DoseStatus.SKIPPED);
+
+        mockMvc.perform(post("/api/dose-logs")
+                        .header("Authorization", "Bearer " + token1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void testUserCannotLogDoseForOthersReminder() throws Exception {
         DoseLogRequest request = new DoseLogRequest();
         request.setReminderId(reminder1.getId());
@@ -122,6 +179,14 @@ class DoseLogControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.success", is(false)));
+    }
+
+    @Test
+    void testUserCannotReadAnotherUsersReminderDoseHistory() throws Exception {
+        mockMvc.perform(get("/api/dose-logs")
+                        .param("reminderId", reminder1.getId().toString())
+                        .header("Authorization", "Bearer " + token2))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -148,5 +213,62 @@ class DoseLogControllerTest {
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.data.status", is("TAKEN")))
                 .andExpect(jsonPath("$.data.notes", is("Took late with lunch")));
+    }
+
+    @Test
+    void testUserCannotUpdateAnotherUsersDoseLog() throws Exception {
+        DoseLog log = new DoseLog(
+                reminder1,
+                user1,
+                LocalDateTime.now().minusHours(1),
+                null,
+                DoseStatus.MISSED,
+                null
+        );
+        log = doseLogRepository.save(log);
+
+        UpdateDoseStatusRequest request = new UpdateDoseStatusRequest();
+        request.setStatus(DoseStatus.TAKEN);
+
+        mockMvc.perform(patch("/api/dose-logs/" + log.getId())
+                        .header("Authorization", "Bearer " + token2)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testDoseHistoryOnlyContainsAuthenticatedUsersEntries() throws Exception {
+        doseLogRepository.save(new DoseLog(
+                reminder1,
+                user1,
+                LocalDateTime.now().minusHours(1),
+                null,
+                DoseStatus.SKIPPED,
+                null
+        ));
+
+        mockMvc.perform(get("/api/dose-logs")
+                        .header("Authorization", "Bearer " + token2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(0)));
+    }
+
+    @Test
+    void testRejectsUnknownDoseStatus() throws Exception {
+        String request = """
+                {
+                  "reminderId": %d,
+                  "scheduledTime": "%s",
+                  "status": "DOUBTFUL"
+                }
+                """.formatted(reminder1.getId(), LocalDateTime.now().withSecond(0).withNano(0));
+
+        mockMvc.perform(post("/api/dose-logs")
+                        .header("Authorization", "Bearer " + token1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("invalid or malformed")));
     }
 }
