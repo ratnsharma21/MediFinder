@@ -175,7 +175,8 @@ CREATE TABLE IF NOT EXISTS reminders (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_reminder_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_reminder_medicine FOREIGN KEY (medicine_id) REFERENCES medicines (id) ON DELETE SET NULL,
-    INDEX idx_reminders_user_active (user_id, is_active)
+    INDEX idx_reminders_user_active (user_id, is_active),
+    INDEX idx_reminders_user_schedule (user_id, is_active, start_date, end_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 10. Dose Logs Table (Adherence Tracking)
@@ -191,6 +192,7 @@ CREATE TABLE IF NOT EXISTS dose_logs (
     CONSTRAINT fk_dose_reminder FOREIGN KEY (reminder_id) REFERENCES reminders (id) ON DELETE CASCADE,
     CONSTRAINT fk_dose_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     INDEX idx_dose_logs_user_time (user_id, scheduled_time),
+    INDEX idx_dose_logs_reminder_time (reminder_id, scheduled_time),
     INDEX idx_dose_logs_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
