@@ -1,5 +1,7 @@
 package com.medicare.reminder.service;
 
+import com.medicare.common.exception.BadRequestException;
+import com.medicare.common.exception.ConflictException;
 import com.medicare.common.exception.ForbiddenException;
 import com.medicare.common.exception.ResourceNotFoundException;
 import com.medicare.reminder.dto.DoseLogRequest;
@@ -60,11 +62,21 @@ public class DoseLogService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-        Reminder reminder = reminderRepository.findById(request.getReminderId())
+        Reminder reminder = reminderRepository.findByIdForUpdate(request.getReminderId())
                 .orElseThrow(() -> new ResourceNotFoundException("Reminder", "id", request.getReminderId()));
 
         if (!reminder.getUser().getId().equals(userId)) {
             throw new ForbiddenException("You do not own this medication reminder");
+        }
+
+        LocalDateTime scheduledTime = request.getScheduledTime().withSecond(0).withNano(0);
+        if (scheduledTime.toLocalDate().isBefore(reminder.getStartDate())
+                || (reminder.getEndDate() != null
+                && scheduledTime.toLocalDate().isAfter(reminder.getEndDate()))) {
+            throw new BadRequestException("Scheduled time must fall within the reminder date range");
+        }
+        if (!doseLogRepository.findByReminderIdAndScheduledTime(reminder.getId(), scheduledTime).isEmpty()) {
+            throw new ConflictException("A dose has already been recorded for this scheduled time");
         }
 
         LocalDateTime actualTime = request.getActualTime() != null ? request.getActualTime() :
@@ -73,7 +85,7 @@ public class DoseLogService {
         DoseLog log = new DoseLog(
                 reminder,
                 user,
-                request.getScheduledTime(),
+                scheduledTime,
                 actualTime,
                 request.getStatus() != null ? request.getStatus() : DoseStatus.TAKEN,
                 request.getNotes() != null ? request.getNotes().trim() : null
