@@ -26,6 +26,18 @@ export interface AuthResponseData {
   user: User;
 }
 
+function persistUserChanges(changes: Partial<Pick<User, 'profile' | 'settings'>>): void {
+  const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+  if (!storedUser) return;
+
+  try {
+    const user = JSON.parse(storedUser) as User;
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ ...user, ...changes }));
+  } catch {
+    return;
+  }
+}
+
 export const authService = {
   async register(payload: RegisterPayload): Promise<AuthResponseData> {
     const res = await request<ApiResponse<AuthResponseData>>('/auth/register', {
@@ -84,6 +96,7 @@ export const authService = {
       requiresAuth: true,
       body: JSON.stringify(profile),
     });
+    persistUserChanges({ profile: res.data });
     return res.data;
   },
 
@@ -93,6 +106,7 @@ export const authService = {
       requiresAuth: true,
       body: JSON.stringify(settings),
     });
+    persistUserChanges({ settings: res.data });
     return res.data;
   }
 };
