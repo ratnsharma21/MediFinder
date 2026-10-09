@@ -1,7 +1,6 @@
 package com.medicare.common.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 public class ErrorResponse {

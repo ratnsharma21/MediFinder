@@ -1,7 +1,6 @@
 package com.medicare.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.medicare.medicine.repository.MedicineRepository;
 import com.medicare.notification.entity.Notification;
 import com.medicare.notification.entity.NotificationChannel;
 import com.medicare.notification.entity.NotificationType;
@@ -57,9 +56,6 @@ public class UserDataIsolationSecurityTest {
 
     @Autowired
     private SavedMedicineRepository savedMedicineRepository;
-
-    @Autowired
-    private MedicineRepository medicineRepository;
 
     @Autowired
     private UserRepository userRepository;
