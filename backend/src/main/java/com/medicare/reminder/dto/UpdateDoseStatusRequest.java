@@ -2,6 +2,7 @@ package com.medicare.reminder.dto;
 
 import com.medicare.reminder.entity.DoseStatus;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class UpdateDoseStatusRequest {
@@ -10,6 +11,8 @@ public class UpdateDoseStatusRequest {
     private DoseStatus status;
 
     private LocalDateTime actualTime;
+
+    @Size(max = 255, message = "Notes must be 255 characters or fewer")
     private String notes;
 
     public UpdateDoseStatusRequest() {}
