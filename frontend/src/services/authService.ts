@@ -68,6 +68,16 @@ export const authService = {
     return res.data;
   },
 
+  async getUserProfile(): Promise<UserProfile> {
+    const res = await request<ApiResponse<UserProfile>>('/users/me/profile', { requiresAuth: true });
+    return res.data;
+  },
+
+  async getUserSettings(): Promise<UserSettings> {
+    const res = await request<ApiResponse<UserSettings>>('/users/me/settings', { requiresAuth: true });
+    return res.data;
+  },
+
   async updateProfile(profile: Partial<UserProfile>): Promise<UserProfile> {
     const res = await request<ApiResponse<UserProfile>>('/users/me', {
       method: 'PATCH',
