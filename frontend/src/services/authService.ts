@@ -1,8 +1,8 @@
-// ==============================================================================
-// MediFinder / MediCare - Authentication Service
-// ==============================================================================
+/**
+ * Authentication and User Profile API Service
+ */
 
-import { request } from './api';
+import { request, uploadMultipart } from './api';
 import { ApiResponse, User, UserProfile, UserSettings } from '../types';
 import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../utils/constants';
 
@@ -17,6 +17,7 @@ export interface RegisterPayload {
   password: string;
   fullName?: string;
   phoneNumber?: string;
+  avatarUrl?: string;
 }
 
 export interface AuthResponseData {
@@ -51,8 +52,28 @@ export const authService = {
     return res.data;
   },
 
+  async registerOnly(payload: RegisterPayload): Promise<User> {
+    const res = await request<ApiResponse<AuthResponseData>>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return res.data?.user;
+  },
+
   async login(payload: LoginPayload): Promise<AuthResponseData> {
     const res = await request<ApiResponse<AuthResponseData>>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    if (res.data?.token) {
+      localStorage.setItem(TOKEN_STORAGE_KEY, res.data.token);
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(res.data.user));
+    }
+    return res.data;
+  },
+
+  async googleLogin(payload: { idToken: string; email: string; name?: string; avatarUrl?: string }): Promise<AuthResponseData> {
+    const res = await request<ApiResponse<AuthResponseData>>('/auth/google', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -108,5 +129,21 @@ export const authService = {
     });
     persistUserChanges({ settings: res.data });
     return res.data;
+  },
+
+  async uploadAvatar(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await uploadMultipart<ApiResponse<{ url: string }>>('/upload/image', formData, false);
+    return res.data?.url || '';
+  },
+
+  async uploadUserAvatar(file: File): Promise<UserProfile> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await uploadMultipart<ApiResponse<UserProfile>>('/users/me/avatar', formData, true);
+    persistUserChanges({ profile: res.data });
+    return res.data;
   }
 };
+

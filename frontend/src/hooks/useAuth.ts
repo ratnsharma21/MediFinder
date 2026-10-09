@@ -1,6 +1,6 @@
-// ==============================================================================
-// MediFinder / MediCare - Authentication Hook
-// ==============================================================================
+/**
+ * Authentication and Session State Hook
+ */
 
 import { useState, useEffect, useCallback } from 'react';
 import { User, AuthState } from '../types';

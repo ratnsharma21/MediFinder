@@ -1,10 +1,10 @@
-// ==============================================================================
-// MediFinder / MediCare - Application Constants
-// ==============================================================================
+/**
+ * MediFinder Application Constants
+ */
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
-export const TOKEN_STORAGE_KEY = 'medicare_auth_token';
-export const USER_STORAGE_KEY = 'medicare_user_data';
+export const TOKEN_STORAGE_KEY = 'medifinder_auth_token';
+export const USER_STORAGE_KEY = 'medifinder_user_data';
 
 export const MEDICINE_CATEGORIES = [
   'All Categories',

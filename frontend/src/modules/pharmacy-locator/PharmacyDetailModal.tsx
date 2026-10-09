@@ -1,8 +1,6 @@
-// ==============================================================================
-// MediFinder - Pharmacy Details Modal / Drawer Component
-// Author: Sumit (Member 3 - Pharmacy Locator & Maps Lead)
-// Feature: feature/pharmacy-locator
-// ==============================================================================
+/**
+ * Pharmacy Details Modal Component
+ */
 
 import React from 'react';
 import { Pharmacy } from '../../types';
@@ -155,14 +153,23 @@ export const PharmacyDetailModal: React.FC<PharmacyDetailModalProps> = ({
           {/* Action button */}
           <button
             type="button"
-            className="btn btn-accent"
+            className="btn btn-primary"
             onClick={() => onNavigateGoogleMaps(pharmacy)}
-            style={{ width: '100%', gap: '0.5rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{
+              width: '100%',
+              gap: '0.5rem',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0.75rem 1rem',
+              boxShadow: 'var(--shadow-sm)'
+            }}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
             </svg>
-            Open in Google Maps
+            🚗 Get Directions from Current Location
           </button>
         </div>
       </Card>

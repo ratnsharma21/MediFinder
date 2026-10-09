@@ -1,8 +1,7 @@
-// ==============================================================================
-// MediFinder / MediCare - Pharmacy Locator & Map Integration Module
-// Primary Owner: Member 3 (Sumit) - feature/nearby-pharmacies
-// Backend Integration: /api/pharmacies, /api/pharmacies/nearby, /api/pharmacies/{id}
-// ==============================================================================
+/**
+ * Pharmacy Locator & Interactive Map Module
+ * Enables GPS/PIN code proximity lookup, 24/7 operating hours filtering, and directions.
+ */
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { Card } from '../../components/common/Card';
@@ -18,7 +17,7 @@ export const PharmacyLocatorModule: React.FC = () => {
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
   const [selectedPharmacy, setSelectedPharmacy] = useState<Pharmacy | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState('Jaipur');
   const [postalCode, setPostalCode] = useState('');
   const [is24HoursOnly, setIs24HoursOnly] = useState(false);
   const [radiusInKm, setRadiusInKm] = useState(10.0);
@@ -98,7 +97,7 @@ export const PharmacyLocatorModule: React.FC = () => {
         switch (error.code) {
           case error.PERMISSION_DENIED:
             setPermissionDenied(true);
-            setErrorMessage('Location permission was denied. You can still search manually by typing your city or selecting a preset below.');
+            setErrorMessage('Location permission was denied. Defaulting map to Jaipur, Rajasthan. You can also search specific areas or PIN codes below.');
             break;
           case error.POSITION_UNAVAILABLE:
             setErrorMessage('Location information is currently unavailable. Please check your GPS signal or internet connection.');
@@ -154,9 +153,55 @@ export const PharmacyLocatorModule: React.FC = () => {
     fetchPharmacies();
   };
 
+  const JAIPUR_HOSPITALS = [
+    { label: '🏥 SMS Hospital', query: 'SMS Hospital', sub: 'JLN Marg' },
+    { label: '🏥 Fortis Escorts', query: 'Fortis', sub: 'Malviya Nagar' },
+    { label: '🏥 SDMH Hospital', query: 'SDMH', sub: 'Bapu Nagar' },
+    { label: '🏥 EHCC Eternal', query: 'Eternal', sub: 'Jawahar Circle' },
+    { label: '🏥 Narayana Health', query: 'Narayana', sub: 'Pratap Nagar' },
+    { label: '🏥 Manipal Hospital', query: 'Manipal', sub: 'Sikar Rd' },
+    { label: '🏥 Apex Hospital', query: 'Apex', sub: 'Malviya Nagar' },
+    { label: '🏥 Mahatma Gandhi', query: 'Mahatma Gandhi', sub: 'Sitapura' },
+    { label: '🏥 CK Birla (RBH)', query: 'CK Birla', sub: 'Gopalpura' },
+    { label: '🏥 Shalby Hospital', query: 'Shalby', sub: 'Vaishali Nagar' },
+    { label: '🏥 BMCHRC Cancer', query: 'Bhagwan Mahaveer', sub: 'Bajaj Nagar' },
+    { label: '🏥 JNU Hospital', query: 'JNU', sub: 'Jagatpura' },
+  ];
+
+  const handleHospitalPreset = (query: string) => {
+    setUserLocation(null);
+    setCity('Jaipur');
+    setSearchQuery(query);
+    setPostalCode('');
+    setErrorMessage(null);
+  };
+
   const handleOpenGoogleMaps = (pharmacy: Pharmacy) => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    // If user's current GPS location is known, pass it as exact origin
+    let url = `https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`;
+    if (userLocation) {
+      url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.latitude},${userLocation.longitude}&destination=${pharmacy.latitude},${pharmacy.longitude}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    // If geolocation is available, try getting one-time current location for precise turn-by-turn directions
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setUserLocation({ latitude, longitude });
+          const routeUrl = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${pharmacy.latitude},${pharmacy.longitude}`;
+          window.open(routeUrl, '_blank', 'noopener,noreferrer');
+        },
+        () => {
+          window.open(url, '_blank', 'noopener,noreferrer');
+        },
+        { timeout: 4000, enableHighAccuracy: true }
+      );
+    } else {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleSelectPharmacy = (pharmacy: Pharmacy) => {
@@ -195,10 +240,10 @@ export const PharmacyLocatorModule: React.FC = () => {
       {/* Hero Header & Search Controls */}
       <header className="locator-hero">
         <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
-          Pharmacy Locator & Emergency Stores
+          Jaipur Hospitals & 24x7 Emergency Pharmacy Locator
         </h1>
-        <p style={{ fontSize: '0.9375rem', color: 'var(--text-muted)', marginBottom: '1.5rem', maxWidth: '640px' }}>
-          Find licensed physical medical stores, 24x7 emergency counters, view operating hours, and navigate via GPS coordinates.
+        <p style={{ fontSize: '0.9375rem', color: 'var(--text-muted)', marginBottom: '1.25rem', maxWidth: '680px' }}>
+          Find premier hospitals and licensed physical 24x7 emergency medical counters across Jaipur, Rajasthan. Get instant driving directions from your current location via GPS.
         </p>
 
         {/* Search Controls Toolbar */}
@@ -209,7 +254,7 @@ export const PharmacyLocatorModule: React.FC = () => {
             style={{ minWidth: '220px', flex: '1 1 200px' }}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search store name or address..."
+            placeholder="Search hospital or store name (e.g. SMS, Fortis, SDMH)..."
           />
           <input
             type="text"
@@ -217,7 +262,7 @@ export const PharmacyLocatorModule: React.FC = () => {
             style={{ width: '160px' }}
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            placeholder="City (e.g. Bengaluru)"
+            placeholder="City (e.g. Jaipur)"
           />
           <input
             type="text"
@@ -263,12 +308,13 @@ export const PharmacyLocatorModule: React.FC = () => {
             onClick={handleUseMyLocation}
             className="btn btn-primary"
             disabled={locatingUser}
+            title="Use current GPS location for proximity search and distance calculation"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
             </svg>
-            {locatingUser ? 'Locating...' : 'Near Me (GPS)'}
+            {locatingUser ? 'Locating...' : '📍 My Location (GPS)'}
           </button>
 
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', marginLeft: 'auto', userSelect: 'none', background: '#ffffff', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
@@ -281,10 +327,48 @@ export const PharmacyLocatorModule: React.FC = () => {
           </label>
         </div>
 
+        {/* Known Major Jaipur Hospitals Quick Search Chips */}
+        <div style={{ marginTop: '1rem', background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--primary)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+              🏥 Top Known Hospitals in Jaipur:
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Click to search & view directions</span>
+          </div>
+          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            {JAIPUR_HOSPITALS.map((hosp) => (
+              <button
+                key={hosp.query}
+                type="button"
+                onClick={() => handleHospitalPreset(hosp.query)}
+                title={`Search ${hosp.label} (${hosp.sub})`}
+                style={{
+                  background: searchQuery === hosp.query ? 'var(--primary)' : '#ffffff',
+                  color: searchQuery === hosp.query ? '#ffffff' : 'var(--text-main)',
+                  border: searchQuery === hosp.query ? '1px solid var(--primary)' : '1px solid #cbd5e1',
+                  borderRadius: '20px',
+                  padding: '0.3rem 0.65rem',
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  transition: 'all 0.15s ease',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                }}
+              >
+                {hosp.label}
+                <span style={{ fontSize: '0.6875rem', opacity: searchQuery === hosp.query ? 0.9 : 0.6 }}>({hosp.sub})</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Location Presets & Quick Filters */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Quick Locations:</span>
-          {['Bengaluru', 'Gurugram'].map((preset) => (
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Areas:</span>
+          {['Jaipur', 'C-Scheme', 'Malviya Nagar', 'Bapu Nagar', 'Mansarovar', 'Vaishali Nagar', 'JLN Marg', 'Vidhyadhar Nagar', 'Sitapura'].map((preset) => (
             <button
               key={preset}
               type="button"
@@ -311,14 +395,15 @@ export const PharmacyLocatorModule: React.FC = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-muted)',
+                color: 'var(--primary)',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 textDecoration: 'underline',
+                fontWeight: 600,
                 marginLeft: '0.25rem'
               }}
             >
-              Clear filters
+              Show All Jaipur Centers
             </button>
           )}
         </div>
@@ -342,7 +427,7 @@ export const PharmacyLocatorModule: React.FC = () => {
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
               </svg>
-              <strong>Location Access Disabled</strong>
+              <strong>Location Access Disabled - Defaulting to Jaipur</strong>
             </div>
             <button
               type="button"
@@ -353,24 +438,32 @@ export const PharmacyLocatorModule: React.FC = () => {
             </button>
           </div>
           <p style={{ fontSize: '0.8125rem', margin: 0, lineHeight: 1.4 }}>
-            Browser geolocation permission is blocked. Select a city preset below to instantly explore verified pharmacies in that region:
+            Browser geolocation permission is blocked. Choose a major Jaipur area below to explore verified hospitals and emergency counters:
           </p>
-          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem', flexWrap: 'wrap' }}>
             <button
               type="button"
               className="btn btn-primary btn-sm"
-              onClick={() => handleCityPreset('Bengaluru')}
+              onClick={() => handleHospitalPreset('SMS Hospital')}
               style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
             >
-              Search Bengaluru
+              SMS Hospital (JLN Marg)
             </button>
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              onClick={() => handleCityPreset('Gurugram')}
+              onClick={() => handleHospitalPreset('Fortis')}
               style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
             >
-              Search Gurugram
+              Fortis (Malviya Nagar)
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => handleHospitalPreset('SDMH')}
+              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+            >
+              SDMH (Bapu Nagar)
             </button>
           </div>
         </div>

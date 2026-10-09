@@ -1,8 +1,6 @@
-// ==============================================================================
-// MediFinder - Interactive Pharmacy Locator Map Component
-// Author: Sumit (Member 3 - Pharmacy Locator & Maps Lead)
-// Feature: feature/maps-integration
-// ==============================================================================
+/**
+ * Interactive SVG Vector Map Component for Pharmacy Geolocation
+ */
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Pharmacy } from '../../types';
@@ -76,8 +74,8 @@ export const PharmacyMap: React.FC<PharmacyMapProps> = ({
   useEffect(() => {
     if (!useGoogleMaps || !googleMapsLoaded || !googleMapRef.current || !window.google) return;
 
-    const centerLat = userLocation?.latitude || (pharmacies.length > 0 ? Number(pharmacies[0].latitude) : 12.9716);
-    const centerLng = userLocation?.longitude || (pharmacies.length > 0 ? Number(pharmacies[0].longitude) : 77.5946);
+    const centerLat = userLocation?.latitude || (pharmacies.length > 0 ? Number(pharmacies[0].latitude) : 26.9124);
+    const centerLng = userLocation?.longitude || (pharmacies.length > 0 ? Number(pharmacies[0].longitude) : 75.7873);
 
     if (!mapInstanceRef.current) {
       mapInstanceRef.current = new window.google.maps.Map(googleMapRef.current, {
@@ -160,7 +158,7 @@ export const PharmacyMap: React.FC<PharmacyMapProps> = ({
   // Compute map bounding box and centers for Vector fallback
   const mapBounds = useMemo(() => {
     if (pharmacies.length === 0 && !userLocation) {
-      return { minLat: 12.8, maxLat: 13.1, minLng: 77.5, maxLng: 77.8, centerLat: 12.9716, centerLng: 77.6410 };
+      return { minLat: 26.75, maxLat: 27.05, minLng: 75.65, maxLng: 75.95, centerLat: 26.9124, centerLng: 75.7873 };
     }
 
     const lats = pharmacies.map((p) => Number(p.latitude));
@@ -538,14 +536,14 @@ export const PharmacyMap: React.FC<PharmacyMapProps> = ({
                 </a>
                 <button
                   type="button"
-                  className="btn btn-secondary btn-sm"
+                  className="btn btn-primary btn-sm"
                   onClick={() => onOpenDirections(activeItem)}
                   style={{ padding: '0.2rem 0.5rem', fontSize: '0.6875rem', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                 >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                   </svg>
-                  Directions
+                  📍 Directions
                 </button>
               </div>
             </div>

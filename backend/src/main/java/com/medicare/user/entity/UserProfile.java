@@ -22,6 +22,9 @@ public class UserProfile {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+    @Column(name = "avatar_url", length = 500)
+    private String avatarUrl;
+
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
@@ -101,6 +104,14 @@ public class UserProfile {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public LocalDate getDateOfBirth() {

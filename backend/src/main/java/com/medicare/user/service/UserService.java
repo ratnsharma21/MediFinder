@@ -55,6 +55,7 @@ public class UserService {
 
         if (request.getFullName() != null) profile.setFullName(request.getFullName().trim());
         if (request.getPhoneNumber() != null) profile.setPhoneNumber(request.getPhoneNumber().trim());
+        if (request.getAvatarUrl() != null) profile.setAvatarUrl(request.getAvatarUrl().trim());
         if (request.getDateOfBirth() != null) profile.setDateOfBirth(request.getDateOfBirth());
         if (request.getGender() != null) profile.setGender(request.getGender());
         if (request.getBloodGroup() != null) profile.setBloodGroup(request.getBloodGroup());
@@ -133,6 +134,7 @@ public class UserService {
                 profile.getId(),
                 profile.getFullName(),
                 profile.getPhoneNumber(),
+                profile.getAvatarUrl(),
                 profile.getDateOfBirth(),
                 profile.getGender(),
                 profile.getBloodGroup(),

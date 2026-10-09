@@ -20,15 +20,21 @@ public class RegisterRequest {
 
     private String fullName;
     private String phoneNumber;
+    private String avatarUrl;
 
     public RegisterRequest() {}
 
     public RegisterRequest(String username, String email, String password, String fullName, String phoneNumber) {
+        this(username, email, password, fullName, phoneNumber, null);
+    }
+
+    public RegisterRequest(String username, String email, String password, String fullName, String phoneNumber, String avatarUrl) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
+        this.avatarUrl = avatarUrl;
     }
 
     public String getUsername() {
@@ -69,5 +75,13 @@ public class RegisterRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

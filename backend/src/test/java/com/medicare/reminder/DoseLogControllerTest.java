@@ -86,7 +86,7 @@ class DoseLogControllerTest {
         reminder1.setUnit("tablet");
         reminder1.setFrequency("TWICE_DAILY");
         reminder1.setTimeOfDay("09:00, 21:00");
-        reminder1.setStartDate(LocalDate.now());
+        reminder1.setStartDate(LocalDate.now().minusDays(1));
         reminder1.setActive(true);
         reminder1 = reminderRepository.save(reminder1);
     }

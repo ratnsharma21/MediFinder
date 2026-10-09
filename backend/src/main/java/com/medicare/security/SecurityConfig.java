@@ -51,8 +51,9 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public Auth Endpoints
+                        // Public Auth & Upload Endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/upload/**").permitAll()
 
                         // Public Catalogue & Pharmacy Exploration
                         .requestMatchers(HttpMethod.GET, "/api/medicines/**").permitAll()

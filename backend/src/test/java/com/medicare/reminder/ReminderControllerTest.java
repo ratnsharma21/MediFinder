@@ -269,4 +269,23 @@ class ReminderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.endDate").value(nullValue()));
     }
+
+    @Test
+    void testPatchStartDatePreservesExistingEndDate() throws Exception {
+        LocalDate existingEndDate = LocalDate.now().plusDays(10);
+        reminderUser1.setEndDate(existingEndDate);
+        reminderRepository.save(reminderUser1);
+
+        LocalDate newStartDate = LocalDate.now().plusDays(1);
+        ReminderRequest request = new ReminderRequest();
+        request.setStartDate(newStartDate);
+
+        mockMvc.perform(patch("/api/reminders/" + reminderUser1.getId())
+                        .header("Authorization", "Bearer " + token1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.startDate", is(newStartDate.toString())))
+                .andExpect(jsonPath("$.data.endDate", is(existingEndDate.toString())));
+    }
 }

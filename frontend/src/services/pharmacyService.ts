@@ -1,8 +1,6 @@
-// ==============================================================================
-// MediFinder / MediCare - Pharmacy Service
-// Integration Contract for Member 3 (Sumit)
-// Feature: feature/pharmacy-search
-// ==============================================================================
+/**
+ * Pharmacy Geolocation, Nearby Search, and Operating Hours Service
+ */
 
 import { request } from './api';
 import { ApiResponse, PagedResponse, Pharmacy } from '../types';

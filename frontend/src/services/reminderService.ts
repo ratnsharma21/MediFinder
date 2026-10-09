@@ -1,7 +1,6 @@
-// ==============================================================================
-// MediFinder / MediCare - Reminder & Dose Log Service
-// Integration Contract for Member 4 (Sameer)
-// ==============================================================================
+/**
+ * Medication Reminder Schedules and Dose Adherence Tracking Service
+ */
 
 import { request } from './api';
 import { ApiResponse, Reminder, DoseLog, DoseStatus } from '../types';

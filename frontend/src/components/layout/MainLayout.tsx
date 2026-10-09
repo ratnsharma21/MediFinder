@@ -1,6 +1,10 @@
+/**
+ * MediFinder Healthcare OS - Main Layout Container Component
+ */
+
 import React from 'react';
-import { Navbar } from '../common/Navbar';
-import { Footer } from '../common/Footer';
+import { Sidebar } from './Sidebar';
+import { TopNavbar } from './TopNavbar';
 import { User } from '../../types';
 
 interface MainLayoutProps {
@@ -11,6 +15,11 @@ interface MainLayoutProps {
   isAuthenticated: boolean;
   onLogout: () => void;
   onOpenAuth: () => void;
+  onOpenAddReminder: () => void;
+  onSearchGlobal: (query: string) => void;
+  activeRemindersCount?: number;
+  unreadNotificationsCount?: number;
+  ordersCount?: number;
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({
@@ -20,24 +29,45 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   user,
   isAuthenticated,
   onLogout,
-  onOpenAuth
+  onOpenAuth,
+  onOpenAddReminder,
+  onSearchGlobal,
+  activeRemindersCount = 0,
+  unreadNotificationsCount = 0,
+  ordersCount = 0,
 }) => {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Navbar
+    <div className="medicare-app-layout">
+      {/* Left Sidebar */}
+      <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         user={user}
         isAuthenticated={isAuthenticated}
-        onLogout={onLogout}
-        onOpenAuth={onOpenAuth}
+        activeRemindersCount={activeRemindersCount}
+        unreadNotificationsCount={unreadNotificationsCount}
+        ordersCount={ordersCount}
       />
-      <main style={{ flex: 1, padding: '2rem 0' }}>
-        <div className="container">
+
+      {/* Main Content Area */}
+      <div className="medicare-main-wrapper">
+        {/* Top Navbar */}
+        <TopNavbar
+          user={user}
+          isAuthenticated={isAuthenticated}
+          onOpenAuth={onOpenAuth}
+          onLogout={onLogout}
+          onOpenAddReminder={onOpenAddReminder}
+          onSearchGlobal={onSearchGlobal}
+          onNavigate={setActiveTab}
+          unreadCount={unreadNotificationsCount}
+        />
+
+        {/* Page Body */}
+        <main className="medicare-page-body">
           {children}
-        </div>
-      </main>
-      <Footer />
+        </main>
+      </div>
     </div>
   );
 };
