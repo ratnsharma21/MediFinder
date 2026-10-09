@@ -96,6 +96,30 @@ class UserControllerTest {
     }
 
     @Test
+    void testUpdateProfileRejectsInvalidPhoneNumber() throws Exception {
+        UpdateProfileRequest request = new UpdateProfileRequest();
+        request.setPhoneNumber("not-a-phone");
+
+        mockMvc.perform(patch("/api/users/me")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateProfileRejectsFutureDateOfBirth() throws Exception {
+        UpdateProfileRequest request = new UpdateProfileRequest();
+        request.setDateOfBirth(java.time.LocalDate.now().plusDays(1));
+
+        mockMvc.perform(patch("/api/users/me")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void testUpdateSettings() throws Exception {
         UpdateSettingsRequest settingsRequest = new UpdateSettingsRequest();
         settingsRequest.setDarkMode(true);
