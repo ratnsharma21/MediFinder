@@ -13,6 +13,9 @@ public class UpdateProfileRequest {
     @Pattern(regexp = "^$|^\\+?[0-9][0-9\\s().-]{6,18}$")
     private String phoneNumber;
 
+    @Size(max = 500)
+    private String avatarUrl;
+
     @Past
     private LocalDate dateOfBirth;
 
@@ -54,6 +57,14 @@ public class UpdateProfileRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public LocalDate getDateOfBirth() {

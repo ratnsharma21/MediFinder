@@ -126,10 +126,14 @@ public class GlobalExceptionHandler {
         }
 
         logger.warn("Validation failed for {}: {}", request.getRequestURI(), errors);
+        String detailedMessage = errors.isEmpty()
+                ? "Validation failed for one or more fields"
+                : String.join("; ", errors.values());
+
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                "Validation failed for one or more fields",
+                detailedMessage,
                 request.getRequestURI(),
                 errors
         );

@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Service for managing medication reminder schedules and dose configuration.
+ */
 @Service
 public class ReminderService {
 
@@ -98,7 +101,16 @@ public class ReminderService {
     }
 
     @Transactional
+    public ReminderResponse patchReminder(Long id, Long userId, ReminderRequest request) {
+        return updateReminderInternal(id, userId, request, true);
+    }
+
+    @Transactional
     public ReminderResponse updateReminder(Long id, Long userId, ReminderRequest request) {
+        return updateReminderInternal(id, userId, request, false);
+    }
+
+    private ReminderResponse updateReminderInternal(Long id, Long userId, ReminderRequest request, boolean isPatch) {
         Reminder reminder = reminderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reminder", "id", id));
 
@@ -136,9 +148,11 @@ public class ReminderService {
         if (request.getStartDate() != null) {
             reminder.setStartDate(request.getStartDate());
         }
-        if (request.getStartDate() != null) {
-            reminder.setEndDate(request.getEndDate());
-        } else if (request.getEndDate() != null) {
+        if (isPatch) {
+            if (request.getEndDate() != null) {
+                reminder.setEndDate(request.getEndDate());
+            }
+        } else {
             reminder.setEndDate(request.getEndDate());
         }
         if (request.getInstructions() != null) {

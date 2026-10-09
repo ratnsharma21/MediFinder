@@ -1,8 +1,7 @@
-// ==============================================================================
-// MediFinder / MediCare - Medicine Reminders & Dose Adherence Module
-// Primary Owner: Member 4 (Sameer) - feature/medicine-reminders, feature/dose-tracking
-// Backend Integration: /api/reminders, /api/dose-logs
-// ==============================================================================
+/**
+ * Medication Reminders & Dose Adherence Module
+ * Manages daily medication schedules, adherence intake logs, and browser notifications.
+ */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Card } from '../../components/common/Card';
@@ -14,6 +13,8 @@ interface RemindersModuleProps {
   user: User | null;
   isAuthenticated: boolean;
   onOpenAuth: () => void;
+  initialOpenCreate?: boolean;
+  onClearInitialOpenCreate?: () => void;
 }
 
 const formatLocalDate = (date: Date): string => {
@@ -72,7 +73,9 @@ const getDoseLogOccurrence = (reminder: Reminder, now: Date): Date | null => {
 export const RemindersModule: React.FC<RemindersModuleProps> = ({
   user,
   isAuthenticated,
-  onOpenAuth
+  onOpenAuth,
+  initialOpenCreate,
+  onClearInitialOpenCreate,
 }) => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [doseLogs, setDoseLogs] = useState<DoseLog[]>([]);
@@ -100,6 +103,15 @@ export const RemindersModule: React.FC<RemindersModuleProps> = ({
   const [startDate, setStartDate] = useState(formatLocalDate(new Date()));
   const [endDate, setEndDate] = useState('');
   const [instructions, setInstructions] = useState('');
+
+  useEffect(() => {
+    if (initialOpenCreate && isAuthenticated) {
+      setShowCreateModal(true);
+      if (onClearInitialOpenCreate) {
+        onClearInitialOpenCreate();
+      }
+    }
+  }, [initialOpenCreate, isAuthenticated, onClearInitialOpenCreate]);
 
   const loadData = useCallback(async () => {
     if (!isAuthenticated) {

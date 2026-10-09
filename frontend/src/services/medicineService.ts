@@ -1,7 +1,6 @@
-// ==============================================================================
-// MediFinder / MediCare - Medicine Service
-// Integration Contract for Member 2 (Vansh)
-// ==============================================================================
+/**
+ * Medicine Catalogue, Search, and Price Provenance Service
+ */
 
 import { request } from './api';
 import { ApiResponse, PagedResponse, Medicine, MedicineDetail, RetailerOffer } from '../types';

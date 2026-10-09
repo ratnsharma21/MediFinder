@@ -1,7 +1,6 @@
-﻿// ==============================================================================
-// MediFinder / MediCare - Shared Frontend TypeScript Interfaces
-// Integration Contract for Members 1, 2, 3, 4, 5
-// ==============================================================================
+/**
+ * MediCare Healthcare OS - Core Type Definitions & API Contracts
+ */
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -36,6 +35,7 @@ export interface UserProfile {
   id?: number;
   fullName?: string;
   phoneNumber?: string;
+  avatarUrl?: string;
   dateOfBirth?: string;
   gender?: string;
   bloodGroup?: string;

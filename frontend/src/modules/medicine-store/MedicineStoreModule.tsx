@@ -1,8 +1,7 @@
-// ==============================================================================
-// MediFinder / MediCare - Medicine Store & Catalogue Module
-// Primary Owner: Vansh (Member 2) - M3 Catalogue & Search, M4 Price Provenance
-// Backend Integration: /api/medicines, /api/medicines/{id}, /api/medicines/{id}/offers
-// ==============================================================================
+/**
+ * Medicine Catalogue & Discovery Module
+ * Provides medicine search, category filtering, dosage forms, and online retailer price comparison.
+ */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Card } from '../../components/common/Card';
@@ -21,7 +20,12 @@ const POPULAR_SEARCH_TAGS = [
   'Vitamin C'
 ];
 
-export const MedicineStoreModule: React.FC = () => {
+interface MedicineStoreModuleProps {
+  initialQuery?: string;
+  onNavigate?: (tab: string) => void;
+}
+
+export const MedicineStoreModule: React.FC<MedicineStoreModuleProps> = ({ initialQuery = '' }) => {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [featuredMedicines, setFeaturedMedicines] = useState<Medicine[]>([]);
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineDetail | null>(null);
@@ -30,8 +34,8 @@ export const MedicineStoreModule: React.FC = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Filter and Query States
-  const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [category, setCategory] = useState('All Categories');
   const [dosageForm, setDosageForm] = useState('All Forms');
   const [dosageFormsList, setDosageFormsList] = useState<string[]>([]);
@@ -42,6 +46,13 @@ export const MedicineStoreModule: React.FC = () => {
   const [sortBy, setSortBy] = useState('name');
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('ASC');
   const [pageSize, setPageSize] = useState<number>(9);
+
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+      setDebouncedQuery(initialQuery);
+    }
+  }, [initialQuery]);
 
   // Pagination & Status States
   const [page, setPage] = useState(0);

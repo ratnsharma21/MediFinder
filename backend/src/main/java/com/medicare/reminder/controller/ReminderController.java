@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing medication reminder schedules and dosage timings.
+ */
 @RestController
 @RequestMapping("/api/reminders")
 @Tag(name = "Medicine Reminders", description = "Personal medication scheduling, dosage timing, and active reminder alarms")
@@ -60,7 +63,7 @@ public class ReminderController {
             @AuthenticationPrincipal UserPrincipal currentUser,
             @PathVariable Long id,
             @RequestBody ReminderRequest request) {
-        ReminderResponse updated = reminderService.updateReminder(id, currentUser.getId(), request);
+        ReminderResponse updated = reminderService.patchReminder(id, currentUser.getId(), request);
         return ResponseEntity.ok(ApiResponse.success("Reminder updated successfully", updated));
     }
 

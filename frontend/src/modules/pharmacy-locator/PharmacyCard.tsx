@@ -1,8 +1,6 @@
-// ==============================================================================
-// MediFinder - Pharmacy Card Component
-// Author: Sumit (Member 3 - Pharmacy Locator & Maps Lead)
-// Feature: feature/pharmacy-locator
-// ==============================================================================
+/**
+ * Pharmacy Summary Card Component
+ */
 
 import React from 'react';
 import { Pharmacy } from '../../types';
@@ -141,13 +139,23 @@ export const PharmacyCard: React.FC<PharmacyCardProps> = ({
               e.stopPropagation();
               onViewDirections(pharmacy);
             }}
-            title="Open directions in Google Maps"
-            style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+            title="Get driving directions from your location in Google Maps"
+            style={{
+              padding: '0.3rem 0.6rem',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              background: '#f0fdf4',
+              color: 'var(--primary-dark)',
+              border: '1px solid var(--primary-light)'
+            }}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
             </svg>
-            Directions
+            📍 Directions
           </button>
           <button
             type="button"
@@ -156,7 +164,7 @@ export const PharmacyCard: React.FC<PharmacyCardProps> = ({
               e.stopPropagation();
               onSelect(pharmacy);
             }}
-            style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem' }}
+            style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem' }}
           >
             Details &rarr;
           </button>

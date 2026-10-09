@@ -77,6 +77,9 @@ public class AuthService {
         if (request.getPhoneNumber() != null) {
             profile.setPhoneNumber(request.getPhoneNumber().trim());
         }
+        if (request.getAvatarUrl() != null && !request.getAvatarUrl().isBlank()) {
+            profile.setAvatarUrl(request.getAvatarUrl().trim());
+        }
         user.setProfile(profile);
 
         UserSettings settings = new UserSettings(user);
@@ -109,6 +112,68 @@ public class AuthService {
 
         UserDto userDto = userService.mapToUserDto(user);
         logger.info("User logged in successfully: {}", user.getUsername());
+
+        return new AuthResponse(jwt, jwtExpirationMs, userDto);
+    }
+
+    @Transactional
+    public AuthResponse googleLogin(com.medicare.auth.dto.GoogleLoginRequest request) {
+        String cleanEmail = (request.getEmail() != null && !request.getEmail().isBlank())
+                ? request.getEmail().trim().toLowerCase()
+                : null;
+
+        if (cleanEmail == null) {
+            throw new BadRequestException("Google login payload must include a valid email");
+        }
+
+        User user = userRepository.findByEmail(cleanEmail).orElseGet(() -> {
+            // Automatically provision a new account for first-time Google sign-in
+            String generatedUsername = cleanEmail.split("@")[0].replaceAll("[^a-zA-Z0-9_]", "_");
+            if (generatedUsername.length() < 3) {
+                generatedUsername = generatedUsername + "_user";
+            }
+            if (userRepository.existsByUsername(generatedUsername)) {
+                generatedUsername = generatedUsername + "_" + System.currentTimeMillis() % 10000;
+            }
+
+            User newUser = new User(
+                    generatedUsername,
+                    cleanEmail,
+                    passwordEncoder.encode(java.util.UUID.randomUUID().toString()),
+                    Role.ROLE_USER
+            );
+
+            UserProfile profile = new UserProfile(newUser);
+            if (request.getName() != null && !request.getName().isBlank()) {
+                profile.setFullName(request.getName().trim());
+            } else {
+                profile.setFullName(generatedUsername);
+            }
+            if (request.getAvatarUrl() != null && !request.getAvatarUrl().isBlank()) {
+                profile.setAvatarUrl(request.getAvatarUrl().trim());
+            }
+            newUser.setProfile(profile);
+
+            UserSettings settings = new UserSettings(newUser);
+            newUser.setSettings(settings);
+
+            logger.info("Auto-registered new patient account via Google: {}", newUser.getUsername());
+            return userRepository.save(newUser);
+        });
+
+        // Update avatar if provided and not yet set
+        if (request.getAvatarUrl() != null && !request.getAvatarUrl().isBlank() &&
+                (user.getProfile() == null || user.getProfile().getAvatarUrl() == null)) {
+            if (user.getProfile() == null) {
+                user.setProfile(new UserProfile(user));
+            }
+            user.getProfile().setAvatarUrl(request.getAvatarUrl().trim());
+            user = userRepository.save(user);
+        }
+
+        String jwt = tokenProvider.generateTokenFromUser(user.getId(), user.getUsername(), user.getEmail());
+        UserDto userDto = userService.mapToUserDto(user);
+        logger.info("Google authenticated user session issued: {}", user.getUsername());
 
         return new AuthResponse(jwt, jwtExpirationMs, userDto);
     }

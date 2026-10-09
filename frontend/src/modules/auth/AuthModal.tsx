@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { authService } from '../../services/authService';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,27 +16,61 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { login, register } = useAuth();
+  const { login } = useAuth();
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
     setLoading(true);
 
     try {
       if (isRegister) {
-        await register({ username, email, password, fullName, phoneNumber });
+        const cleanUser = username.trim();
+        const cleanEmail = email.trim() || `${cleanUser.toLowerCase()}@medifinder.com`;
+        const cleanName = fullName.trim() || cleanUser;
+
+        if (!cleanUser || cleanUser.length < 3) {
+          setError('Username must be at least 3 characters long.');
+          setLoading(false);
+          return;
+        }
+
+        if (cleanUser.length > 50) {
+          setError('Username must be at most 50 characters long.');
+          setLoading(false);
+          return;
+        }
+
+        if (!password || password.length < 6) {
+          setError('Password must be at least 6 characters long.');
+          setLoading(false);
+          return;
+        }
+
+        await authService.registerOnly({
+          username: cleanUser,
+          email: cleanEmail,
+          password,
+          fullName: cleanName,
+          phoneNumber: phoneNumber.trim() || undefined,
+        });
+        setIsRegister(false);
+        setEmail(cleanUser);
+        setPassword('');
+        setSuccessMessage(`Account "${cleanUser}" created! Please enter your password to sign in.`);
       } else {
         await login({ emailOrUsername: email || username, password });
+        onSuccess();
+        onClose();
       }
-      onSuccess();
-      onClose();
     } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+      setError(err.message || (isRegister ? 'Registration failed' : 'Authentication failed'));
     } finally {
       setLoading(false);
     }
@@ -80,6 +115,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
         <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
           {isRegister ? 'Register to manage reminders and track doses' : 'Sign in to access your prescriptions and reminders'}
         </p>
+
+        {successMessage && (
+          <div style={{
+            padding: '0.75rem 1rem',
+            background: 'rgba(16, 185, 129, 0.12)',
+            color: '#065f46',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '0.875rem',
+            marginBottom: '1rem',
+            fontWeight: 500
+          }}>
+            ✅ <strong>Success!</strong> {successMessage}
+          </div>
+        )}
 
         {error && (
           <div style={{

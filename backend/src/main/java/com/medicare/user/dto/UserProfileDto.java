@@ -6,6 +6,7 @@ public class UserProfileDto {
     private Long id;
     private String fullName;
     private String phoneNumber;
+    private String avatarUrl;
     private LocalDate dateOfBirth;
     private String gender;
     private String bloodGroup;
@@ -18,9 +19,14 @@ public class UserProfileDto {
     public UserProfileDto() {}
 
     public UserProfileDto(Long id, String fullName, String phoneNumber, LocalDate dateOfBirth, String gender, String bloodGroup, String emergencyContact, String address, String city, String state, String postalCode) {
+        this(id, fullName, phoneNumber, null, dateOfBirth, gender, bloodGroup, emergencyContact, address, city, state, postalCode);
+    }
+
+    public UserProfileDto(Long id, String fullName, String phoneNumber, String avatarUrl, LocalDate dateOfBirth, String gender, String bloodGroup, String emergencyContact, String address, String city, String state, String postalCode) {
         this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
+        this.avatarUrl = avatarUrl;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.bloodGroup = bloodGroup;
@@ -53,6 +59,14 @@ public class UserProfileDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public LocalDate getDateOfBirth() {

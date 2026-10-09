@@ -90,6 +90,7 @@ export const AccountModule: React.FC<AccountModuleProps> = ({
       const updatedProfile = await authService.updateProfile({
         fullName: profile.fullName,
         phoneNumber: profile.phoneNumber,
+        avatarUrl: profile.avatarUrl,
         dateOfBirth: profile.dateOfBirth,
         gender: profile.gender,
         bloodGroup: profile.bloodGroup,
@@ -109,6 +110,30 @@ export const AccountModule: React.FC<AccountModuleProps> = ({
       } else {
         setError(requestError instanceof Error ? requestError.message : 'Profile changes could not be saved.');
       }
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 20 * 1024 * 1024) {
+      setError('Profile image must be less than 20MB');
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const updatedProfile = await authService.uploadUserAvatar(file);
+      setProfile(updatedProfile);
+      onAccountUpdated({ profile: updatedProfile });
+      setNotice('Profile picture successfully uploaded to AWS S3!');
+    } catch (requestError: any) {
+      setError(requestError.message || 'Failed to upload profile picture to AWS S3');
     } finally {
       setSaving(false);
     }
@@ -202,9 +227,25 @@ export const AccountModule: React.FC<AccountModuleProps> = ({
       <div className="account-layout">
         <aside className="account-rail" aria-label="Account sections">
           <div className="account-identity">
-            <span className="account-avatar" aria-hidden="true">{(user?.profile?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}</span>
+            <div className="account-avatar-wrapper">
+              {profile.avatarUrl || user?.profile?.avatarUrl ? (
+                <img src={profile.avatarUrl || user?.profile?.avatarUrl} alt="Avatar" className="account-avatar-photo" />
+              ) : (
+                <span className="account-avatar" aria-hidden="true">{(profile.fullName || user?.profile?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}</span>
+              )}
+              <label className="btn-edit-avatar-badge" title="Change Profile Photo (AWS S3)">
+                📷
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden-file-input"
+                  onChange={handleAvatarUpload}
+                  disabled={saving}
+                />
+              </label>
+            </div>
             <div>
-              <strong>{user?.profile?.fullName || user?.username}</strong>
+              <strong>{profile.fullName || user?.profile?.fullName || user?.username}</strong>
               <span>{user?.email}</span>
             </div>
           </div>

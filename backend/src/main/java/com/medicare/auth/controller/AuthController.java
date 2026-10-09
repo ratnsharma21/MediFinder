@@ -40,6 +40,13 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success("Login successful", authResponse));
     }
 
+    @PostMapping("/google")
+    @Operation(summary = "Sign in / Register with Google OAuth", description = "Authenticates or auto-registers a user via Google ID credentials")
+    public ResponseEntity<ApiResponse<AuthResponse>> googleLogin(@Valid @RequestBody com.medicare.auth.dto.GoogleLoginRequest request) {
+        AuthResponse authResponse = authService.googleLogin(request);
+        return ResponseEntity.ok(ApiResponse.success("Google sign-in successful", authResponse));
+    }
+
     @PostMapping("/logout")
     @Operation(summary = "Log out user session", description = "Stateless JWT token invalidation (client clears token from local storage)")
     public ResponseEntity<ApiResponse<String>> logout() {
