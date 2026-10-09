@@ -1376,7 +1376,7 @@ cp config/db.properties.example config/db.properties
 
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366F1,50:0EA5E9,100:0D9488&height=140&section=footer&text=Built%20with%20💊%20by%20Team%20MediFinder&fontSize=22&fontColor=ffffff&animation=twinkling&fontAlignY=70" width="100%" alt=""/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366F1,50:0EA5E9,100:0D9488&height=140&section=footer&text=Built%20with%20💊%20by%20Team%20Error-404&fontSize=22&fontColor=ffffff&animation=twinkling&fontAlignY=70" width="100%" alt=""/>
 
 <sub>**06 July 2026 → 06 October 2026** · 5 members · 10 modules · one repository · zero fiction</sub>
 
