@@ -102,10 +102,16 @@ Profile and settings operations always use the user ID from the authenticated to
 | `POST` | `/api/reminders` | Protected | Create a new medication schedule |
 | `GET` | `/api/reminders/{id}` | Protected | Retrieve a specific medication schedule (owner only) |
 | `PATCH`| `/api/reminders/{id}`| Protected | Partially update reminder timing, dosage, or active status |
-| `DELETE`| `/api/reminders/{id}`| Protected | Delete reminder schedule |
+| `PUT` | `/api/reminders/{id}` | Protected | Update a reminder schedule |
+| `DELETE`| `/api/reminders/{id}`| Protected | Delete an owned reminder schedule and dependent dose logs |
 | `GET` | `/api/dose-logs` | Protected | Retrieve dose history for the authenticated user |
+| `GET` | `/api/dose-logs?reminderId={id}` | Protected | Retrieve dose history for an owned reminder |
 | `POST` | `/api/dose-logs` | Protected | Record intake confirmation or missed dose |
 | `PATCH`| `/api/dose-logs/{id}` | Protected | Update dose adherence status (`TAKEN`, `MISSED`, `SKIPPED`) |
+
+Reminder schedules accept the supported frequency values `ONCE_DAILY`, `TWICE_DAILY`, `THRICE_DAILY`, `FOUR_TIMES_DAILY`, `EVERY_8_HOURS`, and `AS_NEEDED`. `timeOfDay` accepts one or more comma-separated 24-hour `HH:mm` values. Reminder and dose-log ownership is determined from the bearer token, not client-supplied user IDs. Repeated dose logs for the same reminder and scheduled minute return `409 Conflict`.
+
+Browser reminder alerts are delivered only while the web app is open and browser notification permission is granted. No background or closed-app delivery is provided.
 
 ### In-App Notifications
 | Method | Endpoint | Auth Required | Description |
