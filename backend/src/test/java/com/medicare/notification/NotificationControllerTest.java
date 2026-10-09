@@ -1,6 +1,5 @@
 package com.medicare.notification;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medicare.notification.entity.Notification;
 import com.medicare.notification.entity.NotificationChannel;
 import com.medicare.notification.entity.NotificationType;
