@@ -87,6 +87,13 @@ export function useAuth() {
     }
   }, [state.token, logout]);
 
+  const updateUser = useCallback((changes: Partial<Pick<User, 'profile' | 'settings'>>) => {
+    setState(prev => prev.user
+      ? { ...prev, user: { ...prev.user, ...changes } }
+      : prev
+    );
+  }, []);
+
   useEffect(() => {
     if (state.token && !state.user) {
       refreshUser();
@@ -101,5 +108,6 @@ export function useAuth() {
     register,
     logout,
     refreshUser,
+    updateUser,
   };
 }
