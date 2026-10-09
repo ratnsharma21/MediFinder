@@ -49,10 +49,14 @@ Authorization: Bearer <your_jwt_token>
 | `POST` | `/api/auth/register` | Public | Register new user account |
 | `POST` | `/api/auth/login` | Public | Authenticate with credentials and receive JWT |
 | `POST` | `/api/auth/logout` | Protected | Logout session / token invalidation notice |
-| `GET` | `/api/users/me` | Protected | Retrieve authenticated user details and profile |
-| `PATCH`| `/api/users/me` | Protected | Update profile (name, emergency contact, address) |
-| `GET` | `/api/users/me/settings` | Protected | Retrieve notification and theme settings |
-| `PATCH`| `/api/users/me/settings`| Protected | Update notification toggles, dark mode, sounds |
+| `GET` | `/api/users/me` | Protected | Retrieve the authenticated user's account, profile, and settings |
+| `GET` | `/api/users/me/profile` | Protected | Retrieve the authenticated user's contact and medical profile |
+| `PATCH`| `/api/users/me` | Protected | Partially update the authenticated user's profile |
+| `PUT` | `/api/users/me/profile` | Protected | Update the authenticated user's profile |
+| `GET` | `/api/users/me/settings` | Protected | Retrieve notification and appearance preferences |
+| `PATCH`| `/api/users/me/settings`| Protected | Persist notification preferences, dark mode, and reminder sound choice |
+
+Profile and settings operations always use the user ID from the authenticated token; clients do not submit a target user ID. Profile updates validate supported column lengths, phone-number and postal-code formats, and require dates of birth to be in the past. Notification channel values are persisted preferences; they do not enable notification delivery by themselves.
 
 ### Medicines & Catalogue
 | Method | Endpoint | Auth Required | Description |
