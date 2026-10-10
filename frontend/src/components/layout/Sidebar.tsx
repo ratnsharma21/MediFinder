@@ -36,7 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
         <div className="brand-text">
           <div className="brand-name">Medi<span className="brand-accent">Finder</span></div>
-          <div className="brand-subtitle">HEALTHCARE OS</div>
+          <div className="brand-subtitle">Healthcare With Ease</div>
         </div>
       </div>
 
@@ -208,18 +208,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
       </nav>
-
-      {/* Bottom Status Card */}
-      <div className="sidebar-footer">
-        <div className="security-status-box">
-          <div className="security-status-indicator"></div>
-          <div className="security-status-text">
-            <div className="status-title">Local Demo Mode</div>
-            <div className="status-subtitle">Encrypted Local DB</div>
-          </div>
-          <span className="security-shield-icon">🛡️</span>
-        </div>
-      </div>
     </aside>
   );
 };

@@ -1,4 +1,4 @@
-﻿-- ==============================================================================
+-- ==============================================================================
 -- MediFinder / MediCare - Initial Database Schema (V1)
 -- Database Architecture & Schema Specification
 -- Author: Ratn (Backend Lead & Database Architect)
@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     user_id BIGINT NOT NULL UNIQUE,
     full_name VARCHAR(100),
     phone_number VARCHAR(20),
+    avatar_url LONGTEXT,
     date_of_birth DATE,
     gender VARCHAR(20),
     blood_group VARCHAR(10),

@@ -1,5 +1,5 @@
 /**
- * MediFinder Healthcare OS - Main Application Root
+ * MediFinder Healthcare  - Main Application Root
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -15,12 +15,12 @@ import { NotificationsModule } from './modules/notifications/NotificationsModule
 import { HelpSupportModule } from './modules/support/HelpSupportModule';
 import { AuthPage } from './modules/auth/AuthPage';
 import { AuthModal } from './modules/auth/AuthModal';
-import { useAuth } from './hooks/useAuth';
+import { useAuth, AuthProvider } from './hooks/useAuth';
 import { reminderService } from './services/reminderService';
 import { notificationService } from './services/notificationService';
 import { orderService } from './services/orderService';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
   const [triggerCreateReminder, setTriggerCreateReminder] = useState<boolean>(false);
@@ -91,7 +91,14 @@ export const App: React.FC = () => {
 
   // If user is not logged in, show initial Login / Registration Page
   if (!isAuthenticated) {
-    return <AuthPage onSuccess={() => refreshUser()} />;
+    return (
+      <AuthPage
+        onSuccess={() => {
+          setActiveTab('dashboard');
+          void refreshUser();
+        }}
+      />
+    );
   }
 
   // Once authenticated, render main Healthcare OS interface
@@ -156,9 +163,20 @@ export const App: React.FC = () => {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
-        onSuccess={() => refreshUser()}
+        onSuccess={() => {
+          setActiveTab('dashboard');
+          void refreshUser();
+        }}
       />
     </>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 

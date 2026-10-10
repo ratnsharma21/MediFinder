@@ -1074,50 +1074,6 @@ a:hover {
   color: #ffffff;
 }
 
-.sidebar-footer {
-  padding: 1rem 0.875rem;
-  border-top: 1px solid #1e293b;
-}
-
-.security-status-box {
-  background-color: #081220;
-  border: 1px solid #1e293b;
-  border-radius: 8px;
-  padding: 0.625rem 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-}
-
-.security-status-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #10b981;
-  box-shadow: 0 0 6px #10b981;
-}
-
-.security-status-text {
-  flex: 1;
-}
-
-.status-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #e2e8f0;
-  line-height: 1.2;
-}
-
-.status-subtitle {
-  font-size: 0.6875rem;
-  color: #64748b;
-  line-height: 1.2;
-}
-
-.security-shield-icon {
-  font-size: 0.875rem;
-}
-
 /* Main Content Area Wrapper */
 .medicare-main-wrapper {
   flex: 1;
@@ -1200,24 +1156,6 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 0.875rem;
-}
-
-.demo-catalogue-badge {
-  background-color: #fffbeb;
-  border: 1px solid #fde68a;
-  color: #92400e;
-  font-size: 0.6875rem;
-  font-weight: 800;
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  transition: all 0.15s ease;
-}
-
-.demo-catalogue-badge:hover {
-  background-color: #fef3c7;
-  border-color: #f59e0b;
 }
 
 .btn-add-reminder-nav {
@@ -2014,6 +1952,51 @@ a:hover {
   font-size: 0.875rem;
   color: #0f172a;
   font-weight: 700;
+}
+
+.stat-pill-interactive {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.stat-pill-interactive:hover {
+  border-color: #0d9488;
+  background-color: #f0fdfa;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.12);
+}
+
+.stat-pill-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.edit-pill-icon {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.stat-pill-interactive:hover .edit-pill-icon {
+  opacity: 1;
+}
+
+.summary-edit-btn {
+  align-self: center;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.summary-edit-btn:hover {
+  background-color: #0d9488;
+  color: #ffffff;
 }
 
 /* Filter Chips Bar */

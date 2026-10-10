@@ -67,11 +67,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
       {/* Right Actions & Profile Hub */}
       <div className="topbar-actions">
-        {/* Demo Catalogue Badge */}
-        <div className="demo-catalogue-badge" onClick={() => onNavigate('medicines')} title="Browsing Verified Medical Database">
-          DEMO CATALOGUE
-        </div>
-
         {/* Add Reminder Action */}
         <button
           type="button"

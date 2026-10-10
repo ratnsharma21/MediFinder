@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/common/Card';
 import { User } from '../../types';
 import { getAvatarUrl } from '../../utils/imageUtils';
-import { medicalRecordService, HealthRecord } from '../../services/medicalRecordService';
+import { medicalRecordService, HealthRecord, PatientClinicalSummary } from '../../services/medicalRecordService';
 
 interface MedicalRecordsModuleProps {
   user: User | null;
@@ -17,6 +17,18 @@ export const MedicalRecordsModule: React.FC<MedicalRecordsModuleProps> = ({ user
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [filter, setFilter] = useState<string>('All');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditSummaryModal, setShowEditSummaryModal] = useState(false);
+
+  // Editable Patient Clinical Summary
+  const [clinicalSummary, setClinicalSummary] = useState<PatientClinicalSummary>(() => {
+    return medicalRecordService.getPatientSummary(user?.id);
+  });
+  const [editConditions, setEditConditions] = useState(clinicalSummary.activeConditions);
+  const [editPhysician, setEditPhysician] = useState(clinicalSummary.primaryPhysician);
+  const [editAllergies, setEditAllergies] = useState(clinicalSummary.allergies);
+  const [editBloodGroup, setEditBloodGroup] = useState(clinicalSummary.bloodGroup || 'O+ Positive');
+
+  // Form states for new document
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState<'Prescription' | 'Lab Report' | 'Cardiology' | 'Vaccination'>('Prescription');
   const [newDoctor, setNewDoctor] = useState('');
@@ -25,10 +37,19 @@ export const MedicalRecordsModule: React.FC<MedicalRecordsModuleProps> = ({ user
   useEffect(() => {
     if (user?.id) {
       setRecords(medicalRecordService.getUserRecords(user.id));
+      const summary = medicalRecordService.getPatientSummary(user.id);
+      if (user.profile?.bloodGroup) {
+        summary.bloodGroup = user.profile.bloodGroup;
+      }
+      setClinicalSummary(summary);
+      setEditConditions(summary.activeConditions);
+      setEditPhysician(summary.primaryPhysician);
+      setEditAllergies(summary.allergies);
+      setEditBloodGroup(summary.bloodGroup || 'O+ Positive');
     } else {
       setRecords([]);
     }
-  }, [user?.id]);
+  }, [user?.id, user?.profile?.bloodGroup]);
 
   const patientName = user?.profile?.fullName || user?.username || 'Verified Patient';
 
@@ -54,6 +75,21 @@ export const MedicalRecordsModule: React.FC<MedicalRecordsModuleProps> = ({ user
     setNewDoctor('');
     setNewNotes('');
     setShowAddModal(false);
+  };
+
+  const handleSaveSummary = (e: React.FormEvent) => {
+    e.preventDefault();
+    const updated: PatientClinicalSummary = {
+      activeConditions: editConditions.trim() || 'None',
+      primaryPhysician: editPhysician.trim() || 'Unassigned',
+      allergies: editAllergies.trim() || 'None',
+      bloodGroup: editBloodGroup,
+    };
+    if (user?.id) {
+      medicalRecordService.savePatientSummary(user.id, updated);
+    }
+    setClinicalSummary(updated);
+    setShowEditSummaryModal(false);
   };
 
   return (
@@ -92,8 +128,8 @@ export const MedicalRecordsModule: React.FC<MedicalRecordsModuleProps> = ({ user
             <h2 className="summary-patient-name">{patientName}</h2>
             <div className="summary-patient-tags">
               <span className="badge badge-primary">ID: MC-PAT-9021</span>
-              <span className="badge badge-slate">Blood: O+ Positive</span>
-              <span className="badge badge-warning">Allergy: Penicillin</span>
+              <span className="badge badge-slate">Blood: {clinicalSummary.bloodGroup || 'O+ Positive'}</span>
+              <span className="badge badge-warning">Allergy: {clinicalSummary.allergies || 'Penicillin'}</span>
             </div>
           </div>
         </div>
@@ -102,14 +138,36 @@ export const MedicalRecordsModule: React.FC<MedicalRecordsModuleProps> = ({ user
             <span className="stat-pill-label">Total Documents</span>
             <strong className="stat-pill-value">{records.length}</strong>
           </div>
-          <div className="stat-pill">
-            <span className="stat-pill-label">Active Conditions</span>
-            <strong className="stat-pill-value">Hypertension</strong>
+          <div
+            className="stat-pill stat-pill-interactive"
+            onClick={() => setShowEditSummaryModal(true)}
+            title="Click to edit Active Conditions"
+          >
+            <div className="stat-pill-header">
+              <span className="stat-pill-label">Active Conditions</span>
+              <span className="edit-pill-icon">✏️</span>
+            </div>
+            <strong className="stat-pill-value">{clinicalSummary.activeConditions}</strong>
           </div>
-          <div className="stat-pill">
-            <span className="stat-pill-label">Primary Physician</span>
-            <strong className="stat-pill-value">Dr. Sarah Jenkins</strong>
+          <div
+            className="stat-pill stat-pill-interactive"
+            onClick={() => setShowEditSummaryModal(true)}
+            title="Click to edit Primary Physician"
+          >
+            <div className="stat-pill-header">
+              <span className="stat-pill-label">Primary Physician</span>
+              <span className="edit-pill-icon">✏️</span>
+            </div>
+            <strong className="stat-pill-value">{clinicalSummary.primaryPhysician}</strong>
           </div>
+          <button
+            type="button"
+            className="btn btn-outline-primary btn-sm summary-edit-btn"
+            onClick={() => setShowEditSummaryModal(true)}
+            title="Edit clinical vitals and physician"
+          >
+            ✏️ Edit
+          </button>
         </div>
       </div>
 
@@ -259,6 +317,88 @@ export const MedicalRecordsModule: React.FC<MedicalRecordsModuleProps> = ({ user
                 </button>
                 <button type="submit" className="btn btn-primary">
                   Save Document
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Health Vitals & Physician Modal */}
+      {showEditSummaryModal && (
+        <div className="modal-overlay" onClick={() => setShowEditSummaryModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Edit Health Vitals & Physician</h3>
+              <button type="button" className="btn-close" onClick={() => setShowEditSummaryModal(false)}>✕</button>
+            </div>
+            <form onSubmit={handleSaveSummary} className="modal-form">
+              <div className="form-group">
+                <label>Active Medical Conditions *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Hypertension, Diabetes, Asthma"
+                  value={editConditions}
+                  onChange={(e) => setEditConditions(e.target.value)}
+                  required
+                />
+                <span className="form-hint" style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem', display: 'block' }}>
+                  Current ongoing health conditions or diagnoses.
+                </span>
+              </div>
+
+              <div className="form-group">
+                <label>Primary Physician / Doctor *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Dr. Sarah Jenkins"
+                  value={editPhysician}
+                  onChange={(e) => setEditPhysician(e.target.value)}
+                  required
+                />
+                <span className="form-hint" style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem', display: 'block' }}>
+                  Your assigned general practitioner or consulting specialist.
+                </span>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Known Allergies</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. Penicillin, Peanuts, None"
+                    value={editAllergies}
+                    onChange={(e) => setEditAllergies(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Blood Group</label>
+                  <select
+                    className="form-input"
+                    value={editBloodGroup}
+                    onChange={(e) => setEditBloodGroup(e.target.value)}
+                  >
+                    <option value="A+ Positive">A+ Positive</option>
+                    <option value="A- Negative">A- Negative</option>
+                    <option value="B+ Positive">B+ Positive</option>
+                    <option value="B- Negative">B- Negative</option>
+                    <option value="AB+ Positive">AB+ Positive</option>
+                    <option value="AB- Negative">AB- Negative</option>
+                    <option value="O+ Positive">O+ Positive</option>
+                    <option value="O- Negative">O- Negative</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowEditSummaryModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Save Changes
                 </button>
               </div>
             </form>

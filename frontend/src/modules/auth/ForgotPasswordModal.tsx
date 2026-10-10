@@ -101,10 +101,6 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             >
               {loading ? 'Processing...' : 'Send Reset Link'}
             </button>
-
-            <div className="auth-modal-footer-note">
-              Default demo accounts: <code>ratn_lead</code>, <code>demo_user</code>, <code>rahul_sharma</code>
-            </div>
           </form>
         )}
       </div>

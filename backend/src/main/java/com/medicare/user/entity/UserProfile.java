@@ -22,7 +22,8 @@ public class UserProfile {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
-    @Column(name = "avatar_url", length = 500)
+    @Lob
+    @Column(name = "avatar_url", columnDefinition = "LONGTEXT")
     private String avatarUrl;
 
     @Column(name = "date_of_birth")

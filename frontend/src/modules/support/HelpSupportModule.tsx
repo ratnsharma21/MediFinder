@@ -30,7 +30,7 @@ export const HelpSupportModule: React.FC<HelpSupportModuleProps> = ({ onNavigate
     },
     {
       q: 'Is my medical and prescription data secure?',
-      a: 'Yes. All authentication and session data are protected with JWT tokens and BCrypt encryption. In Local Demo Mode, test data is sandboxed securely.'
+      a: 'Yes. All authentication, health records, and prescription data are protected with JWT tokens and BCrypt encryption with strict user-level isolation.'
     }
   ];
 

@@ -14,6 +14,13 @@ export interface HealthRecord {
   notes: string;
 }
 
+export interface PatientClinicalSummary {
+  activeConditions: string;
+  primaryPhysician: string;
+  allergies: string;
+  bloodGroup?: string;
+}
+
 export const medicalRecordService = {
   getUserRecords(userId?: number | null): HealthRecord[] {
     if (!userId) return [];
@@ -57,5 +64,32 @@ export const medicalRecordService = {
 
   clearUserRecords(userId: number): void {
     localStorage.removeItem(`medicare_ehr_u_${userId}`);
+  },
+
+  getPatientSummary(userId?: number | null): PatientClinicalSummary {
+    const defaultSummary: PatientClinicalSummary = {
+      activeConditions: 'Hypertension',
+      primaryPhysician: 'Dr. Sarah Jenkins',
+      allergies: 'Penicillin',
+      bloodGroup: 'O+ Positive',
+    };
+    if (!userId) return defaultSummary;
+    try {
+      const saved = localStorage.getItem(`medicare_ehr_summary_u_${userId}`);
+      if (saved) {
+        return { ...defaultSummary, ...JSON.parse(saved) };
+      }
+    } catch {
+      // ignore
+    }
+    return defaultSummary;
+  },
+
+  savePatientSummary(userId: number, summary: PatientClinicalSummary): void {
+    try {
+      localStorage.setItem(`medicare_ehr_summary_u_${userId}`, JSON.stringify(summary));
+    } catch {
+      // ignore
+    }
   }
 };

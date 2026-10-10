@@ -13,7 +13,6 @@ public class UpdateProfileRequest {
     @Pattern(regexp = "^$|^\\+?[0-9][0-9\\s().-]{6,18}$")
     private String phoneNumber;
 
-    @Size(max = 500)
     private String avatarUrl;
 
     @Past

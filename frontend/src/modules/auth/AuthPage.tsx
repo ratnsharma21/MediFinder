@@ -38,7 +38,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
   const [legalModalType, setLegalModalType] = useState<'privacy' | 'terms' | null>(null);
   const [googleOauthNotice, setGoogleOauthNotice] = useState<string | null>(null);
 
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
 
   // Load Remember Me username on initial mount if saved
   useEffect(() => {
@@ -90,7 +90,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
                 setError(null);
                 const parts = response.credential.split('.');
                 const payload = JSON.parse(atob(parts[1]));
-                await authService.googleLogin({
+                await googleLogin({
                   idToken: response.credential,
                   email: payload.email,
                   name: payload.name,
@@ -207,22 +207,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
           localStorage.removeItem('medicare_remembered_user');
         }
 
-        try {
-          await login({
-            emailOrUsername: cleanIdentifier === 'admin' ? 'ratn_lead' : cleanIdentifier,
-            password: password,
-          });
-        } catch (loginErr: any) {
-          if (cleanIdentifier === 'demo_user' || cleanIdentifier === 'alex_morgan') {
-            try {
-              await login({ emailOrUsername: 'user@medicare.demo', password });
-            } catch {
-              throw loginErr;
-            }
-          } else {
-            throw loginErr;
-          }
-        }
+        await login({
+          emailOrUsername: cleanIdentifier,
+          password: password,
+        });
 
         if (onSuccess) {
           onSuccess();
@@ -251,7 +239,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
             </div>
             <div className="auth-brand-titles">
               <span className="auth-brand-title">Medi<span className="brand-accent-green">Finder</span></span>
-              <span className="auth-brand-sub">HEALTHCARE OS</span>
+              <span className="auth-brand-sub">Healthcare With Ease</span>
             </div>
           </div>
 
@@ -622,10 +610,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                   </svg>
-                  <span>Smart Medication Adherence</span>
+                  <span>Smart Medication - MediFinder</span>
                 </div>
               </div>
-              <h3 className="auth-feature-title">Connected Healthcare OS</h3>
+
               <p className="auth-feature-description">
                 Personalized dosage alerts, verified pharmacy price comparisons, and digital electronic health records encrypted end-to-end.
               </p>

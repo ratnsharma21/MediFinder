@@ -1,4 +1,4 @@
-# MediCare / MediFinder — Foundation & Backend Implementation Report
+# MediFinder - Foundation & Backend Implementation Report
 
 **Author / Role**: Ratn — Backend Lead, Repository Foundation & Database Engineer  
 **Date**: 2026-10-08  
