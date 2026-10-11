@@ -1219,7 +1219,7 @@ Deployment : not published yet
 
 <br/>
 
-```bash
+
 # 1️⃣  Clone the repository
 git clone https://github.com/ratnsharma21/MediFinder.git
 cd MediFinder
@@ -1236,7 +1236,7 @@ cp config/db.properties.example config/db.properties
 
 # 5️⃣  Open in browser
 # http://localhost:8080/MediFinder
-```
+
 
 > 💡 **Pro tip:** Always work on your assigned feature branch (`your-name/mX-feature`) and open a PR for review before merging into `main`.
 
@@ -1244,7 +1244,7 @@ cp config/db.properties.example config/db.properties
 
 ## 📸 Screenshots
 
-> 📷 Screenshots will land in `docs/screenshots/` as modules reach their evidence milestone (Week 11). These are **placeholder slots**.
+> 📷 Screenshots will land in `docs/screenshots/` as modules reach their evidence milestone (Week 11). These are .
 
 <table>
 <tr>
