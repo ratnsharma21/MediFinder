@@ -1263,7 +1263,7 @@ http://localhost:8080/MediFinder
 
 <div align="center">
 
-<img src="Images/medifinder/"
+<img src="Images/MediFinder Healthcare App UI Collage.png"
      alt="MediFinder Screenshots — Medicine Search, Price Provenance, PIN Fallback, Dose Log and QA Evidence"
      width="100%">
 
