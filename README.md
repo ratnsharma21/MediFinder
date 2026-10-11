@@ -1218,8 +1218,8 @@ Deployment : not published yet
 </div>
 
 <br/>
-```
 
+```
 # 1️⃣  Clone the repository
 git clone https://github.com/ratnsharma21/MediFinder.git
 cd MediFinder
@@ -1235,7 +1235,7 @@ cp config/db.properties.example config/db.properties
 # Use the team's agreed server setup (Tomcat / embedded)
 
 # 5️⃣  Open in browser
-# http://localhost:8080/MediFinder
+ http://localhost:8080/MediFinder
 
 ```
 > 💡 **Pro tip:** Always work on your assigned feature branch (`your-name/mX-feature`) and open a PR for review before merging into `main`.
