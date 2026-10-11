@@ -1218,7 +1218,7 @@ Deployment : not published yet
 </div>
 
 <br/>
-
+```
 
 # 1️⃣  Clone the repository
 git clone https://github.com/ratnsharma21/MediFinder.git
@@ -1237,7 +1237,7 @@ cp config/db.properties.example config/db.properties
 # 5️⃣  Open in browser
 # http://localhost:8080/MediFinder
 
-
+```
 > 💡 **Pro tip:** Always work on your assigned feature branch (`your-name/mX-feature`) and open a PR for review before merging into `main`.
 
 ---
@@ -1250,7 +1250,7 @@ cp config/db.properties.example config/db.properties
 <tr>
 <td align="center" width="33%">
 
-<img src="https://placehold.co/600x340/0B1120/0D9488/png?font=source-sans-pro&text=🔐%0AAuthentication" alt="Auth"/>
+<img src="images/screenshots/auth.png" alt="Authentication"/>
 
 <sub>**🔐 Authentication** · M1</sub>
 
