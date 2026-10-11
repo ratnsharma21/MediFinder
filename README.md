@@ -1213,110 +1213,63 @@ Deployment : not published yet
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/Prerequisites-Java_17+_·_MySQL_8+_·_Git-0D9488?style=for-the-badge&labelColor=0B1120" alt=""/>
+<img src="https://img.shields.io/badge/Prerequisites-Java_17%2B_·_MySQL_8%2B_·_Git-0D9488?style=for-the-badge&labelColor=0B1120" alt="Prerequisites"/>
 
 </div>
 
 <br/>
 
-```
-# 1️⃣  Clone the repository
+### 1️⃣ Clone the Repository
+
+```bash
 git clone https://github.com/ratnsharma21/MediFinder.git
 cd MediFinder
-
-# 2️⃣  Set up MySQL database
-mysql -u root -p < db/schema.sql
-
-# 3️⃣  Configure JDBC (keep this LOCAL, never commit)
-cp config/db.properties.example config/db.properties
-# edit config/db.properties with your credentials
-
-# 4️⃣  Build & run
-# Use the team's agreed server setup (Tomcat / embedded)
-
-# 5️⃣  Open in browser
- http://localhost:8080/MediFinder
-
 ```
+
+### 2️⃣ Set Up the MySQL Database
+
+```bash
+mysql -u root -p < db/schema.sql
+```
+
+### 3️⃣ Configure Database Credentials
+
+```bash
+cp config/db.properties.example config/db.properties
+```
+
+Edit `config/db.properties` with your local MySQL credentials.
+
+> 🔒 Never commit your database credentials to GitHub.
+
+### 4️⃣ Build and Run
+
+Use the server setup configured for your project (Tomcat or an embedded server).
+
+### 5️⃣ Open in Your Browser
+
+Once the application is running, open:
+
+```text
+http://localhost:8080/MediFinder
+```
+
+---
 > 💡 **Pro tip:** Always work on your assigned feature branch (`your-name/mX-feature`) and open a PR for review before merging into `main`.
 
 ---
 
 ## 📸 Screenshots
 
-> 📷 Screenshots will land in `docs/screenshots/` as modules reach their evidence milestone (Week 11). These are .
+<div align="center">
 
-<table>
-<tr>
-<td align="center" width="33%">
+<img src="Images/medifinder/"
+     alt="MediFinder Screenshots — Medicine Search, Price Provenance, PIN Fallback, Dose Log and QA Evidence"
+     width="100%">
 
-<img src="images/screenshots/auth.png" alt="Authentication"/>
+<sub>🔐 Authentication · 🔍 Medicine Search · 💊 Price Provenance · 📍 Pharmacy Locator · 🧭 PIN Fallback · ⏰ Reminders · 📝 Dose Log · 🎨 Dashboard · 🧪 QA Evidence</sub>
 
-<sub>**🔐 Authentication** · M1</sub>
-
-</td>
-<td align="center" width="33%">
-
-<img src="https://placehold.co/600x340/0B1120/6366F1/png?font=source-sans-pro&text=🔍%0AMedicine+Search" alt="Search"/>
-
-<sub>**🔍 Medicine Search** · M3</sub>
-
-</td>
-<td align="center" width="33%">
-
-<img src="https://placehold.co/600x340/0B1120/A855F7/png?font=source-sans-pro&text=💊%0APrice+Provenance" alt="Details"/>
-
-<sub>**💊 Price Provenance** · M4</sub>
-
-</td>
-</tr>
-<tr>
-<td align="center">
-
-<img src="https://placehold.co/600x340/0B1120/EC4899/png?font=source-sans-pro&text=📍%0APharmacy+Locator" alt="Locator"/>
-
-<sub>**📍 Pharmacy Locator** · M5</sub>
-
-</td>
-<td align="center">
-
-<img src="https://placehold.co/600x340/0B1120/F472B6/png?font=source-sans-pro&text=🧭%0APIN+Fallback" alt="Fallback"/>
-
-<sub>**🧭 PIN Fallback** · M6</sub>
-
-</td>
-<td align="center">
-
-<img src="https://placehold.co/600x340/0B1120/F59E0B/png?font=source-sans-pro&text=⏰%0AReminder+Form" alt="Reminder"/>
-
-<sub>**⏰ Reminder Form** · M7</sub>
-
-</td>
-</tr>
-<tr>
-<td align="center">
-
-<img src="https://placehold.co/600x340/0B1120/EF4444/png?font=source-sans-pro&text=📝%0ADose+Log" alt="Dose"/>
-
-<sub>**📝 Dose Log** · M8</sub>
-
-</td>
-<td align="center">
-
-<img src="https://placehold.co/600x340/0B1120/10B981/png?font=source-sans-pro&text=🎨%0ADashboard" alt="Dashboard"/>
-
-<sub>**🎨 Dashboard** · M9</sub>
-
-</td>
-<td align="center">
-
-<img src="https://placehold.co/600x340/0B1120/14B8A6/png?font=source-sans-pro&text=🧪%0AQA+Evidence" alt="QA"/>
-
-<sub>**🧪 QA Evidence** · M10</sub>
-
-</td>
-</tr>
-</table>
+</div>
 
 ---
 
