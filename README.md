@@ -20,6 +20,9 @@
 
 <br/>
 
+<a href="http://3.104.106.120/" target="_blank">
+  <img src="https://img.shields.io/badge/🌐_Live_Demo-00D9A3?style=for-the-badge&labelColor=0B1120" alt="Live Demo"/>
+</a>
 <a href="https://github.com/ratnsharma21/MediFinder">
   <img src="https://img.shields.io/badge/🚀_Explore_Repository-0D9488?style=for-the-badge&labelColor=0B1120" alt="Repo"/>
 </a>
@@ -1164,11 +1167,11 @@ gitGraph
 | 📊 **Weekly evidence** | Report includes repository + that week's PR/commit links |
 | 🚫 **No fiction** | Commits, issues, errors recorded only when they exist |
 
-```text
-Repository : https://github.com/ratnsharma21/MediFinder
-Demo       : not published yet
-Deployment : not published yet
-```
+| Resource | Link |
+|:---|:---|
+| 🏛️ **Repository** | [github.com/ratnsharma21/MediFinder](https://github.com/ratnsharma21/MediFinder) |
+| 🌐 **Live Demo (AWS EC2)** | [http://3.104.106.120](http://3.104.106.120) |
+| 📖 **Swagger API Docs** | [http://3.104.106.120/swagger-ui.html](http://3.104.106.120/swagger-ui.html) |
 
 ---
 
